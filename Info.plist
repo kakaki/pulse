@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>pl</string>
+	<key>CFBundleDisplayName</key>
+	<string>Pulse</string>
+	<key>CFBundleExecutable</key>
+	<string>Pulse</string>
+	<key>CFBundleIconFile</key>
+	<string>AppIcon</string>
+	<key>CFBundleIdentifier</key>
+	<string>local.pulse.menubar</string>
+	<key>CFBundleName</key>
+	<string>Pulse</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.1</string>
+	<key>CFBundleVersion</key>
+	<string>2</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>26.0</string>
+	<key>LSUIElement</key>
+	<true/>
+	<key>NSHighResolutionCapable</key>
+	<true/>
+	<key>NSLocationUsageDescription</key>
+	<string>Pulse potrzebuje dostępu do lokalizacji tylko po to, by macOS pozwolił odczytać nazwę sieci Wi‑Fi. Lokalizacja nie jest nigdzie zapisywana ani wysyłana.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Pulse potrzebuje dostępu do lokalizacji tylko po to, by macOS pozwolił odczytać nazwę sieci Wi‑Fi. Lokalizacja nie jest nigdzie zapisywana ani wysyłana.</string>
+	<key>SUEnableAutomaticChecks</key>
+	<true/>
+	<key>SUPublicEDKey</key>
+	<string>o6V2kxuVksL/BJ9pf564aphnjrlga2dvPMwdiH1FMkM=</string>
+</dict>
+</plist>
