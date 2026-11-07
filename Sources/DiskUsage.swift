@@ -24,19 +24,19 @@ final class DiskUsage {
     private static func folders() -> [Entry] {
         let home = URL(fileURLWithPath: NSHomeDirectory())
         var list: [Entry] = [
-            .init(id: "apps", name: "Aplikacje", symbol: "app.badge", url: URL(fileURLWithPath: "/Applications")),
-            .init(id: "downloads", name: "Pobrane", symbol: "arrow.down.circle", url: home.appending(path: "Downloads")),
-            .init(id: "documents", name: "Dokumenty", symbol: "doc", url: home.appending(path: "Documents")),
-            .init(id: "desktop", name: "Biurko", symbol: "menubar.dock.rectangle", url: home.appending(path: "Desktop")),
-            .init(id: "movies", name: "Filmy", symbol: "film", url: home.appending(path: "Movies")),
-            .init(id: "music", name: "Muzyka", symbol: "music.note", url: home.appending(path: "Music")),
-            .init(id: "pictures", name: "Obrazy", symbol: "photo", url: home.appending(path: "Pictures")),
-            .init(id: "caches", name: "Pamięć podręczna", symbol: "archivebox", url: home.appending(path: "Library/Caches")),
-            .init(id: "trash", name: "Kosz", symbol: "trash", url: home.appending(path: ".Trash")),
+            .init(id: "apps", name: String(localized: "Aplikacje"), symbol: "app.badge", url: URL(fileURLWithPath: "/Applications")),
+            .init(id: "downloads", name: String(localized: "Pobrane"), symbol: "arrow.down.circle", url: home.appending(path: "Downloads")),
+            .init(id: "documents", name: String(localized: "Dokumenty"), symbol: "doc", url: home.appending(path: "Documents")),
+            .init(id: "desktop", name: String(localized: "Biurko"), symbol: "menubar.dock.rectangle", url: home.appending(path: "Desktop")),
+            .init(id: "movies", name: String(localized: "Filmy"), symbol: "film", url: home.appending(path: "Movies")),
+            .init(id: "music", name: String(localized: "Muzyka"), symbol: "music.note", url: home.appending(path: "Music")),
+            .init(id: "pictures", name: String(localized: "Obrazy"), symbol: "photo", url: home.appending(path: "Pictures")),
+            .init(id: "caches", name: String(localized: "Pamięć podręczna"), symbol: "archivebox", url: home.appending(path: "Library/Caches")),
+            .init(id: "trash", name: String(localized: "Kosz"), symbol: "trash", url: home.appending(path: ".Trash")),
         ]
         let dev = home.appending(path: "Library/Developer")
         if FileManager.default.fileExists(atPath: dev.path) {
-            list.insert(.init(id: "developer", name: "Dane deweloperskie (Xcode)", symbol: "hammer", url: dev), at: 8)
+            list.insert(.init(id: "developer", name: String(localized: "Dane deweloperskie (Xcode)"), symbol: "hammer", url: dev), at: 8)
         }
         return list
     }
@@ -99,7 +99,7 @@ struct DiskUsageCard: View {
                     if usage.scanning {
                         ProgressView().controlSize(.mini)
                     } else {
-                        Text(usage.lastScan == nil ? "Analizuj" : "Odśwież")
+                        Text(usage.lastScan == nil ? String(localized: "Analizuj") : String(localized: "Odśwież"))
                     }
                 }
                 .buttonStyle(.glass)

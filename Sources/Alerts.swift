@@ -12,12 +12,12 @@ final class Alerts: NSObject, UNUserNotificationCenterDelegate {
         var id: String { rawValue }
         var title: String {
             switch self {
-            case .temp: "Wysoka temperatura"
-            case .thermal: "Spowolnienie termiczne"
-            case .cpu: "Długotrwałe obciążenie CPU"
-            case .memory: "Brak pamięci"
-            case .battery: "Niski poziom baterii"
-            case .disk: "Mało miejsca na dysku"
+            case .temp: String(localized: "Wysoka temperatura")
+            case .thermal: String(localized: "Spowolnienie termiczne")
+            case .cpu: String(localized: "Długotrwałe obciążenie CPU")
+            case .memory: String(localized: "Brak pamięci")
+            case .battery: String(localized: "Niski poziom baterii")
+            case .disk: String(localized: "Mało miejsca na dysku")
             }
         }
         var symbol: String {
@@ -67,21 +67,21 @@ final class Alerts: NSObject, UNUserNotificationCenterDelegate {
         // Temperature
         if let t = m.socMax ?? m.socAvg {
             check(.temp, firing: t >= Kind.temp.limit, clear: t < Kind.temp.limit - 8,
-                  body: "SoC ma \(Fmt.temp(t)) (próg \(Fmt.temp(Kind.temp.limit))).")
+                  body: String(localized: "SoC ma \(Fmt.temp(t)) (próg \(Fmt.temp(Kind.temp.limit)))."))
         }
         // macOS thermal pressure (throttling)
         check(.thermal, firing: m.thermalState.rawValue >= ProcessInfo.ThermalState.serious.rawValue,
               clear: m.thermalState == .nominal,
-              body: "macOS ogranicza wydajność z powodu temperatury (stan: \(m.thermalState.title.lowercased())).")
+              body: String(localized: "macOS ogranicza wydajność z powodu temperatury (stan: \(m.thermalState.title.lowercased()))."))
         // CPU above the limit for 2 minutes
         if m.cpu >= Kind.cpu.limit { cpuHighSince = cpuHighSince ?? now } else { cpuHighSince = nil }
         let sustained = cpuHighSince.map { now.timeIntervalSince($0) >= 120 } ?? false
-        let top = m.topByCPU.first.map { " Najwięcej zużywa: \($0.name)." } ?? ""
+        let top = m.topByCPU.first.map { String(localized: " Najwięcej zużywa: \($0.name).") } ?? ""
         check(.cpu, firing: sustained, clear: m.cpu < Kind.cpu.limit - 0.2,
-              body: "Procesor pracuje na \(Fmt.pct(m.cpu)) od ponad 2 minut.\(top)")
+              body: String(localized: "Procesor pracuje na \(Fmt.pct(m.cpu)) od ponad 2 minut.\(top)"))
         // Memory pressure
         check(.memory, firing: m.memPressure == .critical, clear: m.memPressure == .normal,
-              body: "Ciśnienie pamięci jest krytyczne. Zamknij nieużywane aplikacje.")
+              body: String(localized: "Ciśnienie pamięci jest krytyczne. Zamknij nieużywane aplikacje."))
         // Battery
         if m.battery.present {
             let low = !m.battery.onAC && m.battery.percent <= Kind.battery.limit
@@ -92,7 +92,7 @@ final class Alerts: NSObject, UNUserNotificationCenterDelegate {
         if m.diskTotal > 0 {
             let freeGB = Double(m.diskFree) / 1e9
             check(.disk, firing: freeGB < Kind.disk.limit, clear: freeGB > Kind.disk.limit + 5,
-                  body: "Na dysku \(m.diskName) zostało \(Fmt.file(m.diskFree)).")
+                  body: String(localized: "Na dysku \(m.diskName) zostało \(Fmt.file(m.diskFree))."))
         }
     }
 
@@ -138,7 +138,7 @@ struct AlertSettings: View {
                         }
                     }
                     Button("Wyślij test") {
-                        Alerts.shared.send(title: "Pulse", body: "Powiadomienia działają.", id: "test")
+                        Alerts.shared.send(title: "Pulse", body: String(localized: "Powiadomienia działają."), id: "test")
                     }
                 }
             } footer: {
@@ -153,9 +153,9 @@ struct AlertSettings: View {
 
     private var statusText: String {
         switch status {
-        case .authorized, .provisional: "Powiadomienia włączone"
-        case .denied: "Powiadomienia wyłączone w systemie"
-        default: "Pulse nie ma jeszcze zgody na powiadomienia"
+        case .authorized, .provisional: String(localized: "Powiadomienia włączone")
+        case .denied: String(localized: "Powiadomienia wyłączone w systemie")
+        default: String(localized: "Pulse nie ma jeszcze zgody na powiadomienia")
         }
     }
 

@@ -18,11 +18,14 @@ struct Card<Content: View>: View {
 }
 
 struct SectionTitle: View {
-    let text: String
+    let text: Text
     var trailing: String? = nil
+    init(text: LocalizedStringKey, trailing: String? = nil) { self.text = Text(text); self.trailing = trailing }
+    @_disfavoredOverload init<S: StringProtocol>(text: S, trailing: String? = nil) { self.text = Text(verbatim: String(text)); self.trailing = trailing }
     var body: some View {
         HStack {
-            Text(text.uppercased())
+            text
+                .textCase(.uppercase)
                 .font(.system(size: 10, weight: .semibold))
                 .tracking(0.6)
                 .foregroundStyle(.secondary)
@@ -36,7 +39,7 @@ struct SectionTitle: View {
 
 struct BigValue: View {
     let value: String
-    var unit: String? = nil
+    var unit: LocalizedStringKey? = nil
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: 4) {
             Text(value)
@@ -51,10 +54,12 @@ struct BigValue: View {
 }
 
 struct Pill: View {
-    let text: String
+    let text: Text
     var color: Color = .secondary
+    init(text: LocalizedStringKey, color: Color = .secondary) { self.text = Text(text); self.color = color }
+    @_disfavoredOverload init<S: StringProtocol>(text: S, color: Color = .secondary) { self.text = Text(verbatim: String(text)); self.color = color }
     var body: some View {
-        Text(text)
+        text
             .font(.system(size: 10.5, weight: .semibold))
             .foregroundStyle(color)
             .padding(.horizontal, 8)
@@ -126,12 +131,14 @@ struct SegmentBar: View {
 
 struct LegendItem: View {
     let color: Color
-    let title: String
+    let title: Text
     let value: String
+    init(color: Color, title: LocalizedStringKey, value: String) { self.color = color; self.title = Text(title); self.value = value }
+    @_disfavoredOverload init<S: StringProtocol>(color: Color, title: S, value: String) { self.color = color; self.title = Text(verbatim: String(title)); self.value = value }
     var body: some View {
         HStack(spacing: 6) {
             Circle().fill(color.gradient).frame(width: 7, height: 7)
-            Text(title).foregroundStyle(.secondary)
+            title.foregroundStyle(.secondary)
             Spacer(minLength: 4)
             Text(value).monospacedDigit().fontWeight(.medium)
         }
@@ -211,15 +218,21 @@ struct CoreBars: View {
 }
 
 struct MiniStat: View {
-    let title: String
+    let title: Text
     let value: String
     var color: Color = .primary
     var symbol: String? = nil
+    init(title: LocalizedStringKey, value: String, color: Color = .primary, symbol: String? = nil) {
+        self.title = Text(title); self.value = value; self.color = color; self.symbol = symbol
+    }
+    @_disfavoredOverload init<S: StringProtocol>(title: S, value: String, color: Color = .primary, symbol: String? = nil) {
+        self.title = Text(verbatim: String(title)); self.value = value; self.color = color; self.symbol = symbol
+    }
     var body: some View {
         VStack(alignment: .leading, spacing: 3) {
             HStack(spacing: 4) {
                 if let symbol { Image(systemName: symbol).font(.system(size: 9.5, weight: .semibold)).foregroundStyle(color) }
-                Text(title).font(.system(size: 10.5, weight: .medium)).foregroundStyle(.secondary)
+                title.font(.system(size: 10.5, weight: .medium)).foregroundStyle(.secondary)
             }
             Text(value)
                 .font(.system(size: 15, weight: .semibold, design: .rounded))

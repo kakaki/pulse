@@ -5,10 +5,10 @@ enum DisplayMode: String, CaseIterable, Identifiable {
     var id: Self { self }
     var title: String {
         switch self {
-        case .text: "Tekst"
-        case .graph: "Wykres"
-        case .bars: "Słupki"
-        case .ring: "Pierścień"
+        case .text: String(localized: "Tekst")
+        case .graph: String(localized: "Wykres")
+        case .bars: String(localized: "Słupki")
+        case .ring: String(localized: "Pierścień")
         }
     }
 }
@@ -19,14 +19,14 @@ enum Module: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .overview: "Przegląd"
-        case .cpu: "Procesor"
-        case .gpu: "Grafika"
-        case .memory: "Pamięć"
-        case .disk: "Dysk"
-        case .network: "Sieć"
-        case .sensors: "Czujniki"
-        case .battery: "Bateria"
+        case .overview: String(localized: "Przegląd")
+        case .cpu: String(localized: "Procesor")
+        case .gpu: String(localized: "Grafika")
+        case .memory: String(localized: "Pamięć")
+        case .disk: String(localized: "Dysk")
+        case .network: String(localized: "Sieć")
+        case .sensors: String(localized: "Czujniki")
+        case .battery: String(localized: "Bateria")
         }
     }
 
@@ -94,8 +94,8 @@ enum Accent: String, CaseIterable, Identifiable {
     var id: Self { self }
     var title: String {
         switch self {
-        case .auto: "Kolory modułów"; case .purple: "Fioletowy"; case .blue: "Niebieski"; case .teal: "Morski"
-        case .green: "Zielony"; case .orange: "Pomarańczowy"; case .pink: "Różowy"; case .graphite: "Grafitowy"
+        case .auto: String(localized: "Kolory modułów"); case .purple: String(localized: "Fioletowy"); case .blue: String(localized: "Niebieski"); case .teal: String(localized: "Morski")
+        case .green: String(localized: "Zielony"); case .orange: String(localized: "Pomarańczowy"); case .pink: String(localized: "Różowy"); case .graphite: String(localized: "Grafitowy")
         }
     }
     var colors: [Color]? {
@@ -169,10 +169,10 @@ enum Heat {
 
     static func label(_ t: Double) -> String {
         switch t {
-        case ..<50: "Chłodno"
-        case ..<70: "W normie"
-        case ..<85: "Ciepło"
-        default: "Gorąco"
+        case ..<50: String(localized: "Chłodno")
+        case ..<70: String(localized: "W normie")
+        case ..<85: String(localized: "Ciepło")
+        default: String(localized: "Gorąco")
         }
     }
 

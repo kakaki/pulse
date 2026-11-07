@@ -147,10 +147,10 @@ final class HistoryStore {
     func csv() -> String {
         flush()
         let columns: [(HistoryMetric, String, Double)] = [
-            (.cpu, "CPU %", 100), (.gpu, "GPU %", 100), (.mem, "Pamięć %", 100), (.temp, "Temperatura °C", 1),
-            (.diskRead, "Dysk odczyt B/s", 1), (.diskWrite, "Dysk zapis B/s", 1),
-            (.netIn, "Sieć pobieranie B/s", 1), (.netOut, "Sieć wysyłanie B/s", 1),
-            (.battery, "Bateria %", 100), (.batteryPower, "Moc baterii W", 1),
+            (.cpu, String(localized: "CPU %"), 100), (.gpu, String(localized: "GPU %"), 100), (.mem, String(localized: "Pamięć %"), 100), (.temp, String(localized: "Temperatura °C"), 1),
+            (.diskRead, String(localized: "Dysk odczyt B/s"), 1), (.diskWrite, String(localized: "Dysk zapis B/s"), 1),
+            (.netIn, String(localized: "Sieć pobieranie B/s"), 1), (.netOut, String(localized: "Sieć wysyłanie B/s"), 1),
+            (.battery, String(localized: "Bateria %"), 100), (.batteryPower, String(localized: "Moc baterii W"), 1),
         ]
         let fmt = DateFormatter()
         fmt.dateFormat = "yyyy-MM-dd HH:mm"
@@ -173,7 +173,7 @@ final class HistoryStore {
         }
         rows += buckets.map { ($0.minute, 1, $0.values) }
 
-        var out = "\u{FEFF}" + (["Czas", "Rozdzielczość (min)"] + columns.map(\.1)).joined(separator: ";") + "\n"
+        var out = "\u{FEFF}" + ([String(localized: "Czas"), String(localized: "Rozdzielczość (min)")] + columns.map(\.1)).joined(separator: ";") + "\n"
         for (minute, res, values) in rows {
             let date = Date(timeIntervalSince1970: TimeInterval(minute * 60))
             let cells = columns.map { c in

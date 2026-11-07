@@ -8,17 +8,21 @@ SPARKLE="Vendor/Sparkle"
 source ./sign_sparkle.sh
 UPDATE_URL=""
 [[ -f release.conf ]] && source ./release.conf
-rm -rf "$APP"
+LOC="$BUILD_DIR/loc"
+rm -rf "$APP" "$LOC"
+mkdir -p "$LOC/app" "$LOC/widget" "$LOC/out"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 xcrun swiftc -O -swift-version 5 -parse-as-library \
   -target arm64-apple-macos26.0 \
   -sdk "$(xcrun --sdk macosx --show-sdk-path)" \
   -F "$SPARKLE" -framework Sparkle -Xlinker -rpath -Xlinker @executable_path/../Frameworks \
+  -emit-localized-strings -emit-localized-strings-path "$LOC/app" \
   Sources/*.swift -o "$APP/Contents/MacOS/Pulse"
 # Desktop widget extension (sandboxed; reads the JSON snapshot the app writes)
 WX="$APP/Contents/PlugIns/PulseWidget.appex"
 mkdir -p "$WX/Contents/MacOS"
 xcrun swiftc -O -swift-version 5 -parse-as-library -application-extension \
+  -emit-localized-strings -emit-localized-strings-path "$LOC/widget" \
   -target arm64-apple-macos26.0 \
   -sdk "$(xcrun --sdk macosx --show-sdk-path)" \
   Widget/PulseWidget.swift Sources/WidgetData.swift -o "$WX/Contents/MacOS/PulseWidget"
@@ -35,6 +39,15 @@ fi
 mkdir -p "$APP/Contents/Frameworks"
 ditto "$SPARKLE/Sparkle.framework" "$APP/Contents/Frameworks/Sparkle.framework"
 cp AppIcon.icns "$APP/Contents/Resources/"
+# Localization: add new strings from the code to the catalog, then compile pl/en/de .lproj folders.
+rm -f "$LOC"/*/Snapshot.stringsdata
+xcrun xcstringstool sync Localization/Localizable.xcstrings --stringsdata "$LOC"/app/*.stringsdata "$LOC"/widget/*.stringsdata
+xcrun xcstringstool compile Localization/Localizable.xcstrings --output-directory "$LOC/out" >/dev/null
+shopt -s nullglob
+for lproj in "$LOC"/out/*.lproj; do
+  cp -R "$lproj" "$APP/Contents/Resources/"
+  mkdir -p "$WX/Contents/Resources" && cp -R "$lproj" "$WX/Contents/Resources/"
+done
 xattr -cr "$APP"
 sign_sparkle "$APP" -
 codesign --force --sign - --entitlements Widget/PulseWidget.entitlements "$WX" >/dev/null

@@ -20,7 +20,7 @@ final class NetworkExtras: NSObject, CLLocationManagerDelegate {
         var band: String?
         /// 0…4 bars from RSSI.
         var bars: Int { rssi >= -55 ? 4 : rssi >= -65 ? 3 : rssi >= -75 ? 2 : rssi >= -85 ? 1 : 0 }
-        var quality: String { ["Bardzo słaby", "Słaby", "Średni", "Dobry", "Doskonały"][bars] }
+        var quality: String { [String(localized: "Bardzo słaby"), String(localized: "Słaby"), String(localized: "Średni"), String(localized: "Dobry"), String(localized: "Doskonały")][bars] }
     }
 
     /// Per-app traffic (bytes/s) from `nettop`, busiest first.

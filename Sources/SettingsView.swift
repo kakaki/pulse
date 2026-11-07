@@ -9,9 +9,9 @@ struct SettingsView: View {
         NavigationSplitView {
             List(selection: $page) {
                 Section {
-                    SidebarRow(title: "Ogólne", symbol: "gearshape.fill", colors: [.gray, Color(white: 0.4)], enabled: nil)
+                    SidebarRow(title: String(localized: "Ogólne"), symbol: "gearshape.fill", colors: [.gray, Color(white: 0.4)], enabled: nil)
                         .tag(Page.general)
-                    SidebarRow(title: "Powiadomienia", symbol: "bell.badge.fill", colors: [.red, .orange], enabled: nil)
+                    SidebarRow(title: String(localized: "Powiadomienia"), symbol: "bell.badge.fill", colors: [.red, .orange], enabled: nil)
                         .tag(Page.alerts)
                 }
                 Section("Moduły") {
@@ -112,7 +112,7 @@ struct ModuleSettings: View {
             if module == .overview {
                 OverviewItemsSection(defaultMode: DisplayMode(rawValue: modeRaw) ?? .text)
             }
-            Section(module == .overview ? "Domyślny styl wartości" : "Wygląd w pasku menu") {
+            Section(module == .overview ? String(localized: "Domyślny styl wartości") : String(localized: "Wygląd w pasku menu")) {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: module == .overview ? 380 : 104), spacing: 10)], spacing: 10) {
                     ForEach(module.modes) { mode in
                         ModePreview(module: module, mode: mode, labels: showLabels, selected: modeRaw == mode.rawValue) {
@@ -129,14 +129,14 @@ struct ModuleSettings: View {
 
     private var description: String {
         switch module {
-        case .overview: "Wszystkie moduły w jednym miejscu; wybierz, co pokazywać w pasku."
-        case .cpu: "Obciążenie, rdzenie, średnie obciążenie i procesy."
-        case .gpu: "Wykorzystanie układu graficznego."
-        case .memory: "Pamięć aplikacji, związana, skompresowana i swap."
-        case .disk: "Wolne miejsce oraz prędkość odczytu i zapisu."
-        case .network: "Prędkość pobierania i wysyłania, adres IP."
-        case .sensors: "Temperatury SoC, SSD i baterii."
-        case .battery: "Poziom naładowania, kondycja, cykle i moc."
+        case .overview: String(localized: "Wszystkie moduły w jednym miejscu; wybierz, co pokazywać w pasku.")
+        case .cpu: String(localized: "Obciążenie, rdzenie, średnie obciążenie i procesy.")
+        case .gpu: String(localized: "Wykorzystanie układu graficznego.")
+        case .memory: String(localized: "Pamięć aplikacji, związana, skompresowana i swap.")
+        case .disk: String(localized: "Wolne miejsce oraz prędkość odczytu i zapisu.")
+        case .network: String(localized: "Prędkość pobierania i wysyłania, adres IP.")
+        case .sensors: String(localized: "Temperatury SoC, SSD i baterii.")
+        case .battery: String(localized: "Poziom naładowania, kondycja, cykle i moc.")
         }
     }
 }
@@ -264,7 +264,7 @@ struct GeneralSettings: View {
                     Text("Na baterii i w trybie niskiego zużycia energii Pulse odświeża dane rzadziej (co \(Int(max(interval * 2.5, 5))) s zamiast co \(Int(interval)) s).")
                 }
                 .onChange(of: powerSaver) { monitor.updateSaving() }
-                LabeledContent("Stan", value: monitor.isSaving ? "Oszczędzanie aktywne · co \(Int(monitor.effectiveInterval)) s" : "Pełna częstotliwość")
+                LabeledContent("Stan", value: monitor.isSaving ? String(localized: "Oszczędzanie aktywne · co \(Int(monitor.effectiveInterval)) s") : String(localized: "Pełna częstotliwość"))
             } header: {
                 Text("Energia")
             }
@@ -300,7 +300,7 @@ private func exportHistory() {
     let panel = NSSavePanel()
     panel.allowedContentTypes = [.commaSeparatedText]
     let day = Date().formatted(.iso8601.year().month().day())
-    panel.nameFieldStringValue = "Pulse-historia-\(day).csv"
+    panel.nameFieldStringValue = String(localized: "Pulse-historia-\(day).csv")
     guard panel.runModal() == .OK, let url = panel.url else { return }
     try? SystemMonitor.shared.history.csv().write(to: url, atomically: true, encoding: .utf8)
 }

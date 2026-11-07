@@ -132,8 +132,8 @@ enum OverviewItem: String, CaseIterable, Identifiable {
     var id: String { rawValue }
     var title: String {
         switch self {
-        case .cpu: "CPU"; case .gpu: "GPU"; case .mem: "Pamięć"; case .disk: "Dysk"
-        case .temp: "Temperatura"; case .net: "Sieć"; case .bat: "Bateria"
+        case .cpu: "CPU"; case .gpu: "GPU"; case .mem: String(localized: "Pamięć"); case .disk: String(localized: "Dysk")
+        case .temp: String(localized: "Temperatura"); case .net: String(localized: "Sieć"); case .bat: String(localized: "Bateria")
         }
     }
     var key: String { "overview.show.\(rawValue)" }
@@ -201,7 +201,7 @@ struct OverviewContent: View {
     private var summary: some View {
         HStack(spacing: 6) {
             Pill(text: "Load \(String(format: "%.2f", m.loadAverage.first ?? 0))", color: Heat.load(min((m.loadAverage.first ?? 0) / Double(max(m.coreCount, 1)), 1)))
-            Pill(text: m.memPressure == .normal ? "Pamięć OK" : (m.memPressure == .warning ? "Pamięć ⚠︎" : "Pamięć ‼︎"),
+            Pill(text: m.memPressure == .normal ? String(localized: "Pamięć OK") : (m.memPressure == .warning ? String(localized: "Pamięć ⚠︎") : String(localized: "Pamięć ‼︎")),
                  color: m.memPressure == .normal ? .green : (m.memPressure == .warning ? .orange : .red))
             Pill(text: "↓\(Fmt.rate(m.netIn, compact: true)) ↑\(Fmt.rate(m.netOut, compact: true))", color: .cyan)
             if m.thermalState != .nominal {
@@ -222,11 +222,11 @@ struct OverviewContent: View {
         switch module {
         case .cpu: (m.cpu, Fmt.pct(m.cpu), "CPU")
         case .gpu: (m.gpu ?? 0, m.gpu.map(Fmt.pct) ?? "—", "GPU")
-        case .memory: (m.memFraction, Fmt.pct(m.memFraction), "Pamięć")
-        case .disk: (m.diskFraction, Fmt.pct(m.diskFraction), "Dysk")
-        case .sensors: ((m.socMax ?? 0) / 105, Fmt.temp(m.socMax ?? m.socAvg), "Temp.")
-        case .network: (netLevel, Fmt.rate(m.netIn, compact: true), "Sieć")
-        case .battery: (m.battery.percent, Fmt.pct(m.battery.percent), "Bateria")
+        case .memory: (m.memFraction, Fmt.pct(m.memFraction), String(localized: "Pamięć"))
+        case .disk: (m.diskFraction, Fmt.pct(m.diskFraction), String(localized: "Dysk"))
+        case .sensors: ((m.socMax ?? 0) / 105, Fmt.temp(m.socMax ?? m.socAvg), String(localized: "Temp."))
+        case .network: (netLevel, Fmt.rate(m.netIn, compact: true), String(localized: "Sieć"))
+        case .battery: (m.battery.percent, Fmt.pct(m.battery.percent), String(localized: "Bateria"))
         case .overview: (0, "", "")
         }
     }
@@ -272,12 +272,12 @@ struct OverviewContent: View {
         .glassEffect(isOn ? .regular.tint((colors.last ?? .accentColor).opacity(0.25)).interactive() : .regular.interactive(),
                      in: .rect(cornerRadius: 16, style: .continuous))
         .contextMenu {
-            Button(isPinned ? "Odepnij" : "Przypnij – zawsze otwieraj ten moduł",
+            Button(isPinned ? String(localized: "Odepnij") : String(localized: "Przypnij – zawsze otwieraj ten moduł"),
                    systemImage: isPinned ? "pin.slash" : "pin") {
                 pinned = isPinned ? "" : module.rawValue
             }
         }
-        .help(isPinned ? "Przypięty – Przegląd zawsze otwiera się na tym module" : "Prawy klik: przypnij")
+        .help(isPinned ? String(localized: "Przypięty – Przegląd zawsze otwiera się na tym module") : String(localized: "Prawy klik: przypnij"))
     }
 
     /// Last ~2 minutes for the tile's mini chart.

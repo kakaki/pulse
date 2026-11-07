@@ -389,19 +389,19 @@ enum Sysctl {
 extension ProcessInfo.ThermalState {
     var title: String {
         switch self {
-        case .nominal: "Normalny"
-        case .fair: "Podwyższony"
-        case .serious: "Poważny"
-        case .critical: "Krytyczny"
-        @unknown default: "Nieznany"
+        case .nominal: String(localized: "Normalny")
+        case .fair: String(localized: "Podwyższony")
+        case .serious: String(localized: "Poważny")
+        case .critical: String(localized: "Krytyczny")
+        @unknown default: String(localized: "Nieznany")
         }
     }
     var detail: String {
         switch self {
-        case .nominal: "Pełna wydajność."
-        case .fair: "Mac się nagrzewa – wydajność jeszcze bez zmian."
-        case .serious: "macOS ogranicza wydajność, żeby schłodzić układ."
-        case .critical: "Silne ograniczenie wydajności – Mac jest bardzo gorący."
+        case .nominal: String(localized: "Pełna wydajność.")
+        case .fair: String(localized: "Mac się nagrzewa – wydajność jeszcze bez zmian.")
+        case .serious: String(localized: "macOS ogranicza wydajność, żeby schłodzić układ.")
+        case .critical: String(localized: "Silne ograniczenie wydajności – Mac jest bardzo gorący.")
         @unknown default: ""
         }
     }

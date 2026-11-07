@@ -300,7 +300,7 @@ final class SettingsWindowController {
         if window == nil {
             let host = NSHostingController(rootView: SettingsView().environment(SystemMonitor.shared))
             let window = NSWindow(contentViewController: host)
-            window.title = "Pulse — Ustawienia"
+            window.title = String(localized: "Pulse — Ustawienia")
             window.styleMask = [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView]
             window.toolbarStyle = .unified
             window.setContentSize(NSSize(width: 720, height: 520))

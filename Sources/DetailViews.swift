@@ -16,11 +16,13 @@ struct ModuleDetail: View {
 }
 
 struct InfoRow: View {
-    let title: String
+    let title: Text
     let value: String
+    init(title: LocalizedStringKey, value: String) { self.title = Text(title); self.value = value }
+    @_disfavoredOverload init<S: StringProtocol>(title: S, value: String) { self.title = Text(verbatim: String(title)); self.value = value }
     var body: some View {
         HStack {
-            Text(title).foregroundStyle(.secondary)
+            title.foregroundStyle(.secondary)
             Spacer()
             Text(value).monospacedDigit().fontWeight(.medium)
         }
@@ -37,11 +39,11 @@ struct CPUDetail: View {
     var body: some View {
         VStack(spacing: 10) {
             Card {
-                SectionTitle(text: "Użycie procesora", trailing: "\(m.coreCount) rdzeni")
+                SectionTitle(text: "Użycie procesora", trailing: String(localized: "\(m.coreCount) rdzeni"))
                 HStack {
                     BigValue(value: Fmt.pct(m.cpu))
                     Spacer()
-                    Pill(text: m.cpu < 0.5 ? "Spokojnie" : (m.cpu < 0.8 ? "Pracuje" : "Pełne obciążenie"),
+                    Pill(text: m.cpu < 0.5 ? String(localized: "Spokojnie") : (m.cpu < 0.8 ? String(localized: "Pracuje") : String(localized: "Pełne obciążenie")),
                          color: Heat.load(m.cpu))
                 }
                 HistoryChart(metric: .cpu, live: m.cpuHistory, maxValue: 1, color: colors[1], height: 62)
@@ -107,7 +109,7 @@ struct MemoryDetail: View {
     var body: some View {
         VStack(spacing: 10) {
             Card {
-                SectionTitle(text: "Pamięć użyta", trailing: "z \(Fmt.memory(m.memTotal))")
+                SectionTitle(text: "Pamięć użyta", trailing: String(localized: "z \(Fmt.memory(m.memTotal))"))
                 HStack {
                     BigValue(value: Fmt.memory(m.memUsed))
                     Spacer()
@@ -197,7 +199,7 @@ struct NetworkDetail: View {
             Card {
                 SectionTitle(text: "Aplikacje", trailing: "↓ / ↑")
                 if x.apps.isEmpty {
-                    Text(x.watchers > 0 ? "Mierzę ruch aplikacji…" : "Brak ruchu")
+                    Text(x.watchers > 0 ? String(localized: "Mierzę ruch aplikacji…") : String(localized: "Brak ruchu"))
                         .font(.system(size: 11.5)).foregroundStyle(.secondary)
                 }
                 let top = max(x.apps.first?.total ?? 1, 1)
@@ -226,7 +228,7 @@ struct NetworkDetail: View {
                     BigValue(value: x.ping.map { String(Int($0.rounded())) } ?? "—", unit: "ms")
                     Spacer()
                     if let p = x.ping {
-                        Pill(text: p < 30 ? "Świetnie" : p < 80 ? "Dobrze" : p < 150 ? "Przeciętnie" : "Wolno",
+                        Pill(text: p < 30 ? String(localized: "Świetnie") : p < 80 ? String(localized: "Dobrze") : p < 150 ? String(localized: "Przeciętnie") : String(localized: "Wolno"),
                              color: p < 30 ? .green : p < 80 ? .mint : p < 150 ? .orange : .red)
                     } else {
                         Pill(text: "Mierzę…")
@@ -265,7 +267,7 @@ struct NetworkDetail: View {
                 SectionTitle(text: "Połączenie")
                 VStack(spacing: 7) {
                     InfoRow(title: "Adres publiczny", value: x.publicIP ?? "—")
-                    InfoRow(title: "Adres lokalny", value: m.netAddress ?? "Brak połączenia")
+                    InfoRow(title: "Adres lokalny", value: m.netAddress ?? String(localized: "Brak połączenia"))
                     InfoRow(title: "Interfejs", value: m.netInterface ?? "—")
                     Divider().opacity(0.5)
                     InfoRow(title: "Pobrano (sesja)", value: Fmt.file(Int64(m.netSessionIn)))
@@ -288,7 +290,7 @@ struct SensorsDetail: View {
         let _ = tempUnit
         VStack(spacing: 10) {
             Card {
-                SectionTitle(text: "Temperatura SoC", trailing: "średnio")
+                SectionTitle(text: "Temperatura SoC", trailing: String(localized: "średnio"))
                 if let avg = m.socAvg {
                     HStack {
                         BigValue(value: Fmt.temp(avg))
@@ -326,7 +328,7 @@ struct SensorsDetail: View {
                     ForEach(m.fans) { fan in
                         HStack(spacing: 10) {
                             Image(systemName: "fan.fill").foregroundStyle(.cyan)
-                            Text(m.fans.count > 1 ? "Wentylator \(fan.id + 1)" : "Wentylator").font(.system(size: 12))
+                            Text(m.fans.count > 1 ? String(localized: "Wentylator \(fan.id + 1)") : String(localized: "Wentylator")).font(.system(size: 12))
                             Spacer()
                             LinearMeter(value: fan.fraction, colors: [.cyan.opacity(0.7), .blue], height: 5).frame(width: 70)
                             Text("\(Int(fan.rpm)) obr/min").font(.system(size: 11.5, weight: .semibold)).monospacedDigit()
@@ -334,7 +336,7 @@ struct SensorsDetail: View {
                         }
                     }
                 } else {
-                    InfoRow(title: "Wentylator", value: "Brak – chłodzenie pasywne")
+                    InfoRow(title: "Wentylator", value: String(localized: "Brak – chłodzenie pasywne"))
                 }
                 if let w = m.systemPower {
                     InfoRow(title: "Pobór mocy systemu", value: String(format: "%.1f W", w))
@@ -388,13 +390,13 @@ struct BatteryDetail: View {
                         VStack(alignment: .leading, spacing: 2) {
                             BigValue(value: Fmt.pct(b.percent))
                             if let min = b.minutesRemaining {
-                                Text(b.isCharging ? "Do pełna: \(Fmt.minutes(min))" : "Pozostało: \(Fmt.minutes(min))")
+                                Text(b.isCharging ? String(localized: "Do pełna: \(Fmt.minutes(min))") : String(localized: "Pozostało: \(Fmt.minutes(min))"))
                                     .font(.system(size: 11.5)).foregroundStyle(.secondary)
                             } else if b.fullyCharged {
                                 Text("Naładowana").font(.system(size: 11.5)).foregroundStyle(.secondary)
                             }
                             if let w = b.watts, abs(w) >= 0.1 {
-                                Text(w > 0 ? "Ładowanie \(watts(w))" : "Pobór \(watts(-w))")
+                                Text(w > 0 ? String(localized: "Ładowanie \(watts(w))") : String(localized: "Pobór \(watts(-w))"))
                                     .font(.system(size: 11.5, weight: .medium))
                                     .foregroundStyle(w > 0 ? Module.battery.tint : .orange)
                             }
@@ -425,7 +427,7 @@ struct BatteryDetail: View {
         let health = b.health ?? 0
         let healthColor: Color = health >= 0.8 ? Module.battery.tint : (health >= 0.7 ? .orange : .red)
         return Card {
-            SectionTitle(text: "Kondycja", trailing: b.health == nil ? nil : (health >= 0.8 ? "Normalna" : "Zalecany serwis"))
+            SectionTitle(text: "Kondycja", trailing: b.health == nil ? nil : (health >= 0.8 ? String(localized: "Normalna") : String(localized: "Zalecany serwis")))
             HStack(alignment: .firstTextBaseline) {
                 BigValue(value: b.health.map(Fmt.pct) ?? "—")
                 Text("pojemności fabrycznej").font(.system(size: 11)).foregroundStyle(.secondary)
@@ -438,7 +440,7 @@ struct BatteryDetail: View {
                 }
                 if let cur = b.currentCharge { InfoRow(title: "Obecny ładunek", value: "\(cur) mAh") }
                 if let cycles = b.cycleCount {
-                    InfoRow(title: "Cykle ładowania", value: b.designCycles.map { "\(cycles) z \($0)" } ?? "\(cycles)")
+                    InfoRow(title: "Cykle ładowania", value: b.designCycles.map { String(localized: "\(cycles) z \($0)") } ?? "\(cycles)")
                     if let design = b.designCycles, design > 0 {
                         LinearMeter(value: Double(cycles) / Double(design), colors: [.blue.opacity(0.6), .blue], height: 4)
                     }
@@ -450,9 +452,9 @@ struct BatteryDetail: View {
     }
 
     private func state(_ b: BatteryInfo) -> String {
-        if b.isCharging { return "Ładowanie" }
-        if b.onAC { return b.fullyCharged ? "Naładowana" : "Zasilacz" }
-        return "Na baterii"
+        if b.isCharging { return String(localized: "Ładowanie") }
+        if b.onAC { return b.fullyCharged ? String(localized: "Naładowana") : String(localized: "Zasilacz") }
+        return String(localized: "Na baterii")
     }
 
     private func watts(_ w: Double) -> String { String(format: "%.1f W", w) }
@@ -468,7 +470,7 @@ struct ProcessList: View {
     var body: some View {
         let list = metric == .cpu ? m.topByCPU : m.topByMemory
         Card {
-            SectionTitle(text: metric == .cpu ? "Procesy · CPU" : "Procesy · pamięć")
+            SectionTitle(text: metric == .cpu ? String(localized: "Procesy · CPU") : String(localized: "Procesy · pamięć"))
             if list.isEmpty {
                 Text("Zbieranie danych…").font(.system(size: 11.5)).foregroundStyle(.secondary)
             }

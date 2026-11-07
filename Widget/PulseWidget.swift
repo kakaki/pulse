@@ -40,7 +40,7 @@ private func rate(_ r: Double) -> String {
 struct Ring: View {
     let value: Double
     let text: String
-    let title: String
+    let title: LocalizedStringKey
     let colors: [Color]
     var body: some View {
         VStack(spacing: 4) {

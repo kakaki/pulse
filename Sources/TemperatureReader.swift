@@ -90,12 +90,12 @@ final class TemperatureReader {
     static func prettyName(_ raw: String) -> String {
         let n = raw.lowercased()
         if n.contains("nand") { return raw.replacingOccurrences(of: "NAND", with: "SSD").replacingOccurrences(of: " temp", with: "") }
-        if n.contains("gas gauge") { return "Bateria" }
-        if n.contains("battery") { return "Bateria" }
+        if n.contains("gas gauge") { return String(localized: "Bateria") }
+        if n.contains("battery") { return String(localized: "Bateria") }
         return raw
             .replacingOccurrences(of: "PMU2 tdie", with: "SoC₂ die ")
             .replacingOccurrences(of: "PMU tdie", with: "SoC die ")
-            .replacingOccurrences(of: "PMU2 tdev", with: "Płyta₂ ")
-            .replacingOccurrences(of: "PMU tdev", with: "Płyta ")
+            .replacingOccurrences(of: "PMU2 tdev", with: String(localized: "Płyta") + "₂ ")
+            .replacingOccurrences(of: "PMU tdev", with: String(localized: "Płyta") + " ")
     }
 }
