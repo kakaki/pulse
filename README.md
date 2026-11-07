@@ -14,7 +14,7 @@
   macOS 26 · Apple Silicon · English / Deutsch / Polski
 </p>
 
-<p align="center"><b>English</b> · <a href="README.pl.md">Polski</a></p>
+<p align="center"><b>English</b> · <a href="README.pl.md">Polski</a> · <a href="README.de.md">Deutsch</a></p>
 
 ---
 
@@ -43,22 +43,20 @@
 
 ## Screenshots
 
-| CPU | Memory | Network |
-|:---:|:---:|:---:|
-| <img src="docs/cpu-dark.png" width="260"> | <img src="docs/memory-dark.png" width="260"> | <img src="docs/network-dark.png" width="260"> |
+<table>
+  <tr>
+    <td align="center" valign="top" width="33%"><b>CPU</b><br><img src="docs/en/cpu.png" width="260"></td>
+    <td align="center" valign="top" width="33%"><b>Memory</b><br><img src="docs/en/memory.png" width="260"></td>
+    <td align="center" valign="top" width="33%"><b>Network</b><br><img src="docs/en/network.png" width="260"></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><b>Battery</b><br><img src="docs/en/battery.png" width="260"></td>
+    <td align="center" valign="top" width="33%"><b>Sensors</b><br><img src="docs/en/sensors.png" width="260"></td>
+    <td align="center" valign="top" width="33%"><b>Disk</b><br><img src="docs/en/disk.png" width="260"></td>
+  </tr>
+</table>
 
-| Battery | Sensors | Disk |
-|:---:|:---:|:---:|
-| <img src="docs/battery-dark.png" width="260"> | <img src="docs/sensors-dark.png" width="260"> | <img src="docs/disk-dark.png" width="260"> |
-
-<details>
-<summary>Polish and German</summary>
-
-| Polski | Deutsch |
-|:---:|:---:|
-| <img src="docs/cpu-dark-pl.png" width="260"> | <img src="docs/battery-dark-de.png" width="260"> |
-
-</details>
+<sub>Screenshots use demo data. The app is also available in Polish and German.</sub>
 
 ## Installation
 
@@ -78,6 +76,8 @@ You need Xcode 26 (the command line tools are enough, no Xcode project involved)
 ```
 
 To release a new version, bump `CFBundleShortVersionString` and `CFBundleVersion` in `Info.plist`, run `./release.sh`, then commit and push `updates/`.
+
+README screenshots: `Pulse.app/Contents/MacOS/Pulse --snapshot <dir> --demo -AppleLanguages "(en)"` renders every panel with demo data.
 
 Translations live in `Localization/Localizable.xcstrings`. Polish is the source language. `build.sh` syncs new strings into the catalog on every build.
 

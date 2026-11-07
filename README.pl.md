@@ -14,7 +14,7 @@
   macOS 26 · Apple Silicon · Polski / English / Deutsch
 </p>
 
-<p align="center"><a href="README.md">English</a> · <b>Polski</b></p>
+<p align="center"><a href="README.md">English</a> · <b>Polski</b> · <a href="README.de.md">Deutsch</a></p>
 
 ---
 
@@ -43,13 +43,20 @@
 
 ## Zrzuty ekranu
 
-| CPU | Pamięć | Sieć |
-|:---:|:---:|:---:|
-| <img src="docs/cpu-dark-pl.png" width="260"> | <img src="docs/memory-dark.png" width="260"> | <img src="docs/network-dark.png" width="260"> |
+<table>
+  <tr>
+    <td align="center" valign="top" width="33%"><b>CPU</b><br><img src="docs/pl/cpu.png" width="260"></td>
+    <td align="center" valign="top" width="33%"><b>Pamięć</b><br><img src="docs/pl/memory.png" width="260"></td>
+    <td align="center" valign="top" width="33%"><b>Sieć</b><br><img src="docs/pl/network.png" width="260"></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="33%"><b>Bateria</b><br><img src="docs/pl/battery.png" width="260"></td>
+    <td align="center" valign="top" width="33%"><b>Czujniki</b><br><img src="docs/pl/sensors.png" width="260"></td>
+    <td align="center" valign="top" width="33%"><b>Dysk</b><br><img src="docs/pl/disk.png" width="260"></td>
+  </tr>
+</table>
 
-| Bateria | Czujniki | Dysk |
-|:---:|:---:|:---:|
-| <img src="docs/battery-dark.png" width="260"> | <img src="docs/sensors-dark.png" width="260"> | <img src="docs/disk-dark.png" width="260"> |
+<sub>Zrzuty pokazują dane demonstracyjne.</sub>
 
 ## Instalacja
 

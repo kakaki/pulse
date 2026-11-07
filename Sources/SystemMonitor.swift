@@ -414,3 +414,67 @@ extension ProcessInfo.ThermalState {
         }
     }
 }
+
+// MARK: - Demo data (README screenshots: `Pulse --snapshot <dir> --demo`)
+
+/// Smooth, deterministic pseudo-random series for screenshots.
+func demoSeries(_ n: Int, base: Double, amp: Double, seed: Double) -> [Double] {
+    (0..<n).map { i in
+        let x = Double(i)
+        return max(0, base + amp * (0.6 * sin(x / 5 + seed) + 0.3 * sin(x / 2.1 + seed * 3) + 0.1 * sin(x * 1.7 + seed * 7)))
+    }
+}
+
+/// pid of a running app with the given name (so its real icon shows), or a fake pid.
+@MainActor func demoPID(_ name: String, _ fallback: pid_t) -> pid_t {
+    NSWorkspace.shared.runningApplications.first { $0.localizedName == name }?.processIdentifier ?? fallback
+}
+
+extension SystemMonitor {
+    func applyDemo() {
+        let n = Self.historyLength
+        cpuHistory = demoSeries(n, base: 0.22, amp: 0.12, seed: 1)
+        cpu = cpuHistory.last ?? 0.24; cpuUser = cpu * 0.65; cpuSystem = cpu * 0.35
+        cores = (0..<coreCount).map { i in max(0.03, 0.55 * pow(0.72, Double(i)) + 0.04 * sin(Double(i))) }
+        loadAverage = [2.41, 2.65, 2.83]
+        let gb: UInt64 = 1 << 30
+        memApp = UInt64(6.1 * Double(gb)); memWired = UInt64(2.4 * Double(gb)); memCompressed = UInt64(1.2 * Double(gb))
+        memCached = UInt64(3.8 * Double(gb)); memUsed = memApp + memWired + memCompressed; swapUsed = 0
+        memPressure = .normal
+        memHistory = demoSeries(n, base: Double(memUsed) / Double(memTotal), amp: 0.02, seed: 2)
+        diskName = "Macintosh HD"; diskTotal = 494_380_000_000; diskFree = 301_200_000_000
+        readHistory = demoSeries(n, base: 3_500_000, amp: 3_000_000, seed: 3)
+        writeHistory = demoSeries(n, base: 2_000_000, amp: 1_800_000, seed: 4)
+        readRate = readHistory.last ?? 0; writeRate = writeHistory.last ?? 0
+        gpuHistory = demoSeries(n, base: 0.18, amp: 0.1, seed: 5); gpu = gpuHistory.last
+        netInHistory = demoSeries(n, base: 1_400_000, amp: 1_100_000, seed: 6)
+        netOutHistory = demoSeries(n, base: 120_000, amp: 90_000, seed: 7)
+        netIn = netInHistory.last ?? 0; netOut = netOutHistory.last ?? 0
+        netInterface = "en0"; netAddress = "192.168.1.20"
+        netSessionIn = 1_840_000_000; netSessionOut = 212_000_000
+        tempHistory = demoSeries(n, base: 48, amp: 4, seed: 8)
+        socMax = 49; socAvg = 44; ssdTemp = 38; batteryTemp = 31
+        sensors = (1...6).map { TempSensor(id: "soc\($0)", name: "SoC \($0)", value: 41 + Double($0) * 1.4, kind: .soc) }
+            + [TempSensor(id: "ssd", name: "SSD", value: 38, kind: .ssd),
+               TempSensor(id: "bat", name: String(localized: "Bateria"), value: 31, kind: .battery)]
+        if hasFans { fans = fans.map { FanInfo(id: $0.id, rpm: $0.min + 600, min: $0.min, max: $0.max) } }
+        systemPower = 7.4
+        thermalState = .nominal
+        var b = BatteryInfo()
+        b.present = true; b.percent = 0.82; b.onAC = false; b.isCharging = false
+        b.minutesRemaining = 9 * 60 + 40; b.cycleCount = 87; b.health = 0.98; b.temperature = 31
+        b.watts = -6.8; b.designCapacity = 5760; b.maxCapacity = 5645; b.currentCharge = 4629
+        battery = b
+        batteryHistory = demoSeries(n, base: 0.83, amp: 0.005, seed: 9)
+        let mb: UInt64 = 1 << 20
+        processes = [
+            ProcessStat(id: demoPID("Xcode", 99901), name: "Xcode", cpu: 0.42, memory: 1_480 * mb),
+            ProcessStat(id: demoPID("Safari", 99902), name: "Safari", cpu: 0.18, memory: 920 * mb),
+            ProcessStat(id: demoPID("Music", 99903), name: "Music", cpu: 0.06, memory: 310 * mb),
+            ProcessStat(id: demoPID("Mail", 99904), name: "Mail", cpu: 0.04, memory: 420 * mb),
+            ProcessStat(id: demoPID("Finder", 99905), name: "Finder", cpu: 0.02, memory: 260 * mb),
+            ProcessStat(id: 99906, name: "WindowServer", cpu: 0.15, memory: 640 * mb),
+            ProcessStat(id: 99907, name: "kernel_task", cpu: 0.09, memory: 180 * mb),
+        ]
+    }
+}

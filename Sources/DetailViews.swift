@@ -100,9 +100,9 @@ struct MemoryDetail: View {
 
     private var pressure: (String, Color) {
         switch m.memPressure {
-        case .normal: ("Ciśnienie: niskie", Heat.load(0))
-        case .warning: ("Ciśnienie: średnie", Heat.load(0.6))
-        case .critical: ("Ciśnienie: wysokie", Heat.load(1))
+        case .normal: (String(localized: "Ciśnienie: niskie"), Heat.load(0))
+        case .warning: (String(localized: "Ciśnienie: średnie"), Heat.load(0.6))
+        case .critical: (String(localized: "Ciśnienie: wysokie"), Heat.load(1))
         }
     }
 
@@ -159,7 +159,7 @@ struct DiskDetail: View {
                 HStack(alignment: .firstTextBaseline) {
                     BigValue(value: Fmt.file(m.diskFree), unit: "wolne")
                     Spacer()
-                    Text(Fmt.pct(m.diskFraction) + " zajęte").font(.system(size: 11.5, weight: .medium)).foregroundStyle(.secondary)
+                    Text(String(localized: "\(Fmt.pct(m.diskFraction)) zajęte")).font(.system(size: 11.5, weight: .medium)).foregroundStyle(.secondary)
                 }
                 LinearMeter(value: m.diskFraction, colors: Module.disk.colors, height: 10)
             }
@@ -245,7 +245,7 @@ struct NetworkDetail: View {
                         Image(systemName: "wifi", variableValue: Double(w.bars) / 4)
                             .font(.system(size: 20, weight: .semibold)).foregroundStyle(.blue)
                         VStack(alignment: .leading, spacing: 1) {
-                            Text(w.ssid ?? "Sieć Wi‑Fi").font(.system(size: 13, weight: .semibold))
+                            Text(w.ssid ?? String(localized: "Sieć Wi‑Fi")).font(.system(size: 13, weight: .semibold))
                             Text("Sygnał: \(w.quality)").font(.system(size: 10.5)).foregroundStyle(.secondary)
                         }
                         Spacer()

@@ -86,7 +86,8 @@ final class Alerts: NSObject, UNUserNotificationCenterDelegate {
         if m.battery.present {
             let low = !m.battery.onAC && m.battery.percent <= Kind.battery.limit
             check(.battery, firing: low, clear: m.battery.onAC || m.battery.percent > Kind.battery.limit + 0.05,
-                  body: "Bateria: \(Fmt.pct(m.battery.percent))" + (m.battery.minutesRemaining.map { ", zostało ok. \(Fmt.minutes($0))." } ?? "."))
+                  body: m.battery.minutesRemaining.map { String(localized: "Bateria: \(Fmt.pct(m.battery.percent)), zostało ok. \(Fmt.minutes($0)).") }
+                      ?? String(localized: "Bateria: \(Fmt.pct(m.battery.percent))."))
         }
         // Disk
         if m.diskTotal > 0 {

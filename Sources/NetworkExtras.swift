@@ -188,3 +188,19 @@ final class OSAllocatedUnfairLockBox: @unchecked Sendable {
     private var claimed = false
     func claim() -> Bool { lock.lock(); defer { lock.unlock() }; if claimed { return false }; claimed = true; return true }
 }
+
+extension NetworkExtras {
+    /// Fake values for README screenshots (`--demo`).
+    func applyDemo() {
+        apps = [
+            AppTraffic(id: demoPID("Safari", 99902), name: "Safari", inRate: 980_000, outRate: 42_000),
+            AppTraffic(id: demoPID("Music", 99903), name: "Music", inRate: 320_000, outRate: 6_000),
+            AppTraffic(id: demoPID("Mail", 99904), name: "Mail", inRate: 54_000, outRate: 31_000),
+            AppTraffic(id: 99908, name: "softwareupdated", inRate: 41_000, outRate: 2_000),
+        ]
+        publicIP = "203.0.113.42"
+        wifi = nil
+        pingHistory = demoSeries(40, base: 14, amp: 4, seed: 10)
+        ping = pingHistory.last
+    }
+}

@@ -123,11 +123,13 @@ enum Fmt {
     static func pct(_ v: Double) -> String { "\(Int((v * 100).rounded()))%" }
 
     static func memory(_ bytes: UInt64) -> String {
-        ByteCountFormatter.string(fromByteCount: Int64(bytes), countStyle: .memory)
+        let f = ByteCountFormatter(); f.countStyle = .memory; f.allowsNonnumericFormatting = false
+        return f.string(fromByteCount: Int64(bytes))
     }
 
     static func file(_ bytes: Int64) -> String {
-        ByteCountFormatter.string(fromByteCount: bytes, countStyle: .file)
+        let f = ByteCountFormatter(); f.countStyle = .file; f.allowsNonnumericFormatting = false
+        return f.string(fromByteCount: bytes)
     }
 
     static func rate(_ r: Double, compact: Bool = false) -> String {

@@ -158,13 +158,30 @@ struct DiskUsageCard: View {
             }
             .font(.system(size: 11.5, weight: .medium)).monospacedDigit()
             .frame(width: 78, alignment: .trailing)
-            Button {
-                NSWorkspace.shared.activateFileViewerSelecting([e.url])
-            } label: {
-                Image(systemName: "magnifyingglass")
+            if CommandLine.arguments.contains("--snapshot") {
+                // ImageRenderer can't draw AppKit-backed buttons.
+                Image(systemName: "magnifyingglass").foregroundStyle(.secondary)
+            } else {
+                Button {
+                    NSWorkspace.shared.activateFileViewerSelecting([e.url])
+                } label: {
+                    Image(systemName: "magnifyingglass")
+                }
+                .buttonStyle(.borderless)
+                .help("Pokaż w Finderze")
             }
-            .buttonStyle(.borderless)
-            .help("Pokaż w Finderze")
         }
+    }
+}
+
+extension DiskUsage {
+    /// Fake folder sizes for README screenshots (`--demo`).
+    func applyDemo() {
+        let gb: Int64 = 1_000_000_000
+        let sizes: [String: Int64] = ["apps": 38 * gb, "downloads": 12 * gb, "documents": 21 * gb, "desktop": 3 * gb,
+                                      "movies": 46 * gb, "music": 9 * gb, "pictures": 27 * gb, "caches": 6 * gb,
+                                      "developer": 18 * gb, "trash": 1 * gb]
+        entries = Self.folders().map { e in var e = e; e.size = sizes[e.id] ?? gb; return e }.sorted { ($0.size ?? 0) > ($1.size ?? 0) }
+        lastScan = Date()
     }
 }

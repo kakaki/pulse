@@ -18,6 +18,9 @@ enum Snapshot {
                 try? await Task.sleep(for: .milliseconds(700))
                 monitor.refresh()
             }
+            if args.contains("--demo") {
+                monitor.applyDemo(); NetworkExtras.shared.applyDemo(); DiskUsage.shared.applyDemo()
+            }
             for s in monitor.sensors { print("sensor:", s.id, s.kind, String(format: "%.1f", s.value)) }
             print("gpu:", monitor.gpu ?? -1, "battery:", monitor.battery)
             let csv = monitor.history.csv().split(separator: "\n")
@@ -69,11 +72,26 @@ enum Snapshot {
         }
     }
 
+    /// Cuts fully transparent rows off the top and bottom (shadows/overflow leave empty bands).
+    private static func trimmed(_ image: CGImage) -> CGImage {
+        let w = image.width, h = image.height
+        guard let ctx = CGContext(data: nil, width: w, height: h, bitsPerComponent: 8, bytesPerRow: w * 4,
+                                  space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue),
+              let data = { ctx.draw(image, in: CGRect(x: 0, y: 0, width: w, height: h)); return ctx.data }() else { return image }
+        let px = data.bindMemory(to: UInt8.self, capacity: w * h * 4)
+        func opaque(_ row: Int) -> Bool { px[(row * w + w / 2) * 4 + 3] > 0 }   // row 0 = top in memory
+        var top = 0, bottom = h - 1
+        while top < bottom, !opaque(top) { top += 1 }
+        while bottom > top, !opaque(bottom) { bottom -= 1 }
+        return image.cropping(to: CGRect(x: 0, y: top, width: w, height: bottom - top + 1)) ?? image
+    }
+
     private static func save(_ view: some View, _ url: URL) {
         let renderer = ImageRenderer(content: view)
         renderer.scale = 2
-        guard let image = renderer.nsImage, let tiff = image.tiffRepresentation,
-              let png = NSBitmapImageRep(data: tiff)?.representation(using: .png, properties: [:]) else { return }
+        guard let cg = renderer.cgImage else { return }
+        let rep = NSBitmapImageRep(cgImage: trimmed(cg))
+        guard let png = rep.representation(using: .png, properties: [:]) else { return }
         try? png.write(to: url)
     }
 }

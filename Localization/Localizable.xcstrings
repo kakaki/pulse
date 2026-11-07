@@ -17,6 +17,22 @@
         }
       }
     },
+    "%@ zajęte": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ belegt"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ used"
+          }
+        }
+      }
+    },
     "%@ · %@ RAM": {
       "localizations": {
         "de": {
@@ -350,6 +366,44 @@
         }
       }
     },
+    "Bateria: %@, zostało ok. %@.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Batterie: %1$@, noch ca. %2$@."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Battery: %1$@, about %2$@ left."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Bateria: %1$@, zostało ok. %2$@."
+          }
+        }
+      }
+    },
+    "Bateria: %@.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Batterie: %@."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Battery: %@."
+          }
+        }
+      }
+    },
     "Bezczynny": {
       "localizations": {
         "de": {
@@ -570,6 +624,54 @@
           "stringUnit": {
             "state": "translated",
             "value": "Memory pressure is critical. Quit apps you are not using."
+          }
+        }
+      }
+    },
+    "Ciśnienie: niskie": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Druck: niedrig"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pressure: low"
+          }
+        }
+      }
+    },
+    "Ciśnienie: wysokie": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Druck: hoch"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pressure: high"
+          }
+        }
+      }
+    },
+    "Ciśnienie: średnie": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Druck: mittel"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pressure: medium"
           }
         }
       }
@@ -2972,6 +3074,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Network"
+          }
+        }
+      }
+    },
+    "Sieć Wi‑Fi": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WLAN-Netzwerk"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wi‑Fi network"
           }
         }
       }
