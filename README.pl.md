@@ -35,9 +35,11 @@
   - **Czujniki:** temperatury SoC, SSD i baterii, wentylatory, stan termiczny
   - **Bateria:** wykres naładowania, kondycja, cykle, pobór mocy, moc zasilacza
 - **Historia z 2 min, 1 h, 24 h, 7 dni i 30 dni**, z eksportem do CSV.
+- **Przydatne akcje:** zwalnianie pamięci (`purge`, pyta o hasło administratora), kończenie procesów prawym klikiem, kopiowanie adresu IP kliknięciem.
 - **Powiadomienia** o długotrwałym obciążeniu CPU, wysokiej temperaturze, spowolnieniu termicznym, braku pamięci, małej ilości miejsca na dysku i niskim poziomie baterii.
 - **Wartości krytyczne pulsują** w pasku menu, a przy wysokim obciążeniu wartości zmieniają kolor.
 - **Nie przeszkadza:** chowa się na pełnym ekranie i przy dublowaniu ekranu, a na baterii i w trybie niskiego zużycia energii odświeża dane rzadziej.
+- **Mieści się przy notchu:** gdy macOS chowa Pulse z braku miejsca, Pulse ukrywa etykiety i przechodzi na najwęższy styl.
 - **Widżet na biurko** i uruchamianie przy logowaniu.
 - **Automatyczne aktualizacje** przez Sparkle. Każda wersja jest podpisana i notaryzowana przez Apple.
 

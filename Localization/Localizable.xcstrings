@@ -109,6 +109,22 @@
         }
       }
     },
+    "(licencja MIT)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "(MIT-Lizenz)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "(MIT license)"
+          }
+        }
+      }
+    },
     "0": {},
     "1 s": {
       "localizations": {
@@ -270,6 +286,22 @@
         }
       }
     },
+    "Aktualizacje:": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Updates:"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Updates:"
+          }
+        }
+      }
+    },
     "Aktywność": {
       "localizations": {
         "de": {
@@ -298,6 +330,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Analyze"
+          }
+        }
+      }
+    },
+    "Anuluj": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abbrechen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
           }
         }
       }
@@ -692,6 +740,22 @@
         }
       }
     },
+    "Co nowego": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neuigkeiten"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What’s new"
+          }
+        }
+      }
+    },
     "Co zajmuje miejsce": {
       "localizations": {
         "de": {
@@ -784,6 +848,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sensors"
+          }
+        }
+      }
+    },
+    "Czyści pamięć podręczną plików i nieaktywne strony (polecenie purge). macOS zapyta o hasło administratora. Pomaga głównie przy wysokim ciśnieniu pamięci – zwykle system radzi sobie sam.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leert den Dateicache und inaktive Seiten (Befehl purge). macOS fragt nach einem Administratorpasswort. Hilft vor allem bei hohem Speicherdruck – meist kommt das System allein zurecht."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clears the file cache and inactive pages (the purge command). macOS will ask for an administrator password. Mostly helps under high memory pressure – usually the system copes on its own."
           }
         }
       }
@@ -1092,6 +1172,22 @@
         }
       }
     },
+    "Gdy macOS chowa Pulse za wycięciem ekranu lub długim menu aplikacji, Pulse ukrywa etykiety i przechodzi na najwęższy styl.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wenn macOS Pulse hinter der Kamera-Aussparung oder einem langen App-Menü versteckt, blendet Pulse Beschriftungen aus und wechselt zum schmalsten Stil."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "When macOS hides Pulse behind the notch or a long app menu, Pulse drops labels and switches to the narrowest style."
+          }
+        }
+      }
+    },
     "Gdy macOS zacznie ograniczać wydajność z powodu temperatury (stan „poważny” lub „krytyczny”).": {
       "localizations": {
         "de": {
@@ -1300,6 +1396,22 @@
         }
       }
     },
+    "Kliknij, aby skopiować": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Klicken zum Kopieren"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Click to copy"
+          }
+        }
+      }
+    },
     "Kolor akcentu": {
       "localizations": {
         "de": {
@@ -1392,6 +1504,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Critical"
+          }
+        }
+      }
+    },
+    "Lekki monitor systemu w pasku menu macOS.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ein schlanker Systemmonitor für die macOS-Menüleiste."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A lightweight system monitor for the macOS menu bar."
           }
         }
       }
@@ -1632,6 +1760,38 @@
         }
       }
     },
+    "Nie było czego zwolnić.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Es gab nichts freizugeben."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "There was nothing to free."
+          }
+        }
+      }
+    },
+    "Nie można zakończyć „%@”": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "„%@“ kann nicht beendet werden"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Can’t quit “%@”"
+          }
+        }
+      }
+    },
     "Nie udało się odczytać czujników temperatury.": {
       "localizations": {
         "de": {
@@ -1648,6 +1808,22 @@
         }
       }
     },
+    "Nie udało się: %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fehlgeschlagen: %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Failed: %@"
+          }
+        }
+      }
+    },
     "Niebieski": {
       "localizations": {
         "de": {
@@ -1660,6 +1836,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Blue"
+          }
+        }
+      }
+    },
+    "Niezapisane zmiany w tej aplikacji zostaną utracone.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nicht gesicherte Änderungen in dieser App gehen verloren."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unsaved changes in this app will be lost."
           }
         }
       }
@@ -1740,6 +1932,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "E.g. when a projector or TV is connected in mirroring mode (AirPlay)."
+          }
+        }
+      }
+    },
+    "O programie": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Über"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About"
           }
         }
       }
@@ -2364,6 +2572,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Show in Finder"
+          }
+        }
+      }
+    },
+    "Pokaż w Monitorze aktywności": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In Aktivitätsanzeige zeigen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show in Activity Monitor"
           }
         }
       }
@@ -3174,6 +3398,22 @@
         }
       }
     },
+    "Skopiowano": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kopiert"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copied"
+          }
+        }
+      }
+    },
     "SoC ma %@ (próg %@).": {
       "localizations": {
         "de": {
@@ -3212,6 +3452,7 @@
         }
       }
     },
+    "Sparkle": {},
     "Spokojnie": {
       "localizations": {
         "de": {
@@ -3256,6 +3497,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Check for updates automatically"
+          }
+        }
+      }
+    },
+    "Sprawdź aktualizacje…": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nach Updates suchen …"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check for Updates…"
           }
         }
       }
@@ -3320,6 +3577,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "GPU statistics are not available on this Mac."
+          }
+        }
+      }
+    },
+    "Strona projektu": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Projektseite"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Project website"
           }
         }
       }
@@ -3596,6 +3869,22 @@
         }
       }
     },
+    "To proces systemowy lub innego użytkownika. Użyj Monitora aktywności.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Es ist ein Systemprozess oder gehört einem anderen Benutzer. Verwende die Aktivitätsanzeige."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It’s a system process or belongs to another user. Use Activity Monitor."
+          }
+        }
+      }
+    },
     "To samo powiadomienie nie pojawi się częściej niż co 30 minut ani ponownie, zanim wartość nie wróci do normy.": {
       "localizations": {
         "de": {
@@ -3852,6 +4141,28 @@
         }
       }
     },
+    "Wersja %@ (%@)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Version %1$@ (%2$@)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Version %1$@ (%2$@)"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Wersja %1$@ (%2$@)"
+          }
+        }
+      }
+    },
     "Wi‑Fi": {
       "localizations": {
         "de": {
@@ -4012,6 +4323,54 @@
         }
       }
     },
+    "Wymusić zakończenie „%@”?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "„%@“ sofort beenden?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Force quit “%@”?"
+          }
+        }
+      }
+    },
+    "Wymuś zakończenie": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sofort beenden"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Force Quit"
+          }
+        }
+      }
+    },
+    "Wymuś zakończenie…": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sofort beenden …"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Force Quit…"
+          }
+        }
+      }
+    },
     "Wysoka temperatura": {
       "localizations": {
         "de": {
@@ -4088,6 +4447,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Send test"
+          }
+        }
+      }
+    },
+    "Zakończ": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beenden"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quit"
           }
         }
       }
@@ -4220,6 +4595,22 @@
         }
       }
     },
+    "Zgłoś problem": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Problem melden"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Report an issue"
+          }
+        }
+      }
+    },
     "Zielony": {
       "localizations": {
         "de": {
@@ -4236,6 +4627,22 @@
         }
       }
     },
+    "Zmniejszaj, gdy brakuje miejsca": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verkleinern bei Platzmangel"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shrink when space runs out"
+          }
+        }
+      }
+    },
     "Związana": {
       "localizations": {
         "de": {
@@ -4248,6 +4655,54 @@
           "stringUnit": {
             "state": "translated",
             "value": "Wired"
+          }
+        }
+      }
+    },
+    "Zwolnij": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Freigeben"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Free up"
+          }
+        }
+      }
+    },
+    "Zwolnij pamięć": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speicher freigeben"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Free up memory"
+          }
+        }
+      }
+    },
+    "Zwolniono %@.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ freigegeben."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Freed %@."
           }
         }
       }
@@ -4380,6 +4835,22 @@
         }
       }
     },
+    "prawy klik: opcje": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechtsklick: Optionen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "right-click: options"
+          }
+        }
+      }
+    },
     "s": {},
     "t": {},
     "v": {},
@@ -4411,6 +4882,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "of %@"
+          }
+        }
+      }
+    },
+    "© 2026 Krzysztof Pliszka": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "© 2026 Krzysztof Pliszka"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "© 2026 Krzysztof Pliszka"
           }
         }
       }

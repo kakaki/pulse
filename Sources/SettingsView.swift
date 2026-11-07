@@ -2,7 +2,7 @@ import SwiftUI
 import ServiceManagement
 
 struct SettingsView: View {
-    enum Page: Hashable { case general, alerts, module(Module) }
+    enum Page: Hashable { case general, alerts, module(Module), about }
     @State private var page: Page? = .general
 
     var body: some View {
@@ -19,6 +19,10 @@ struct SettingsView: View {
                         ModuleSidebarRow(module: module).tag(Page.module(module))
                     }
                 }
+                Section {
+                    SidebarRow(title: String(localized: "O programie"), symbol: "info.circle.fill", colors: [.blue, .purple], enabled: nil)
+                        .tag(Page.about)
+                }
             }
             .navigationSplitViewColumnWidth(200)
         } detail: {
@@ -26,6 +30,7 @@ struct SettingsView: View {
             case .general: GeneralSettings()
             case .alerts: AlertSettings()
             case .module(let module): ModuleSettings(module: module).id(module)
+            case .about: AboutView()
             }
         }
         .frame(minWidth: 700, minHeight: 500)
@@ -188,6 +193,7 @@ struct GeneralSettings: View {
     @AppStorage("pulseAlerts") private var pulseAlerts = true
     @AppStorage("hide.fullscreen") private var hideFullscreen = false
     @AppStorage("hide.mirroring") private var hideMirroring = false
+    @AppStorage("autoCompact") private var autoCompact = true
     @State private var launchAtLogin = SMAppService.mainApp.status == .enabled
     @State private var loginError: String?
 
@@ -202,6 +208,10 @@ struct GeneralSettings: View {
                 Toggle(isOn: $pulseAlerts) {
                     Text("Pulsuj wartościami krytycznymi")
                     Text("Wartość powyżej progu krytycznego (np. CPU ≥ 90%, temperatura ≥ ok. 90°C, krytyczne ciśnienie pamięci) miga w pasku menu.")
+                }
+                Toggle(isOn: $autoCompact) {
+                    Text("Zmniejszaj, gdy brakuje miejsca")
+                    Text("Gdy macOS chowa Pulse za wycięciem ekranu lub długim menu aplikacji, Pulse ukrywa etykiety i przechodzi na najwęższy styl.")
                 }
                 Text("Kliknij ikonę z wciśniętym ⌘ i przeciągnij, aby zmienić kolejność elementów w pasku menu.")
                     .font(.callout).foregroundStyle(.secondary)

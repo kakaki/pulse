@@ -18,13 +18,18 @@ struct ModuleDetail: View {
 struct InfoRow: View {
     let title: Text
     let value: String
-    init(title: LocalizedStringKey, value: String) { self.title = Text(title); self.value = value }
+    var copyable = false
+    init(title: LocalizedStringKey, value: String, copyable: Bool = false) { self.title = Text(title); self.value = value; self.copyable = copyable }
     @_disfavoredOverload init<S: StringProtocol>(title: S, value: String) { self.title = Text(verbatim: String(title)); self.value = value }
     var body: some View {
         HStack {
             title.foregroundStyle(.secondary)
             Spacer()
-            Text(value).monospacedDigit().fontWeight(.medium)
+            if copyable {
+                CopyableValue(value: value)
+            } else {
+                Text(value).monospacedDigit().fontWeight(.medium)
+            }
         }
         .font(.system(size: 12))
     }
@@ -140,6 +145,7 @@ struct MemoryDetail: View {
                     MiniStat(title: "Swap", value: Fmt.memory(m.swapUsed), color: compColor, symbol: "arrow.left.arrow.right")
                 }
             }
+            MemoryPurgeCard()
             ProcessList(metric: .memory)
         }
     }
@@ -219,6 +225,8 @@ struct NetworkDetail: View {
                             .font(.system(size: 10.5, weight: .medium)).monospacedDigit()
                             .frame(width: 84, alignment: .trailing)
                         }
+                        .contentShape(Rectangle())
+                        .processMenu(pid: app.id, name: app.name)
                     }
                 }
             }
@@ -266,9 +274,9 @@ struct NetworkDetail: View {
             Card {
                 SectionTitle(text: "Połączenie")
                 VStack(spacing: 7) {
-                    InfoRow(title: "Adres publiczny", value: x.publicIP ?? "—")
-                    InfoRow(title: "Adres lokalny", value: m.netAddress ?? String(localized: "Brak połączenia"))
-                    InfoRow(title: "Interfejs", value: m.netInterface ?? "—")
+                    InfoRow(title: "Adres publiczny", value: x.publicIP ?? "—", copyable: x.publicIP != nil)
+                    InfoRow(title: "Adres lokalny", value: m.netAddress ?? String(localized: "Brak połączenia"), copyable: m.netAddress != nil)
+                    InfoRow(title: "Interfejs", value: m.netInterface ?? "—", copyable: m.netInterface != nil)
                     Divider().opacity(0.5)
                     InfoRow(title: "Pobrano (sesja)", value: Fmt.file(Int64(m.netSessionIn)))
                     InfoRow(title: "Wysłano (sesja)", value: Fmt.file(Int64(m.netSessionOut)))
@@ -470,7 +478,7 @@ struct ProcessList: View {
     var body: some View {
         let list = metric == .cpu ? m.topByCPU : m.topByMemory
         Card {
-            SectionTitle(text: metric == .cpu ? String(localized: "Procesy · CPU") : String(localized: "Procesy · pamięć"))
+            SectionTitle(text: metric == .cpu ? String(localized: "Procesy · CPU") : String(localized: "Procesy · pamięć"), trailing: String(localized: "prawy klik: opcje"))
             if list.isEmpty {
                 Text("Zbieranie danych…").font(.system(size: 11.5)).foregroundStyle(.secondary)
             }
@@ -484,6 +492,8 @@ struct ProcessList: View {
                             .font(.system(size: 11.5, weight: .medium)).monospacedDigit()
                             .foregroundStyle(.secondary)
                     }
+                    .contentShape(Rectangle())
+                    .processMenu(pid: p.id, name: p.name)
                 }
             }
         }

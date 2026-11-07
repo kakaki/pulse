@@ -70,6 +70,15 @@ final class StatusBarController: NSObject, NSPopoverDelegate {
     private var lastSignature = ""
     /// True while a full-screen app is in front or the display is mirrored (Settings → Ogólne).
     private var hiddenForPresentation = false
+    /// How much each item is squeezed because macOS hid it for lack of menu bar space (0 = as configured).
+    /// Remembered per frontmost app, since app menus take different amounts of space.
+    private var compactByApp: [String: [Module: Int]] = [:]
+    private var compactLevel: [Module: Int] {
+        get { compactByApp[Self.frontmostKey] ?? [:] }
+        set { compactByApp[Self.frontmostKey] = newValue }
+    }
+    private static var frontmostKey: String { NSWorkspace.shared.frontmostApplication?.bundleIdentifier ?? "-" }
+    private static let maxCompactLevel = 2
 
     init(monitor: SystemMonitor) {
         self.monitor = monitor
@@ -88,10 +97,78 @@ final class StatusBarController: NSObject, NSPopoverDelegate {
         }
         NotificationCenter.default.addObserver(
             self, selector: #selector(updatePresentation), name: NSApplication.didChangeScreenParametersNotification, object: nil)
+        NotificationCenter.default.addObserver(
+            self, selector: #selector(occlusionChanged(_:)), name: NSWindow.didChangeOcclusionStateNotification, object: nil)
+    }
+
+    // MARK: Squeezing when the menu bar is full
+
+    /// macOS hides status items that don't fit (notch, long app menus): their window loses `.visible`.
+    /// Items hidden from the start get no notification, so this also runs after creation and app switches.
+    @objc private func occlusionChanged(_ note: Notification) {
+        guard let window = note.object as? NSWindow, items.values.contains(where: { $0.button?.window === window }) else { return }
+        scheduleCompactCheck()
+    }
+
+    private var compactCheckPending = false
+    private func scheduleCompactCheck(after delay: Double = 0.4) {
+        guard !compactCheckPending else { return }
+        compactCheckPending = true
+        // Let the menu bar settle (space switches, full screen transitions, re-layout after a resize).
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+            guard let self else { return }
+            self.compactCheckPending = false
+            self.checkCompaction()
+        }
+    }
+
+    private func checkCompaction() {
+        guard UserDefaults.standard.object(forKey: "autoCompact") as? Bool ?? true,
+              !hiddenForPresentation, !Self.frontmostIsFullScreen() else { return }
+        var changed = false
+        for (module, item) in items {
+            guard let window = item.button?.window, !window.occlusionState.contains(.visible),
+                  NSScreen.screens.contains(where: { $0.frame.intersects(window.frame) }) else { continue }
+            let level = compactLevel[module] ?? 0
+            guard level < Self.maxCompactLevel else { continue }
+            compactLevel[module] = level + 1
+            changed = true
+        }
+        if changed {
+            renderImages()
+            scheduleCompactCheck()   // still hidden? squeeze one more step
+        }
+    }
+
+    /// Give every item its full size again (settings or screens changed); occlusion squeezes them back if needed.
+    private func resetCompact() {
+        guard !compactByApp.isEmpty else { return }
+        compactByApp = [:]
+        renderImages()
+    }
+
+    /// Mode, label setting and snapshot for an item at its current squeeze level.
+    private func compacted(_ module: Module, _ snapshot: StatusSnapshot, labels: Bool) -> (StatusSnapshot, DisplayMode, Bool) {
+        let level = compactLevel[module] ?? 0
+        var snap = snapshot, mode = module.currentMode, labels = labels
+        if level >= 1 {
+            labels = false
+            for i in snap.cells.indices { snap.cells[i].showLabel = false }
+        }
+        if level >= 2 {
+            for i in snap.cells.indices { snap.cells[i].mode = nil }
+            mode = module.modes.min { a, b in
+                StatusRenderer.image(module: module, mode: a, snapshot: snap, labels: false).size.width
+                    < StatusRenderer.image(module: module, mode: b, snapshot: snap, labels: false).size.width
+            } ?? mode
+        }
+        return (snap, mode, labels)
     }
 
     /// Hide the menu bar items while a full-screen app is frontmost or the main display is mirrored.
-    @objc private func updatePresentation() {
+    @objc private func updatePresentation(_ note: Notification? = nil) {
+        if note == nil || note?.name == NSApplication.didChangeScreenParametersNotification { resetCompact() } else { renderImages() }
+        scheduleCompactCheck(after: 0.8)
         // Space switches settle a moment after the notification.
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { [weak self] in
             guard let self else { return }
@@ -125,7 +202,7 @@ final class StatusBarController: NSObject, NSPopoverDelegate {
         return Module.allCases.map { "\($0.rawValue):\($0.isEnabled):\($0.currentMode.rawValue)" }.joined(separator: ",")
             + "|\(d.bool(forKey: "showLabels"))|\(d.bool(forKey: "colorize"))|\(d.integer(forKey: "tempUnit"))"
             + "|" + OverviewItem.ordered.map { "\($0.rawValue)\($0.isOn ? 1 : 0)\($0.style?.rawValue ?? "")\($0.showsLabel ? 1 : 0)" }.joined(separator: ".")
-            + "|\(d.bool(forKey: "hide.fullscreen"))\(d.bool(forKey: "hide.mirroring"))"
+            + "|\(d.bool(forKey: "hide.fullscreen"))\(d.bool(forKey: "hide.mirroring"))\(d.object(forKey: "autoCompact") as? Bool ?? true)"
             + "|\(d.object(forKey: "pulseAlerts") as? Bool ?? true)|\(d.bool(forKey: "overview.separators"))|\(d.object(forKey: "overview.net.split") as? Bool ?? true)"
     }
 
@@ -138,6 +215,7 @@ final class StatusBarController: NSObject, NSPopoverDelegate {
 
     private func syncItems() {
         lastSignature = signature()
+        defer { scheduleCompactCheck(after: 1.0) }
         // New status items appear to the left of existing ones, so create them right-to-left.
         for module in Module.allCases.reversed() {
             if module.isEnabled, items[module] == nil {
@@ -182,8 +260,9 @@ final class StatusBarController: NSObject, NSPopoverDelegate {
             if module == .overview, popovers[module]?.isShown == true { snapshot.highlight = dropdownStates[module]?.selected }
             if snapshot.pulseLevel >= 0.9 { anyCritical = true }
             snapshot.dimCritical = pulse && pulsePhase
-            let image = StatusRenderer.image(module: module, mode: module.currentMode,
-                                             snapshot: snapshot, labels: labels,
+            let (snap, mode, showLabels) = compacted(module, snapshot, labels: labels)
+            let image = StatusRenderer.image(module: module, mode: mode,
+                                             snapshot: snap, labels: showLabels,
                                              colorize: colorize, darkBar: dark)
             item.button?.image = image
             // Tighter than the default padding: on notched MacBooks every point of menu bar space counts.
@@ -223,7 +302,9 @@ final class StatusBarController: NSObject, NSPopoverDelegate {
         if module == .overview, let image = sender.image, let location {
             let point = sender.convert(location, from: nil)
             let x = point.x - (sender.bounds.width - image.size.width) / 2
-            target = StatusRenderer.overviewCell(at: x, snapshot: .make(.overview, monitor), mode: module.currentMode)
+            let labels = UserDefaults.standard.bool(forKey: "showLabels")
+            let (snap, mode, _) = compacted(.overview, .make(.overview, monitor), labels: labels)
+            target = StatusRenderer.overviewCell(at: x, snapshot: snap, mode: mode)
         }
 
         if let open = popovers[module], open.isShown {

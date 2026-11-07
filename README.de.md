@@ -35,9 +35,11 @@
   - **Sensoren:** Temperaturen von SoC, SSD und Batterie, Lüfter, thermischer Zustand
   - **Batterie:** Ladeverlauf, Zustand, Ladezyklen, Leistungsaufnahme, Netzteilleistung
 - **Verlauf über 2 Min., 1 h, 24 h, 7 Tage und 30 Tage**, mit CSV-Export.
+- **Praktische Aktionen:** Speicher freigeben (`purge`, fragt nach dem Administratorpasswort), Prozesse per Rechtsklick beenden, IP-Adresse per Klick kopieren.
 - **Mitteilungen** bei anhaltender CPU-Last, hoher Temperatur, thermischer Drosselung, Speicherdruck, wenig Speicherplatz und niedrigem Akkustand.
 - **Kritische Werte blinken** in der Menüleiste, und bei hoher Last werden Werte eingefärbt.
 - **Stört nicht:** blendet sich im Vollbild und bei Bildschirmspiegelung aus und aktualisiert im Batteriebetrieb und im Stromsparmodus seltener.
+- **Passt neben die Kamera-Aussparung:** Wenn macOS Pulse aus Platzmangel ausblendet, entfallen Beschriftungen und der schmalste Stil wird gewählt.
 - **Widget** für den Schreibtisch und Start beim Anmelden.
 - **Automatische Updates** über Sparkle. Jede Version ist von Apple signiert und notarisiert.
 
