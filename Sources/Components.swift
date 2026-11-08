@@ -153,6 +153,13 @@ struct Sparkline: View {
     var secondary: [Double]? = nil
     var secondaryColor: Color = .orange
     var length: Int = SystemMonitor.historyLength
+    /// Formats the value shown while hovering; without it the chart has no hover readout.
+    var format: ((Double) -> String)? = nil
+    /// Optional time caption for the hovered point; the argument is the number of points back from the newest.
+    var timeLabel: ((Int) -> String)? = nil
+
+    @State private var hoverX: Int?
+    @State private var readoutWidth: CGFloat = 0
 
     private struct Point: Identifiable { let id: String; let series: String; let x: Int; let y: Double }
 
@@ -192,7 +199,74 @@ struct Sparkline: View {
             }
         }
         .chartLegend(.hidden)
+        .chartOverlay { proxy in
+            if format != nil { hoverLayer(proxy) }
+        }
         .animation(.smooth(duration: 0.4), value: values)
+    }
+
+    /// Value of a series at chart position `x`; nil where the series has no sample.
+    private func sample(_ series: [Double]?, at x: Int) -> Double? {
+        guard let series else { return nil }
+        let i = x - (length - series.count)
+        return series.indices.contains(i) && series[i].isFinite ? series[i] : nil
+    }
+
+    private func hoverLayer(_ proxy: ChartProxy) -> some View {
+        GeometryReader { geo in
+            if let anchor = proxy.plotFrame {
+                let plot = geo[anchor]
+                Color.clear
+                    .contentShape(.rect)
+                    .onContinuousHover { phase in
+                        switch phase {
+                        case .active(let p):
+                            let x = proxy.value(atX: p.x - plot.minX, as: Double.self) ?? 0
+                            hoverX = min(max(Int(x.rounded()), 0), max(length - 1, 0))
+                        case .ended:
+                            hoverX = nil
+                        }
+                    }
+                if let x = hoverX, let format, let px = proxy.position(forX: x) {
+                    let a = sample(values, at: x), b = sample(secondary, at: x)
+                    if a != nil || b != nil {
+                        let lineX = plot.minX + px
+                        Rectangle()
+                            .fill(.primary.opacity(0.35))
+                            .frame(width: 1, height: plot.height)
+                            .position(x: lineX, y: plot.midY)
+                            .allowsHitTesting(false)
+                        readout(a.map(format), b.map(format), time: timeLabel?(length - 1 - x))
+                            .fixedSize()
+                            .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { readoutWidth = $0 }
+                            .position(x: min(max(lineX, plot.minX + readoutWidth / 2), max(plot.maxX - readoutWidth / 2, plot.minX + readoutWidth / 2)),
+                                      y: plot.minY + 9)
+                            .allowsHitTesting(false)
+                    }
+                }
+            }
+        }
+    }
+
+    private func readout(_ first: String?, _ second: String?, time: String?) -> some View {
+        HStack(spacing: 6) {
+            if let time { Text(verbatim: time).foregroundStyle(.secondary) }
+            if let first { readoutValue(first, color: color) }
+            if let second { readoutValue(second, color: secondaryColor) }
+        }
+        .font(.system(size: 10, weight: .semibold))
+        .monospacedDigit()
+        .padding(.horizontal, 6)
+        .frame(height: 18)
+        .background(.regularMaterial, in: .capsule)
+        .overlay { Capsule().strokeBorder(.primary.opacity(0.1), lineWidth: 0.5) }
+    }
+
+    private func readoutValue(_ text: String, color: Color) -> some View {
+        HStack(spacing: 3) {
+            if secondary != nil { Circle().fill(color).frame(width: 5, height: 5) }
+            Text(verbatim: text)
+        }
     }
 }
 

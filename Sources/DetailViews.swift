@@ -305,7 +305,7 @@ struct NetworkDetail: View {
                     }
                 }
                 if x.pingHistory.count > 1 {
-                    Sparkline(values: x.pingHistory, color: .mint, length: 40).frame(height: 34)
+                    Sparkline(values: x.pingHistory, color: .mint, length: 40, format: { "\(Int($0.rounded())) ms" }).frame(height: 34)
                 }
             }
             if let w = x.wifi {

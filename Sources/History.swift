@@ -36,6 +36,27 @@ enum HistoryRange: Int, CaseIterable, Identifiable {
     }
 }
 
+extension HistoryRange {
+    /// Clock time of the chart point `pointsBack` slots before the newest one.
+    func timeLabel(pointsBack: Int) -> String {
+        let date = Date().addingTimeInterval(-Double(pointsBack * step + 1) * 60)
+        return span > 1440
+            ? date.formatted(.dateTime.day().month(.abbreviated).hour().minute())
+            : date.formatted(.dateTime.hour().minute())
+    }
+}
+
+extension HistoryMetric {
+    func format(_ value: Double) -> String {
+        switch self {
+        case .cpu, .gpu, .mem, .battery: Fmt.pct(value)
+        case .temp: Fmt.temp(value)
+        case .diskRead, .diskWrite, .netIn, .netOut: Fmt.rate(value)
+        case .batteryPower: String(format: "%.1f W", value)
+        }
+    }
+}
+
 /// Per-minute averages for the last 24 h plus 10-minute averages for the last 30 days, persisted to Application Support so they survive restarts.
 @MainActor
 final class HistoryStore {
@@ -205,7 +226,8 @@ struct HistoryChart: View {
             let values = range == .live ? live : m.history.series(metric, range: range)
             let second: [Double]? = metric2.map { range == .live ? (live2 ?? []) : m.history.series($0, range: range) }
             Sparkline(values: values, maxValue: maxValue, color: color, secondary: second, secondaryColor: color2,
-                      length: range == .live ? SystemMonitor.historyLength : values.count)
+                      length: range == .live ? SystemMonitor.historyLength : values.count,
+                      format: metric.format, timeLabel: range == .live ? nil : { range.timeLabel(pointsBack: $0) })
                 .frame(height: height)
                 .overlay {
                     if range != .live, !values.contains(where: { $0.isFinite }) {
