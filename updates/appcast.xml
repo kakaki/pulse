@@ -3,6 +3,15 @@
     <channel>
         <title>Pulse</title>
         <item>
+            <title>1.6.1</title>
+            <pubDate>Sun, 08 Nov 2026 11:45:13 +0100</pubDate>
+            <sparkle:version>9</sparkle:version>
+            <sparkle:shortVersionString>1.6.1</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <enclosure url="https://raw.githubusercontent.com/kakaki/pulse/main/updates/Pulse-1.6.1.dmg" length="3514037" type="application/octet-stream" sparkle:edSignature="w6vofTW04dUzRZq5bBSXGlmDCMUUBF56WH97SqJfCL/n/pWsCunC8TERlcu9edFapagJnYXG6YUfhM2zm3d2Cw=="/>
+        </item>
+        <item>
             <title>1.6</title>
             <pubDate>Sun, 08 Nov 2026 11:35:05 +0100</pubDate>
             <sparkle:version>8</sparkle:version>
@@ -19,15 +28,6 @@
             <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
             <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
             <enclosure url="https://raw.githubusercontent.com/kakaki/pulse/main/updates/Pulse-1.5.dmg" length="3503013" type="application/octet-stream" sparkle:edSignature="OT1Z1pJon9t7WAnW7VDtGV0Evd/k7/91ZlrHahx6pK43J4Oam76MgQS9Gt6TT8dwb/0SY64+hTK/+VWsvxOLCQ=="/>
-        </item>
-        <item>
-            <title>1.4</title>
-            <pubDate>Sun, 08 Nov 2026 11:07:11 +0100</pubDate>
-            <sparkle:version>6</sparkle:version>
-            <sparkle:shortVersionString>1.4</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <enclosure url="https://raw.githubusercontent.com/kakaki/pulse/main/updates/Pulse-1.4.dmg" length="4524202" type="application/octet-stream" sparkle:edSignature="gABXkKd1aJ/x0FtLsIOHPWTQFN24c64A3KVV0D3S8FtsFBw3NvPCWkZmnoYZY6MrYGx07Wj1IYy9e96btnxPCQ=="/>
         </item>
     </channel>
 </rss>

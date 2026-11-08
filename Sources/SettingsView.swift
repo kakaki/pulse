@@ -382,6 +382,8 @@ struct OverviewItemsSection: View {
     let defaultMode: DisplayMode
     @Environment(SystemMonitor.self) private var monitor
     @State private var items = OverviewItem.ordered
+    @State private var dragged: OverviewItem?
+    @State private var rowFrames: [OverviewItem: CGRect] = [:]
     @AppStorage("overview.separators") private var separators = false
     @AppStorage("showLabels") private var showLabels = true
 
@@ -397,14 +399,14 @@ struct OverviewItemsSection: View {
                 .background(.primary.opacity(0.06), in: .rect(cornerRadius: 10, style: .continuous))
                 .id(items.map(\.rawValue).joined())
             ForEach(items) { item in
-                OverviewItemRow(item: item, defaultMode: defaultMode,
-                                canMoveUp: item != items.first, canMoveDown: item != items.last) { delta in
-                    move(item, by: delta)
+                OverviewItemRow(item: item, defaultMode: defaultMode, isDragging: dragged == item) { y in
+                    dragged = item
+                    reorder(item, pointerY: y)
+                } onDragEnd: {
+                    dragged = nil
+                    OverviewItem.setOrder(items)
                 }
-            }
-            .onMove { from, to in
-                items.move(fromOffsets: from, toOffset: to)
-                OverviewItem.setOrder(items)
+                .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { rowFrames[item] = $0 }
             }
             Toggle("Separatory między wartościami", isOn: $separators)
         } header: {
@@ -414,12 +416,14 @@ struct OverviewItemsSection: View {
         }
     }
 
-    private func move(_ item: OverviewItem, by delta: Int) {
-        guard let i = items.firstIndex(of: item) else { return }
-        let j = i + delta
-        guard items.indices.contains(j) else { return }
-        items.swapAt(i, j)
-        OverviewItem.setOrder(items)
+    /// Moves the dragged row to the row under the pointer; the frames follow, so it can't flip back and forth.
+    private func reorder(_ item: OverviewItem, pointerY y: CGFloat) {
+        guard let target = items.first(where: { $0 != item && rowFrames[$0].map { $0.minY...$0.maxY ~= y } == true }),
+              let from = items.firstIndex(of: item), let to = items.firstIndex(of: target) else { return }
+        withAnimation(.easeOut(duration: 0.12)) {
+            items.move(fromOffsets: IndexSet(integer: from), toOffset: to > from ? to + 1 : to)
+        }
+        OverviewItem.setOrder(items)   // saved at every step, in case the gesture gets cancelled
     }
 }
 
@@ -427,18 +431,18 @@ struct OverviewItemsSection: View {
 struct OverviewItemRow: View {
     let item: OverviewItem
     let defaultMode: DisplayMode
-    let canMoveUp: Bool
-    let canMoveDown: Bool
-    let move: (Int) -> Void
+    let isDragging: Bool
+    let onDrag: (CGFloat) -> Void
+    let onDragEnd: () -> Void
     @AppStorage private var on: Bool
     @AppStorage private var style: String
 
-    init(item: OverviewItem, defaultMode: DisplayMode, canMoveUp: Bool, canMoveDown: Bool, move: @escaping (Int) -> Void) {
+    init(item: OverviewItem, defaultMode: DisplayMode, isDragging: Bool, onDrag: @escaping (CGFloat) -> Void, onDragEnd: @escaping () -> Void) {
         self.item = item
         self.defaultMode = defaultMode
-        self.canMoveUp = canMoveUp
-        self.canMoveDown = canMoveDown
-        self.move = move
+        self.isDragging = isDragging
+        self.onDrag = onDrag
+        self.onDragEnd = onDragEnd
         _on = AppStorage(wrappedValue: item.defaultOn, item.key)
         _style = AppStorage(wrappedValue: "", item.styleKey)
     }
@@ -451,8 +455,16 @@ struct OverviewItemRow: View {
     var body: some View {
         HStack(spacing: 10) {
             Image(systemName: "line.3.horizontal")
-                .foregroundStyle(.tertiary)
+                .foregroundStyle(.secondary)
+                .frame(width: 26, height: 26)
+                .contentShape(Rectangle())
+                .pointerStyle(isDragging ? .grabActive : .grabIdle)
                 .help("Przeciągnij, aby zmienić kolejność")
+                .gesture(
+                    DragGesture(minimumDistance: 2, coordinateSpace: .global)
+                        .onChanged { onDrag($0.location.y) }
+                        .onEnded { _ in onDragEnd() }
+                )
             Image(systemName: item.module.symbol)
                 .font(.system(size: 10, weight: .semibold))
                 .foregroundStyle(.white)
@@ -471,10 +483,7 @@ struct OverviewItemRow: View {
             .help("Ustawienia modułu")
         }
         .opacity(on ? 1 : 0.6)
-        .contextMenu {
-            Button("Przesuń w górę", systemImage: "arrow.up") { move(-1) }.disabled(!canMoveUp)
-            Button("Przesuń w dół", systemImage: "arrow.down") { move(1) }.disabled(!canMoveDown)
-        }
+        .scaleEffect(isDragging ? 1.02 : 1)
     }
 }
 
