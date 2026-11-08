@@ -223,7 +223,8 @@ struct OverviewContent: View {
         case .cpu: (m.cpu, Fmt.pct(m.cpu), "CPU")
         case .gpu: (m.gpu ?? 0, m.gpu.map(Fmt.pct) ?? "—", "GPU")
         case .memory: (m.memFraction, Fmt.pct(m.memFraction), String(localized: "Pamięć"))
-        case .disk: (m.diskFraction, Fmt.pct(m.diskFraction), String(localized: "Dysk"))
+        case .disk: (DiskDisplay.fraction(m.displayVolume), DiskDisplay.text(m.displayVolume),
+                     m.displayVolume.isSystem ? String(localized: "Dysk") : m.displayVolume.name)
         case .sensors: ((m.socMax ?? 0) / 105, Fmt.temp(m.socMax ?? m.socAvg), String(localized: "Temp."))
         case .network: (netLevel, Fmt.rate(m.netIn, compact: true), String(localized: "Sieć"))
         case .battery: (m.battery.percent, Fmt.pct(m.battery.percent), String(localized: "Bateria"))

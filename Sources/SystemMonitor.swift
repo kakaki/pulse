@@ -45,6 +45,14 @@ final class SystemMonitor {
     private(set) var readHistory: [Double] = []
     private(set) var writeHistory: [Double] = []
     var diskFraction: Double { diskTotal > 0 ? Double(diskTotal - diskFree) / Double(diskTotal) : 0 }
+    /// All local drives, system disk first.
+    private(set) var volumes: [DiskVolume] = []
+    /// The drive picked in Settings for the menu bar and tile; the system disk if it is not connected.
+    var displayVolume: DiskVolume {
+        let id = UserDefaults.standard.string(forKey: DiskDisplay.volumeKey)
+        return volumes.first { $0.id == id } ?? volumes.first { $0.isSystem }
+            ?? DiskVolume(id: "/", name: diskName, total: diskTotal, free: diskFree, isSystem: true, isInternal: true)
+    }
 
     // MARK: Temperatures
     private(set) var sensors: [TempSensor] = []
@@ -298,6 +306,7 @@ final class SystemMonitor {
         diskTotal = Int64(values.volumeTotalCapacity ?? 0)
         diskFree = values.volumeAvailableCapacityForImportantUsage ?? 0
         if let name = values.volumeLocalizedName { diskName = name }
+        volumes = DiskVolumes.list()
     }
 
     private func sampleDiskIO() {
@@ -445,6 +454,8 @@ extension SystemMonitor {
         memPressure = .normal
         memHistory = demoSeries(n, base: Double(memUsed) / Double(memTotal), amp: 0.02, seed: 2)
         diskName = "Macintosh HD"; diskTotal = 494_380_000_000; diskFree = 301_200_000_000
+        volumes = [DiskVolume(id: "/", name: diskName, total: diskTotal, free: diskFree, isSystem: true, isInternal: true),
+                   DiskVolume(id: "demo-backup", name: "Backup", total: 2_000_000_000_000, free: 1_240_000_000_000, isSystem: false, isInternal: false)]
         readHistory = demoSeries(n, base: 3_500_000, amp: 3_000_000, seed: 3)
         writeHistory = demoSeries(n, base: 2_000_000, amp: 1_800_000, seed: 4)
         readRate = readHistory.last ?? 0; writeRate = writeHistory.last ?? 0

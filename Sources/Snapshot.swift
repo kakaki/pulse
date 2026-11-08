@@ -25,6 +25,7 @@ enum Snapshot {
             print("gpu:", monitor.gpu ?? -1, "battery:", monitor.battery)
             let csv = monitor.history.csv().split(separator: "\n")
             print("csv:", csv.count, csv.prefix(2).joined(separator: " | "), "|", csv.last ?? "")
+            print("volumes:", monitor.volumes.map { "\($0.name) sys=\($0.isSystem) int=\($0.isInternal) \(DiskDisplay.text($0))" })
             print("thermal:", monitor.thermalState.title, "week:", monitor.history.series(.cpu, range: .week).count,
                   "month:", monitor.history.series(.cpu, range: .month).count)
             for mode in Module.overview.modes {

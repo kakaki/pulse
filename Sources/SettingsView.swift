@@ -114,6 +114,7 @@ struct ModuleSettings: View {
                 }
             }
 
+            if module == .disk { DiskDisplaySection() }
             if module == .overview {
                 OverviewItemsSection(defaultMode: DisplayMode(rawValue: modeRaw) ?? .text)
             }
@@ -142,6 +143,43 @@ struct ModuleSettings: View {
         case .network: String(localized: "Prędkość pobierania i wysyłania, adres IP.")
         case .sensors: String(localized: "Temperatury SoC, SSD i baterii.")
         case .battery: String(localized: "Poziom naładowania, kondycja, cykle i moc.")
+        }
+    }
+}
+
+struct DiskDisplaySection: View {
+    @Environment(SystemMonitor.self) private var monitor
+    @AppStorage(DiskDisplay.quantityKey) private var quantity = "used"
+    @AppStorage(DiskDisplay.unitKey) private var unit = "percent"
+    @AppStorage(DiskDisplay.volumeKey) private var volume = ""
+
+    var body: some View {
+        Section {
+            Picker("Pokazuj", selection: $quantity) {
+                Text("Zajęte miejsce").tag("used")
+                Text("Wolne miejsce").tag("free")
+            }
+            .pickerStyle(.segmented)
+            Picker("Format", selection: $unit) {
+                Text("Procenty").tag("percent")
+                Text("GB / TB").tag("amount")
+            }
+            .pickerStyle(.segmented)
+            if monitor.volumes.count > 1 || !volume.isEmpty {
+                Picker("Dysk", selection: $volume) {
+                    Text("Dysk systemowy").tag("")
+                    ForEach(monitor.volumes.filter { !$0.isSystem }) { v in
+                        Text(verbatim: v.name).tag(v.id)
+                    }
+                    if !volume.isEmpty, !monitor.volumes.contains(where: { $0.id == volume }) {
+                        Text("Niepodłączony dysk").tag(volume)
+                    }
+                }
+            }
+        } header: {
+            Text("Wartość w pasku menu i na kafelku")
+        } footer: {
+            Text("Dotyczy też Przeglądu. Gdy wybrany dysk jest odłączony, Pulse pokazuje dysk systemowy.")
         }
     }
 }

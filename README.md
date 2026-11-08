@@ -30,7 +30,7 @@
   - **CPU:** usage, per-core load, load average, top processes
   - **GPU:** usage history, renderer and tiler load, GPU memory, cores, restarts
   - **Memory:** pressure, app / wired / compressed memory, swap, top processes
-  - **Disk:** free space, read/write speed, and what takes up the space
+  - **Disk:** used or free space as percent or GB/TB, multiple drives, read/write speed, and what takes up the space
   - **Network:** upload/download, traffic per app, latency, local and public IP
   - **Sensors:** SoC, SSD and battery temperatures, fans, thermal state
   - **Battery:** charge chart, health, cycle count, power draw, adapter wattage

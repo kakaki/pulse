@@ -208,8 +208,31 @@ struct DiskDetail: View {
                 }
                 LinearMeter(value: m.diskFraction, colors: Module.disk.colors, height: 10)
             }
+            let others = m.volumes.filter { !$0.isSystem }
+            if !others.isEmpty {
+                Card {
+                    SectionTitle(text: "Inne dyski")
+                    VStack(spacing: 9) {
+                        ForEach(others) { v in
+                            HStack(spacing: 8) {
+                                Image(systemName: v.symbol).frame(width: 16).foregroundStyle(Module.disk.tint)
+                                VStack(alignment: .leading, spacing: 3) {
+                                    HStack {
+                                        Text(verbatim: v.name).font(.system(size: 12)).lineLimit(1)
+                                        Spacer()
+                                        Text(String(localized: "\(Fmt.file(v.free)) wolne z \(Fmt.file(v.total))"))
+                                            .font(.system(size: 11.5, weight: .medium)).monospacedDigit()
+                                            .foregroundStyle(.secondary)
+                                    }
+                                    LinearMeter(value: v.usedFraction, colors: Module.disk.colors, height: 4)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             Card {
-                SectionTitle(text: "Aktywność")
+                SectionTitle(text: "Aktywność", trailing: m.volumes.count > 1 ? String(localized: "wszystkie dyski") : nil)
                 HStack(spacing: 8) {
                     MiniStat(title: "Odczyt", value: Fmt.rate(m.readRate), color: readColor, symbol: "arrow.down")
                     MiniStat(title: "Zapis", value: Fmt.rate(m.writeRate), color: writeColor, symbol: "arrow.up")

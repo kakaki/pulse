@@ -17,6 +17,28 @@
         }
       }
     },
+    "%@ wolne z %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ frei von %2$@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ free of %2$@"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@ wolne z %2$@"
+          }
+        }
+      }
+    },
     "%@ zajęte": {
       "localizations": {
         "de": {
@@ -1028,6 +1050,22 @@
         }
       }
     },
+    "Dotyczy też Przeglądu. Gdy wybrany dysk jest odłączony, Pulse pokazuje dysk systemowy.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gilt auch für die Übersicht. Ist die gewählte Festplatte getrennt, zeigt Pulse die Systemfestplatte."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Also applies to Overview. If the selected disk is disconnected, Pulse shows the system disk."
+          }
+        }
+      }
+    },
     "Dysk": {
       "localizations": {
         "de": {
@@ -1056,6 +1094,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Disk read B/s"
+          }
+        }
+      }
+    },
+    "Dysk systemowy": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Systemfestplatte"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "System disk"
           }
         }
       }
@@ -1168,6 +1222,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Purple"
+          }
+        }
+      }
+    },
+    "Format": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Format"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Format"
+          }
+        }
+      }
+    },
+    "GB / TB": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GB / TB"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GB / TB"
           }
         }
       }
@@ -1328,6 +1414,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Icons in the panels and Overview tiles. “Module colors” keeps each module’s own color."
+          }
+        }
+      }
+    },
+    "Inne dyski": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Andere Festplatten"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Other disks"
           }
         }
       }
@@ -1852,6 +1954,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Blue"
+          }
+        }
+      }
+    },
+    "Niepodłączony dysk": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Getrennte Festplatte"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disconnected disk"
           }
         }
       }
@@ -2560,6 +2678,22 @@
         }
       }
     },
+    "Pokazuj": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anzeigen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show"
+          }
+        }
+      }
+    },
     "Pokazuj etykiety (CPU, MEM, …)": {
       "localizations": {
         "de": {
@@ -2876,6 +3010,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Right-click: pin"
+          }
+        }
+      }
+    },
+    "Procenty": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prozent"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Percent"
           }
         }
       }
@@ -4237,6 +4387,22 @@
         }
       }
     },
+    "Wartość w pasku menu i na kafelku": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wert in der Menüleiste und auf der Kachel"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Value in the menu bar and on the tile"
+          }
+        }
+      }
+    },
     "Wentylator": {
       "localizations": {
         "de": {
@@ -4335,6 +4501,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Free"
+          }
+        }
+      }
+    },
+    "Wolne miejsce": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Freier Speicher"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Free space"
           }
         }
       }
@@ -4591,6 +4773,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Send test"
+          }
+        }
+      }
+    },
+    "Zajęte miejsce": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Belegter Speicher"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Used space"
           }
         }
       }
@@ -5010,6 +5208,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "free"
+          }
+        }
+      }
+    },
+    "wszystkie dyski": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "alle Festplatten"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "all disks"
           }
         }
       }

@@ -30,7 +30,7 @@
   - **CPU:** obciążenie, rdzenie, średnie obciążenie, najbardziej obciążające procesy
   - **GPU:** historia użycia, obciążenie renderera i tilera, pamięć GPU, rdzenie, restarty
   - **Pamięć:** ciśnienie, pamięć aplikacji / związana / skompresowana, swap, procesy
-  - **Dysk:** wolne miejsce, odczyt i zapis, co zajmuje miejsce
+  - **Dysk:** miejsce zajęte lub wolne w procentach albo GB/TB, wiele dysków, odczyt i zapis, co zajmuje miejsce
   - **Sieć:** wysyłanie i pobieranie, ruch per aplikacja, opóźnienie, adres lokalny i publiczny
   - **Czujniki:** temperatury SoC, SSD i baterii, wentylatory, stan termiczny
   - **Bateria:** wykres naładowania, kondycja, cykle, pobór mocy, moc zasilacza

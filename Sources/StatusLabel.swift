@@ -74,7 +74,10 @@ struct StatusSnapshot {
                 case .cpu: cell = .init(module: .cpu, label: "CPU", text: Fmt.pct(m.cpu), value: m.cpu, history: m.cpuHistory, maxHistory: 1, level: m.cpu)
                 case .gpu: cell = .init(module: .gpu, label: "GPU", text: m.gpu.map(Fmt.pct) ?? "—", value: m.gpu ?? 0, history: m.gpuHistory, maxHistory: 1, level: m.gpu)
                 case .mem: cell = .init(module: .memory, label: "MEM", text: Fmt.pct(m.memFraction), value: m.memFraction, history: m.memHistory, maxHistory: 1, level: Severity.memory(m.memPressure))
-                case .disk: cell = .init(module: .disk, label: "SSD", text: Fmt.pct(m.diskFraction), value: m.diskFraction, history: m.readHistory, maxHistory: nil, level: m.diskFraction)
+                case .disk:
+                    let v = m.displayVolume
+                    cell = .init(module: .disk, label: v.isSystem ? "SSD" : "EXT", text: DiskDisplay.text(v), value: DiskDisplay.fraction(v),
+                                 history: m.readHistory, maxHistory: nil, level: v.usedFraction)
                 case .temp:
                     let t = m.socMax ?? m.socAvg
                     cell = .init(module: .sensors, label: "TEMP", text: Fmt.temp(t), value: (t ?? 0) / 100, history: m.tempHistory, maxHistory: 100, level: Severity.temp(t))
@@ -105,9 +108,10 @@ struct StatusSnapshot {
             s.value = m.memFraction; s.text = Fmt.pct(m.memFraction); s.history = m.memHistory; s.bars = [m.memFraction]
             s.level = Severity.memory(m.memPressure)
         case .disk:
-            s.value = m.diskFraction; s.text = Fmt.pct(m.diskFraction)
+            let v = m.displayVolume
+            s.value = DiskDisplay.fraction(v); s.text = DiskDisplay.text(v)
             s.history = m.readHistory; s.history2 = m.writeHistory; s.maxHistory = nil
-            s.bars = [m.diskFraction]; s.level = m.diskFraction
+            s.bars = [DiskDisplay.fraction(v)]; s.level = v.usedFraction
         case .network:
             s.text = "↑ " + Fmt.rate(m.netOut, compact: true)
             s.text2 = "↓ " + Fmt.rate(m.netIn, compact: true)

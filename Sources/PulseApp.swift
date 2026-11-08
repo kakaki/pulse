@@ -202,7 +202,7 @@ final class StatusBarController: NSObject, NSPopoverDelegate {
         return Module.allCases.map { "\($0.rawValue):\($0.isEnabled):\($0.currentMode.rawValue)" }.joined(separator: ",")
             + "|\(d.bool(forKey: "showLabels"))|\(d.bool(forKey: "colorize"))|\(d.integer(forKey: "tempUnit"))"
             + "|" + OverviewItem.ordered.map { "\($0.rawValue)\($0.isOn ? 1 : 0)\($0.style?.rawValue ?? "")\($0.showsLabel ? 1 : 0)" }.joined(separator: ".")
-            + "|\(d.bool(forKey: "hide.fullscreen"))\(d.bool(forKey: "hide.mirroring"))\(d.object(forKey: "autoCompact") as? Bool ?? true)"
+            + "|\(d.bool(forKey: "hide.fullscreen"))\(d.bool(forKey: "hide.mirroring"))\(d.object(forKey: "autoCompact") as? Bool ?? true)|\(DiskDisplay.showsFree)\(DiskDisplay.showsAmount)\(d.string(forKey: DiskDisplay.volumeKey) ?? "")"
             + "|\(d.object(forKey: "pulseAlerts") as? Bool ?? true)|\(d.bool(forKey: "overview.separators"))|\(d.object(forKey: "overview.net.split") as? Bool ?? true)"
     }
 

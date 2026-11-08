@@ -30,7 +30,7 @@
   - **CPU:** Auslastung, Kerne, Durchschnittslast, Prozesse mit der höchsten Last
   - **GPU:** Auslastungsverlauf, Last von Renderer und Tiler, GPU-Speicher, Kerne, Neustarts
   - **Speicher:** Speicherdruck, App-, gebundener und komprimierter Speicher, Swap, Prozesse
-  - **Festplatte:** freier Speicher, Lese- und Schreibrate, was den Platz belegt
+  - **Festplatte:** belegter oder freier Speicher in Prozent oder GB/TB, mehrere Laufwerke, Lese- und Schreibrate, was den Platz belegt
   - **Netzwerk:** Upload und Download, Datenverkehr pro App, Latenz, lokale und öffentliche IP
   - **Sensoren:** Temperaturen von SoC, SSD und Batterie, Lüfter, thermischer Zustand
   - **Batterie:** Ladeverlauf, Zustand, Ladezyklen, Leistungsaufnahme, Netzteilleistung
