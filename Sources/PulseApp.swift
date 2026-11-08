@@ -50,8 +50,9 @@ extension Module {
 enum AppActions {
     static var closePopovers: () -> Void = {}
 
-    static func openSettings() {
+    static func openSettings(_ module: Module? = nil) {
         closePopovers()
+        if let module { SettingsRouter.shared.page = .module(module) }
         SettingsWindowController.shared.show()
     }
 }

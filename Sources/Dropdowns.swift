@@ -34,7 +34,7 @@ struct ModuleDropdown: View {
                     ModuleDetail(module: module)
                 }
             }
-            DropdownFooter()
+            DropdownFooter(module: module)
         }
         .padding(12)
         .frame(width: 340)
@@ -99,6 +99,7 @@ struct DropdownHeader: View {
 
 struct DropdownFooter: View {
     @Environment(SystemMonitor.self) private var m
+    var module: Module
 
     var body: some View {
         HStack(spacing: 8) {
@@ -107,7 +108,7 @@ struct DropdownFooter: View {
                 .foregroundStyle(.secondary)
             Spacer()
             Button {
-                AppActions.openSettings()
+                AppActions.openSettings(module)
             } label: {
                 Image(systemName: "gearshape.fill").frame(width: 16, height: 16)
             }

@@ -30,6 +30,17 @@ final class Alerts: NSObject, UNUserNotificationCenterDelegate {
             case .disk: "internaldrive"
             }
         }
+        /// Shown on this module's Settings page.
+        static func kinds(for module: Module) -> [Kind] {
+            switch module {
+            case .cpu: [.cpu]
+            case .memory: [.memory]
+            case .disk: [.disk]
+            case .battery: [.battery]
+            case .sensors: [.temp, .thermal]
+            case .overview, .gpu, .network: []
+            }
+        }
         var enabledKey: String { "alerts.\(rawValue)" }
         var limitKey: String { "alerts.\(rawValue).limit" }
         var defaultEnabled: Bool { self != .cpu }
@@ -143,9 +154,8 @@ struct AlertSettings: View {
                     }
                 }
             } footer: {
-                Text("To samo powiadomienie nie pojawi się częściej niż co 30 minut ani ponownie, zanim wartość nie wróci do normy.")
+                Text("To samo powiadomienie nie pojawi się częściej niż co 30 minut ani ponownie, zanim wartość nie wróci do normy. Progi ustawisz na stronach modułów: CPU, Pamięć, Dysk, Czujniki i Bateria.")
             }
-            ForEach(Alerts.Kind.allCases) { AlertRow(kind: $0) }
         }
         .formStyle(.grouped)
         .navigationTitle("Powiadomienia")
@@ -169,7 +179,7 @@ struct AlertSettings: View {
     }
 }
 
-private struct AlertRow: View {
+struct AlertRow: View {
     let kind: Alerts.Kind
     @AppStorage private var enabled: Bool
     @AppStorage private var limit: Double

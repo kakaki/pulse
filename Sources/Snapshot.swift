@@ -8,6 +8,10 @@ enum Snapshot {
         guard !started else { return }
         started = true
         let args = CommandLine.arguments
+        // Debug helper: `Pulse --settings-page sensors` opens Settings on a module's page.
+        if let p = args.firstIndex(of: "--settings-page"), p + 1 < args.count, let module = Module(rawValue: args[p + 1]) {
+            AppActions.openSettings(module)
+        }
         guard let i = args.firstIndex(of: "--snapshot"), i + 1 < args.count else { return }
         let dir = URL(fileURLWithPath: args[i + 1])
         FileHandle.standardError.write("snapshot start\n".data(using: .utf8)!)

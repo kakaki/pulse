@@ -1,4 +1,5 @@
 #!/bin/bash
+export DEVELOPER_DIR="${DEVELOPER_DIR:-/Applications/Xcode.app/Contents/Developer}"  # xcode-select may point at Command Line Tools
 # Builds a Developer ID-signed, notarized Pulse-<version>.dmg.
 #
 #   ./release.sh                 sign with the first "Developer ID Application" identity, notarize, staple

@@ -1,13 +1,20 @@
 import SwiftUI
 import ServiceManagement
 
+/// Which page the Settings window shows; set when opened from a module's panel.
+@MainActor @Observable
+final class SettingsRouter {
+    static let shared = SettingsRouter()
+    var page: SettingsView.Page? = .general
+}
+
 struct SettingsView: View {
     enum Page: Hashable { case general, alerts, module(Module), about }
-    @State private var page: Page? = .general
+    @State private var router = SettingsRouter.shared
 
     var body: some View {
         NavigationSplitView {
-            List(selection: $page) {
+            List(selection: $router.page) {
                 Section {
                     SidebarRow(title: String(localized: "Ogólne"), symbol: "gearshape.fill", colors: [.gray, Color(white: 0.4)], enabled: nil)
                         .tag(Page.general)
@@ -26,7 +33,7 @@ struct SettingsView: View {
             }
             .navigationSplitViewColumnWidth(200)
         } detail: {
-            switch page ?? .general {
+            switch router.page ?? .general {
             case .general: GeneralSettings()
             case .alerts: AlertSettings()
             case .module(let module): ModuleSettings(module: module).id(module)
@@ -115,6 +122,7 @@ struct ModuleSettings: View {
             }
 
             if module == .disk { DiskDisplaySection() }
+            if let item = OverviewItem.allCases.first(where: { $0.module == module }) { OverviewModuleSection(item: item) }
             if module == .overview {
                 OverviewItemsSection(defaultMode: DisplayMode(rawValue: modeRaw) ?? .text)
             }
@@ -128,6 +136,9 @@ struct ModuleSettings: View {
                 }
                 .padding(.vertical, 4)
             }
+            if module == .sensors { TemperatureUnitSection() }
+            if module == .battery { EnergySavingSection() }
+            ForEach(Alerts.Kind.kinds(for: module)) { AlertRow(kind: $0) }
         }
         .formStyle(.grouped)
         .navigationTitle(module.title)
@@ -143,6 +154,37 @@ struct ModuleSettings: View {
         case .network: String(localized: "Prędkość pobierania i wysyłania, adres IP.")
         case .sensors: String(localized: "Temperatury SoC, SSD i baterii.")
         case .battery: String(localized: "Poziom naładowania, kondycja, cykle i moc.")
+        }
+    }
+}
+
+struct TemperatureUnitSection: View {
+    @AppStorage("tempUnit") private var tempUnit = 0
+    var body: some View {
+        Section {
+            Picker("Jednostka temperatury", selection: $tempUnit) {
+                Text("°C").tag(0)
+                Text("°F").tag(1)
+            }
+            .pickerStyle(.segmented)
+        }
+    }
+}
+
+struct EnergySavingSection: View {
+    @Environment(SystemMonitor.self) private var monitor
+    @AppStorage("interval") private var interval = 2.0
+    @AppStorage("powerSaver") private var powerSaver = true
+    var body: some View {
+        Section {
+            Toggle(isOn: $powerSaver) {
+                Text("Oszczędzaj energię na baterii")
+                Text("Na baterii i w trybie niskiego zużycia energii Pulse odświeża dane rzadziej (co \(Int(max(interval * 2.5, 5))) s zamiast co \(Int(interval)) s).")
+            }
+            .onChange(of: powerSaver) { monitor.updateSaving() }
+            LabeledContent("Stan", value: monitor.isSaving ? String(localized: "Oszczędzanie aktywne · co \(Int(monitor.effectiveInterval)) s") : String(localized: "Pełna częstotliwość"))
+        } header: {
+            Text("Energia")
         }
     }
 }
@@ -225,8 +267,6 @@ struct GeneralSettings: View {
     @AppStorage("showLabels") private var showLabels = true
     @AppStorage("colorize") private var colorize = true
     @AppStorage("interval") private var interval = 2.0
-    @AppStorage("tempUnit") private var tempUnit = 0
-    @AppStorage("powerSaver") private var powerSaver = true
     @AppStorage("accent") private var accent = Accent.auto.rawValue
     @AppStorage("pulseAlerts") private var pulseAlerts = true
     @AppStorage("hide.fullscreen") private var hideFullscreen = false
@@ -294,27 +334,12 @@ struct GeneralSettings: View {
                     Text("3 s").tag(3.0)
                     Text("5 s").tag(5.0)
                 }
-                Picker("Jednostka temperatury", selection: $tempUnit) {
-                    Text("°C").tag(0)
-                    Text("°F").tag(1)
-                }
-                .pickerStyle(.segmented)
                 LabeledContent("Historia") {
                     HStack {
                         Text("do 30 dni").foregroundStyle(.secondary)
                         Button("Eksportuj CSV…") { exportHistory() }
                     }
                 }
-            }
-            Section {
-                Toggle(isOn: $powerSaver) {
-                    Text("Oszczędzaj energię na baterii")
-                    Text("Na baterii i w trybie niskiego zużycia energii Pulse odświeża dane rzadziej (co \(Int(max(interval * 2.5, 5))) s zamiast co \(Int(interval)) s).")
-                }
-                .onChange(of: powerSaver) { monitor.updateSaving() }
-                LabeledContent("Stan", value: monitor.isSaving ? String(localized: "Oszczędzanie aktywne · co \(Int(monitor.effectiveInterval)) s") : String(localized: "Pełna częstotliwość"))
-            } header: {
-                Text("Energia")
             }
             Section {
                 Toggle("Uruchamiaj przy logowaniu", isOn: $launchAtLogin)
@@ -385,7 +410,7 @@ struct OverviewItemsSection: View {
         } header: {
             Text("Wartości w pasku menu")
         } footer: {
-            Text("Przeciągnij za ≡, aby zmienić kolejność – ta sama kolejność obowiązuje w kafelkach okienka. Kliknięcie wartości w pasku otwiera jej szczegóły.")
+            Text("Przeciągnij za ≡, aby zmienić kolejność – ta sama kolejność obowiązuje w kafelkach okienka. To, co pokazuje każda wartość, ustawisz na stronie jej modułu.")
         }
     }
 
@@ -398,6 +423,7 @@ struct OverviewItemsSection: View {
     }
 }
 
+/// Order only: what each value shows is decided on its module's page.
 struct OverviewItemRow: View {
     let item: OverviewItem
     let defaultMode: DisplayMode
@@ -406,9 +432,6 @@ struct OverviewItemRow: View {
     let move: (Int) -> Void
     @AppStorage private var on: Bool
     @AppStorage private var style: String
-    @AppStorage private var label: Bool
-    @AppStorage private var tile: Bool
-    @AppStorage("overview.net.split") private var netSplit = true
 
     init(item: OverviewItem, defaultMode: DisplayMode, canMoveUp: Bool, canMoveDown: Bool, move: @escaping (Int) -> Void) {
         self.item = item
@@ -418,8 +441,11 @@ struct OverviewItemRow: View {
         self.move = move
         _on = AppStorage(wrappedValue: item.defaultOn, item.key)
         _style = AppStorage(wrappedValue: "", item.styleKey)
-        _label = AppStorage(wrappedValue: true, item.labelKey)
-        _tile = AppStorage(wrappedValue: true, item.tileKey)
+    }
+
+    private var status: String {
+        guard on else { return String(localized: "Ukryta") }
+        return (DisplayMode(rawValue: style) ?? defaultMode).title
     }
 
     var body: some View {
@@ -433,43 +459,58 @@ struct OverviewItemRow: View {
                 .frame(width: 20, height: 20)
                 .background(LinearGradient(colors: item.module.colors, startPoint: .topLeading, endPoint: .bottomTrailing),
                             in: .rect(cornerRadius: 5, style: .continuous))
-            Toggle(item.title, isOn: $on)
-                .toggleStyle(.checkbox)
+            Text(verbatim: item.title)
             Spacer()
-            Picker("Styl", selection: $style) {
-                Text("Domyślny (\(defaultMode.title.lowercased()))").tag("")
-                Divider()
-                ForEach(DisplayMode.allCases) { Text($0.title).tag($0.rawValue) }
-            }
-            .labelsHidden()
-            .fixedSize()
-            .disabled(!on)
-            Menu {
-                Toggle("Pokaż etykietę (\(item.title))", isOn: $label)
-                Toggle("Kafelek w okienku Przeglądu", isOn: $tile)
-                if item == .net {
-                    Toggle("Wysyłanie i pobieranie (dwie linie)", isOn: $netSplit)
-                }
-                Divider()
-                Button("Przesuń w górę", systemImage: "arrow.up") { move(-1) }.disabled(!canMoveUp)
-                Button("Przesuń w dół", systemImage: "arrow.down") { move(1) }.disabled(!canMoveDown)
+            Text(verbatim: status).foregroundStyle(.secondary)
+            Button {
+                SettingsRouter.shared.page = .module(item.module)
             } label: {
-                Image(systemName: "ellipsis.circle")
+                Image(systemName: "chevron.right")
             }
-            .menuStyle(.borderlessButton)
-            .menuIndicator(.hidden)
-            .fixedSize()
+            .buttonStyle(.borderless)
+            .help("Ustawienia modułu")
         }
-        .opacity(on ? 1 : 0.75)
+        .opacity(on ? 1 : 0.6)
+        .contextMenu {
+            Button("Przesuń w górę", systemImage: "arrow.up") { move(-1) }.disabled(!canMoveUp)
+            Button("Przesuń w dół", systemImage: "arrow.down") { move(1) }.disabled(!canMoveDown)
+        }
     }
 }
 
-struct OverviewToggle: View {
+/// On a module's page: what this module shows in Overview.
+struct OverviewModuleSection: View {
     let item: OverviewItem
     @AppStorage private var on: Bool
+    @AppStorage private var style: String
+    @AppStorage private var label: Bool
+    @AppStorage private var tile: Bool
+    @AppStorage("overview.net.split") private var netSplit = true
+
     init(item: OverviewItem) {
         self.item = item
         _on = AppStorage(wrappedValue: item.defaultOn, item.key)
+        _style = AppStorage(wrappedValue: "", item.styleKey)
+        _label = AppStorage(wrappedValue: true, item.labelKey)
+        _tile = AppStorage(wrappedValue: true, item.tileKey)
     }
-    var body: some View { Toggle(item.title, isOn: $on) }
+
+    var body: some View {
+        Section("W Przeglądzie") {
+            Toggle("Pokazuj w pasku menu", isOn: $on)
+            if on {
+                Picker("Styl", selection: $style) {
+                    Text("Domyślny (\(Module.overview.currentMode.title.lowercased()))").tag("")
+                    Divider()
+                    ForEach(DisplayMode.allCases) { Text($0.title).tag($0.rawValue) }
+                }
+                Toggle("Pokaż etykietę (\(item.title))", isOn: $label)
+                if item == .net {
+                    Toggle("Wysyłanie i pobieranie (dwie linie)", isOn: $netSplit)
+                }
+            }
+            Toggle("Kafelek w okienku Przeglądu", isOn: $tile)
+        }
+    }
 }
+

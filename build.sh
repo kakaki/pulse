@@ -1,4 +1,5 @@
 #!/bin/bash
+export DEVELOPER_DIR="${DEVELOPER_DIR:-/Applications/Xcode.app/Contents/Developer}"  # xcode-select may point at Command Line Tools
 # Builds Pulse.app into ~/Library/Caches/PulseBuild. Usage: ./build.sh [--install]  (--install copies it to /Applications)
 set -euo pipefail
 cd "$(dirname "$0")"

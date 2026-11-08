@@ -2710,6 +2710,22 @@
         }
       }
     },
+    "Pokazuj w pasku menu": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In der Menüleiste anzeigen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show in the menu bar"
+          }
+        }
+      }
+    },
     "Pokaż etykietę (%@)": {
       "localizations": {
         "de": {
@@ -3101,6 +3117,7 @@
       }
     },
     "Przeciągnij za ≡, aby zmienić kolejność – ta sama kolejność obowiązuje w kafelkach okienka. Kliknięcie wartości w pasku otwiera jej szczegóły.": {
+      "extractionState": "stale",
       "localizations": {
         "de": {
           "stringUnit": {
@@ -3112,6 +3129,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Drag by ≡ to reorder – the panel tiles use the same order. Clicking a value in the menu bar opens its details."
+          }
+        }
+      }
+    },
+    "Przeciągnij za ≡, aby zmienić kolejność – ta sama kolejność obowiązuje w kafelkach okienka. To, co pokazuje każda wartość, ustawisz na stronie jej modułu.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Am ≡ ziehen, um die Reihenfolge zu ändern – die Kacheln im Fenster folgen ihr. Was jeder Wert zeigt, legst du auf der Seite seines Moduls fest."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drag by ≡ to reorder – the panel tiles use the same order. What each value shows is set on its module’s page."
           }
         }
       }
@@ -4180,6 +4213,7 @@
       }
     },
     "To samo powiadomienie nie pojawi się częściej niż co 30 minut ani ponownie, zanim wartość nie wróci do normy.": {
+      "extractionState": "stale",
       "localizations": {
         "de": {
           "stringUnit": {
@@ -4191,6 +4225,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "The same notification appears at most every 30 minutes and not again until the value is back to normal."
+          }
+        }
+      }
+    },
+    "To samo powiadomienie nie pojawi się częściej niż co 30 minut ani ponownie, zanim wartość nie wróci do normy. Progi ustawisz na stronach modułów: CPU, Pamięć, Dysk, Czujniki i Bateria.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dieselbe Mitteilung erscheint höchstens alle 30 Minuten und erst wieder, wenn der Wert normal war. Schwellen legst du auf den Modulseiten fest: CPU, Speicher, Festplatte, Sensoren und Batterie."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The same notification appears at most every 30 minutes and not again until the value is back to normal. Set thresholds on the module pages: CPU, Memory, Disk, Sensors and Battery."
+          }
+        }
+      }
+    },
+    "Ukryta": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ausgeblendet"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hidden"
           }
         }
       }
@@ -4291,6 +4357,22 @@
         }
       }
     },
+    "Ustawienia modułu": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Moduleinstellungen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Module settings"
+          }
+        }
+      }
+    },
     "Użycie grafiki": {
       "localizations": {
         "de": {
@@ -4335,6 +4417,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "User"
+          }
+        }
+      }
+    },
+    "W Przeglądzie": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In der Übersicht"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In Overview"
           }
         }
       }
