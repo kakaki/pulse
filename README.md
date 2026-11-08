@@ -77,7 +77,7 @@ You need Xcode 26 (the command line tools are enough, no Xcode project involved)
 ./release.sh             # Developer ID signing, notarization, DMG and appcast in updates/
 ```
 
-To release a new version, bump `CFBundleShortVersionString` and `CFBundleVersion` in `Info.plist`, run `./release.sh`, then commit and push `updates/`.
+To release a new version, bump `CFBundleShortVersionString` and `CFBundleVersion` in `Info.plist`, run `./release.sh`, then commit and push `updates/`. Pushing an annotated tag (`git tag -a v1.5 -m "Release notes"`) then publishes the GitHub Release with the DMG automatically.
 
 README screenshots: `Pulse.app/Contents/MacOS/Pulse --snapshot <dir> --demo -AppleLanguages "(en)"` renders every panel with demo data.
 
