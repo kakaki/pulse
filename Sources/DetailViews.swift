@@ -76,19 +76,58 @@ struct CPUDetail: View {
 
 struct GPUDetail: View {
     @Environment(SystemMonitor.self) private var m
+
+    private func stage(_ title: LocalizedStringKey, _ value: Double) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                Text(title).foregroundStyle(.secondary)
+                Spacer()
+                Text(Fmt.pct(value)).monospacedDigit().fontWeight(.medium)
+            }
+            .font(.system(size: 12))
+            LinearMeter(value: value, colors: Module.gpu.colors, height: 5)
+        }
+    }
+
     var body: some View {
-        Card {
-            SectionTitle(text: "Użycie grafiki", trailing: m.chipName)
-            if let gpu = m.gpu {
-                HStack {
-                    BigValue(value: Fmt.pct(gpu))
-                    Spacer()
-                    RingGauge(value: gpu, colors: Module.gpu.colors, lineWidth: 6).frame(width: 40, height: 40)
+        let s = m.gpuStats
+        VStack(spacing: 10) {
+            Card {
+                SectionTitle(text: "Użycie grafiki", trailing: m.chipName)
+                if let gpu = m.gpu {
+                    HStack {
+                        BigValue(value: Fmt.pct(gpu))
+                        Spacer()
+                        RingGauge(value: gpu, colors: Module.gpu.colors, lineWidth: 6).frame(width: 40, height: 40)
+                    }
+                    HistoryChart(metric: .gpu, live: m.gpuHistory, maxValue: 1, color: Module.gpu.tint, height: 70)
+                } else {
+                    Text("Statystyki GPU są niedostępne na tym Macu.")
+                        .font(.callout).foregroundStyle(.secondary)
                 }
-                HistoryChart(metric: .gpu, live: m.gpuHistory, maxValue: 1, color: Module.gpu.tint, height: 70)
-            } else {
-                Text("Statystyki GPU są niedostępne na tym Macu.")
-                    .font(.callout).foregroundStyle(.secondary)
+            }
+            if s?.renderer != nil || s?.tiler != nil {
+                Card {
+                    SectionTitle(text: "Etapy pracy")
+                    VStack(spacing: 9) {
+                        if let v = s?.renderer { stage("Renderer", v) }
+                        if let v = s?.tiler { stage("Tiler", v) }
+                    }
+                    Text("Tiler przygotowuje geometrię sceny, a renderer rysuje piksele.")
+                        .font(.system(size: 11)).foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+            if let s, s.memoryInUse != nil || s.memoryAllocated != nil || s.cores != nil || s.recoveries != nil {
+                Card {
+                    SectionTitle(text: "Szczegóły")
+                    VStack(spacing: 7) {
+                        if let v = s.memoryInUse { InfoRow(title: "Pamięć GPU w użyciu", value: Fmt.memory(v)) }
+                        if let v = s.memoryAllocated { InfoRow(title: "Pamięć GPU przydzielona", value: Fmt.memory(v)) }
+                        if let v = s.cores { InfoRow(title: "Rdzenie GPU", value: "\(v)") }
+                        if let v = s.recoveries { InfoRow(title: "Restarty GPU", value: "\(v)") }
+                    }
+                }
             }
         }
     }

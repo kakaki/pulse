@@ -28,7 +28,7 @@
 - **Four value styles:** text, ring, bars or a mini graph. You can set the style, label and order separately for each value, and drag to reorder.
 - **Detailed panels** for every module:
   - **CPU:** usage, per-core load, load average, top processes
-  - **GPU:** usage history
+  - **GPU:** usage history, renderer and tiler load, GPU memory, cores, restarts
   - **Memory:** pressure, app / wired / compressed memory, swap, top processes
   - **Disk:** free space, read/write speed, and what takes up the space
   - **Network:** upload/download, traffic per app, latency, local and public IP

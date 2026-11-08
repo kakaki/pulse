@@ -5,8 +5,19 @@ import IOKit.ps
 
 // MARK: - GPU
 
+/// Undocumented IOAccelerator statistics: every field but `device` may be missing on other Macs or systems.
+struct GPUStats: Equatable {
+    var device: Double
+    var renderer: Double?
+    var tiler: Double?
+    var memoryInUse: UInt64?
+    var memoryAllocated: UInt64?
+    var recoveries: Int?
+    var cores: Int?
+}
+
 enum GPUSampler {
-    static func utilization() -> Double? {
+    static func stats() -> GPUStats? {
         var iterator: io_iterator_t = 0
         guard IOServiceGetMatchingServices(kIOMainPortDefault, IOServiceMatching("IOAccelerator"), &iterator) == KERN_SUCCESS
         else { return nil }
@@ -14,12 +25,23 @@ enum GPUSampler {
         while case let service = IOIteratorNext(iterator), service != 0 {
             defer { IOObjectRelease(service) }
             guard let stats = IORegistryEntryCreateCFProperty(service, "PerformanceStatistics" as CFString, kCFAllocatorDefault, 0)?
-                .takeRetainedValue() as? [String: Any] else { continue }
-            if let value = (stats["Device Utilization %"] as? NSNumber)?.doubleValue {
-                return min(1, max(0, value / 100))
-            }
+                .takeRetainedValue() as? [String: Any],
+                  let device = fraction(stats["Device Utilization %"]) else { continue }
+            let cores = IORegistryEntryCreateCFProperty(service, "gpu-core-count" as CFString, kCFAllocatorDefault, 0)?
+                .takeRetainedValue() as? NSNumber
+            return GPUStats(device: device,
+                            renderer: fraction(stats["Renderer Utilization %"]),
+                            tiler: fraction(stats["Tiler Utilization %"]),
+                            memoryInUse: (stats["In use system memory"] as? NSNumber)?.uint64Value,
+                            memoryAllocated: (stats["Alloc system memory"] as? NSNumber)?.uint64Value,
+                            recoveries: (stats["recoveryCount"] as? NSNumber)?.intValue,
+                            cores: cores?.intValue)
         }
         return nil
+    }
+
+    private static func fraction(_ value: Any?) -> Double? {
+        (value as? NSNumber).map { min(1, max(0, $0.doubleValue / 100)) }
     }
 }
 

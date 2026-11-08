@@ -28,7 +28,7 @@
 - **Vier Darstellungsstile:** Text, Ring, Balken oder Mini-Diagramm. Stil, Beschriftung und Reihenfolge lassen sich für jeden Wert einzeln festlegen; die Reihenfolge änderst du per Drag & Drop.
 - **Detaillierte Fenster** für jedes Modul:
   - **CPU:** Auslastung, Kerne, Durchschnittslast, Prozesse mit der höchsten Last
-  - **GPU:** Auslastungsverlauf
+  - **GPU:** Auslastungsverlauf, Last von Renderer und Tiler, GPU-Speicher, Kerne, Neustarts
   - **Speicher:** Speicherdruck, App-, gebundener und komprimierter Speicher, Swap, Prozesse
   - **Festplatte:** freier Speicher, Lese- und Schreibrate, was den Platz belegt
   - **Netzwerk:** Upload und Download, Datenverkehr pro App, Latenz, lokale und öffentliche IP

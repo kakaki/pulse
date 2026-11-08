@@ -1124,6 +1124,22 @@
         }
       }
     },
+    "Etapy pracy": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arbeitsphasen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pipeline stages"
+          }
+        }
+      }
+    },
     "Filmy": {
       "localizations": {
         "de": {
@@ -2208,6 +2224,38 @@
         }
       }
     },
+    "Pamięć GPU przydzielona": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zugewiesener GPU-Speicher"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GPU memory allocated"
+          }
+        }
+      }
+    },
+    "Pamięć GPU w użyciu": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Genutzter GPU-Speicher"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GPU memory in use"
+          }
+        }
+      }
+    },
     "Pamięć OK": {
       "localizations": {
         "de": {
@@ -3222,6 +3270,54 @@
         }
       }
     },
+    "Rdzenie GPU": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GPU-Kerne"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GPU cores"
+          }
+        }
+      }
+    },
+    "Renderer": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Renderer"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Renderer"
+          }
+        }
+      }
+    },
+    "Restarty GPU": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GPU-Neustarts"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GPU restarts"
+          }
+        }
+      }
+    },
     "Rozdzielczość (min)": {
       "localizations": {
         "de": {
@@ -3677,6 +3773,22 @@
         }
       }
     },
+    "Szczegóły": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Details"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Details"
+          }
+        }
+      }
+    },
     "Szum": {
       "localizations": {
         "de": {
@@ -3865,6 +3977,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "This Mac runs on mains power."
+          }
+        }
+      }
+    },
+    "Tiler": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiler"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiler"
+          }
+        }
+      }
+    },
+    "Tiler przygotowuje geometrię sceny, a renderer rysuje piksele.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Tiler bereitet die Szenengeometrie vor, der Renderer zeichnet die Pixel."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The tiler prepares the scene geometry and the renderer draws the pixels."
           }
         }
       }

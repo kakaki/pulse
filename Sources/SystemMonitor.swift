@@ -57,6 +57,7 @@ final class SystemMonitor {
     // MARK: GPU
     private(set) var gpu: Double?
     private(set) var gpuHistory: [Double] = []
+    private(set) var gpuStats: GPUStats?
 
     // MARK: Network
     private(set) var netIn: Double = 0
@@ -330,7 +331,8 @@ final class SystemMonitor {
     // MARK: - GPU
 
     private func sampleGPU() {
-        gpu = GPUSampler.utilization()
+        gpuStats = GPUSampler.stats()
+        gpu = gpuStats?.device
         if let gpu { push(&gpuHistory, gpu) }
     }
 
@@ -447,6 +449,8 @@ extension SystemMonitor {
         writeHistory = demoSeries(n, base: 2_000_000, amp: 1_800_000, seed: 4)
         readRate = readHistory.last ?? 0; writeRate = writeHistory.last ?? 0
         gpuHistory = demoSeries(n, base: 0.18, amp: 0.1, seed: 5); gpu = gpuHistory.last
+        gpuStats = GPUStats(device: gpu ?? 0.2, renderer: 0.21, tiler: 0.09, memoryInUse: 1_150 * (1 << 20),
+                            memoryAllocated: 4_800 * (1 << 20), recoveries: 0, cores: 10)
         netInHistory = demoSeries(n, base: 1_400_000, amp: 1_100_000, seed: 6)
         netOutHistory = demoSeries(n, base: 120_000, amp: 90_000, seed: 7)
         netIn = netInHistory.last ?? 0; netOut = netOutHistory.last ?? 0

@@ -28,7 +28,7 @@
 - **Cztery style wartości:** tekst, pierścień, słupki albo mini wykres. Styl, etykietę i kolejność ustawiasz osobno dla każdej wartości; kolejność zmieniasz przeciąganiem.
 - **Szczegółowe panele** dla każdego modułu:
   - **CPU:** obciążenie, rdzenie, średnie obciążenie, najbardziej obciążające procesy
-  - **GPU:** historia użycia
+  - **GPU:** historia użycia, obciążenie renderera i tilera, pamięć GPU, rdzenie, restarty
   - **Pamięć:** ciśnienie, pamięć aplikacji / związana / skompresowana, swap, procesy
   - **Dysk:** wolne miejsce, odczyt i zapis, co zajmuje miejsce
   - **Sieć:** wysyłanie i pobieranie, ruch per aplikacja, opóźnienie, adres lokalny i publiczny
