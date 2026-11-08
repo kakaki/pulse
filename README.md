@@ -11,7 +11,7 @@
 
 <p align="center">
   <a href="https://github.com/kakaki/pulse/releases/latest"><b>⬇︎ Download the latest release</b></a> ·
-  macOS 26 · Apple Silicon · English / Deutsch / Polski
+  macOS 15+ · Apple Silicon & Intel · English / Deutsch / Polski
 </p>
 
 <p align="center"><b>English</b> · <a href="README.pl.md">Polski</a> · <a href="README.de.md">Deutsch</a></p>

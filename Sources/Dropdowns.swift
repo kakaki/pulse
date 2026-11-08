@@ -120,7 +120,7 @@ struct DropdownFooter: View {
             }
             .help("Zakończ Pulse")
         }
-        .buttonStyle(.glass)
+        .pulseGlassButton()
         .buttonBorderShape(.circle)
         .controlSize(.small)
         .padding(.horizontal, 2)
@@ -184,7 +184,7 @@ struct OverviewContent: View {
     var body: some View {
         VStack(spacing: 10) {
             summary
-            GlassEffectContainer(spacing: 6) {
+            PulseGlassContainer(spacing: 6) {
                 LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 4), spacing: 6) {
                     ForEach(tiles) { tile($0) }
                 }
@@ -271,8 +271,7 @@ struct OverviewContent: View {
             .contentShape(.rect)
         }
         .buttonStyle(.plain)
-        .glassEffect(isOn ? .regular.tint((colors.last ?? .accentColor).opacity(0.25)).interactive() : .regular.interactive(),
-                     in: .rect(cornerRadius: 16, style: .continuous))
+        .pulseGlassTile(tint: isOn ? (colors.last ?? .accentColor).opacity(0.25) : nil, cornerRadius: 16)
         .contextMenu {
             Button(isPinned ? String(localized: "Odepnij") : String(localized: "Przypnij – zawsze otwieraj ten moduł"),
                    systemImage: isPinned ? "pin.slash" : "pin") {

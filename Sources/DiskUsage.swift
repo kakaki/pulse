@@ -102,7 +102,7 @@ struct DiskUsageCard: View {
                         Text(usage.lastScan == nil ? String(localized: "Analizuj") : String(localized: "Odśwież"))
                     }
                 }
-                .buttonStyle(.glass)
+                .pulseGlassButton()
                 .controlSize(.small)
                 .disabled(usage.scanning)
             }

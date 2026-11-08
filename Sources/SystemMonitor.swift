@@ -370,7 +370,8 @@ final class SystemMonitor {
     // MARK: - Temperatures
 
     private func sampleTemperatures() {
-        let all = tempReader.read()
+        var all = tempReader.read()
+        if all.isEmpty { all = smcSampler.intelTemperatures() }
         sensors = all
         let soc = all.filter { $0.kind == .soc }.map(\.value)
         socAvg = soc.isEmpty ? nil : soc.reduce(0, +) / Double(soc.count)

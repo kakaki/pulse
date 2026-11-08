@@ -47,7 +47,8 @@ final class SMC {
         switch type {
         case "flt ": return b.count >= 4 ? Double(b.withUnsafeBytes { $0.load(as: Float32.self) }) : nil
         case "fpe2": return b.count >= 2 ? Double(UInt16(b[0]) << 8 | UInt16(b[1])) / 4 : nil
-        case "ui8 ": return Double(b[0])
+        case "sp78": return b.count >= 2 ? Double(Int16(bitPattern: UInt16(b[0]) << 8 | UInt16(b[1]))) / 256 : nil
+        case "ui8 ": return b.isEmpty ? nil : Double(b[0])
         case "ui16": return b.count >= 2 ? Double(UInt16(b[0]) << 8 | UInt16(b[1])) : nil
         case "ui32": return b.count >= 4 ? Double(UInt32(b[0]) << 24 | UInt32(b[1]) << 16 | UInt32(b[2]) << 8 | UInt32(b[3])) : nil
         default: return nil
@@ -75,6 +76,31 @@ final class SMCSampler {
             guard let rpm = smc.number("F\(i)Ac") else { return nil }
             return FanInfo(id: i, rpm: rpm, min: smc.number("F\(i)Mn") ?? 0, max: smc.number("F\(i)Mx") ?? 0)
         }
+    }
+
+    /// Temperature keys of Intel Macs, which do not publish thermal sensors through IOHIDEventSystem.
+    private static let intelTemperatureKeys: [(key: String, name: () -> String, kind: TempSensor.Kind)] = [
+        ("TC0F", { "CPU" }, .soc), ("TC0D", { "CPU" }, .soc), ("TC0E", { "CPU" }, .soc), ("TC0P", { "CPU" }, .soc),
+        ("TG0D", { "GPU" }, .other), ("TG0P", { "GPU" }, .other),
+        ("TH0a", { "SSD" }, .ssd), ("TH0b", { "SSD" }, .ssd), ("TH0P", { "SSD" }, .ssd),
+        ("TM0P", { String(localized: "Pamięć") }, .other),
+        ("TPCD", { String(localized: "Płyta") }, .other),
+        ("TA0P", { String(localized: "Otoczenie") }, .other),
+        ("TB0T", { String(localized: "Bateria") }, .battery)
+    ]
+
+    /// One reading per sensor name: the first key that exists, in the list's order of preference.
+    func intelTemperatures() -> [TempSensor] {
+        guard let smc else { return [] }
+        var seen = Set<String>()
+        var sensors: [TempSensor] = []
+        for entry in Self.intelTemperatureKeys {
+            let name = entry.name()
+            guard !seen.contains(name), let value = smc.number(entry.key), value > 1, value < 150 else { continue }
+            seen.insert(name)
+            sensors.append(TempSensor(id: entry.key, name: name, value: value, kind: entry.kind))
+        }
+        return sensors.sorted { $0.kind.rawValue < $1.kind.rawValue }
     }
 
     /// Whole-system power draw in watts (PSTR), if the SMC exposes it.

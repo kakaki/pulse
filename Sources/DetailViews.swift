@@ -321,7 +321,7 @@ struct NetworkDetail: View {
                         Spacer()
                         if w.ssid == nil {
                             Button("Pokaż nazwę") { x.requestSSIDAccess() }
-                                .buttonStyle(.glass).controlSize(.small)
+                                .pulseGlassButton().controlSize(.small)
                                 .help("macOS udostępnia nazwę sieci Wi‑Fi tylko aplikacjom z dostępem do lokalizacji.")
                         }
                     }

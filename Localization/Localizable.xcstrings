@@ -147,9 +147,7 @@
         }
       }
     },
-    "0" : {
-
-    },
+    "0" : {},
     "1 s" : {
       "localizations" : {
         "de" : {
@@ -2296,6 +2294,22 @@
         }
       }
     },
+    "Otoczenie" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Umgebung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ambient"
+          }
+        }
+      }
+    },
     "Otwórz Ustawienia systemowe" : {
       "localizations" : {
         "de" : {
@@ -3735,9 +3749,7 @@
         }
       }
     },
-    "Sparkle" : {
-
-    },
+    "Sparkle" : {},
     "Spokojnie" : {
       "localizations" : {
         "de" : {
@@ -5297,15 +5309,9 @@
         }
       }
     },
-    "s" : {
-
-    },
-    "t" : {
-
-    },
-    "v" : {
-
-    },
+    "s" : {},
+    "t" : {},
+    "v" : {},
     "wolne" : {
       "localizations" : {
         "de" : {
@@ -5482,9 +5488,7 @@
         }
       }
     },
-    "—" : {
-
-    },
+    "—" : {},
     "↓%@ ↑%@" : {
       "localizations" : {
         "de" : {

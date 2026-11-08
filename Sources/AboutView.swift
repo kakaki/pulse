@@ -33,7 +33,7 @@ struct AboutView: View {
                 Link(destination: ProjectLinks.releases) { Label("Co nowego", systemImage: "sparkles") }
                 Link(destination: ProjectLinks.issues) { Label("Zgłoś problem", systemImage: "exclamationmark.bubble") }
             }
-            .buttonStyle(.glass)
+            .pulseGlassButton()
             .controlSize(.large)
             if Updater.shared.isConfigured {
                 Button("Sprawdź aktualizacje…") { Updater.shared.checkForUpdates() }

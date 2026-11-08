@@ -13,20 +13,31 @@ LOC="$BUILD_DIR/loc"
 rm -rf "$APP" "$LOC"
 mkdir -p "$LOC/app" "$LOC/widget" "$LOC/out"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
-xcrun swiftc -O -swift-version 5 -parse-as-library \
-  -target arm64-apple-macos26.0 \
-  -sdk "$(xcrun --sdk macosx --show-sdk-path)" \
-  -F "$SPARKLE" -framework Sparkle -Xlinker -rpath -Xlinker @executable_path/../Frameworks \
-  -emit-localized-strings -emit-localized-strings-path "$LOC/app" \
-  Sources/*.swift -o "$APP/Contents/MacOS/Pulse"
+# Universal binaries (Apple Silicon + Intel). Only the arm64 pass collects strings: they are the same in both.
+MIN_MACOS=15.0
+BIN="$BUILD_DIR/bin"
+rm -rf "$BIN"; mkdir -p "$BIN"
+SDK="$(xcrun --sdk macosx --show-sdk-path)"
+for ARCH in arm64 x86_64; do
+  STRINGS=(); [[ $ARCH == arm64 ]] && STRINGS=(-emit-localized-strings -emit-localized-strings-path "$LOC/app")
+  xcrun swiftc -O -swift-version 5 -parse-as-library \
+    -target "$ARCH-apple-macos$MIN_MACOS" -sdk "$SDK" \
+    -F "$SPARKLE" -framework Sparkle -Xlinker -rpath -Xlinker @executable_path/../Frameworks \
+    ${STRINGS[@]+"${STRINGS[@]}"} \
+    Sources/*.swift -o "$BIN/Pulse-$ARCH"
+done
+lipo -create "$BIN"/Pulse-* -output "$APP/Contents/MacOS/Pulse"
 # Desktop widget extension (sandboxed; reads the JSON snapshot the app writes)
 WX="$APP/Contents/PlugIns/PulseWidget.appex"
 mkdir -p "$WX/Contents/MacOS"
-xcrun swiftc -O -swift-version 5 -parse-as-library -application-extension \
-  -emit-localized-strings -emit-localized-strings-path "$LOC/widget" \
-  -target arm64-apple-macos26.0 \
-  -sdk "$(xcrun --sdk macosx --show-sdk-path)" \
-  Widget/PulseWidget.swift Sources/WidgetData.swift -o "$WX/Contents/MacOS/PulseWidget"
+for ARCH in arm64 x86_64; do
+  STRINGS=(); [[ $ARCH == arm64 ]] && STRINGS=(-emit-localized-strings -emit-localized-strings-path "$LOC/widget")
+  xcrun swiftc -O -swift-version 5 -parse-as-library -application-extension \
+    ${STRINGS[@]+"${STRINGS[@]}"} \
+    -target "$ARCH-apple-macos$MIN_MACOS" -sdk "$SDK" \
+    Widget/PulseWidget.swift Sources/WidgetData.swift -o "$BIN/PulseWidget-$ARCH"
+done
+lipo -create "$BIN"/PulseWidget-* -output "$WX/Contents/MacOS/PulseWidget"
 cp Widget/Info.plist "$WX/Contents/"
 # The widget's version must match the app's.
 for k in CFBundleShortVersionString CFBundleVersion; do

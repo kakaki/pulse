@@ -81,7 +81,7 @@ struct MemoryPurgeCard: View {
                             Text("Zwolnij")
                         }
                     }
-                    .buttonStyle(.glass)
+                    .pulseGlassButton()
                     .controlSize(.small)
                     .disabled(purge.running)
                 }
