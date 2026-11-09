@@ -30,20 +30,37 @@ enum CoreTopology {
         }
         guard byKind.count > 1 else { return [] }
         let order = ["S": 0, "P": 1, "M": 2, "E": 3]
-        return byKind.sorted { (order[$0.key] ?? 2, $0.key) < (order[$1.key] ?? 2, $1.key) }
-            .map { CoreGroup(id: $0.key, name: name(kind: $0.key, kinds: byKind.count), indices: $0.value.sorted()) }
+        let sorted = byKind.sorted { (order[$0.key] ?? 2, $0.key) < (order[$1.key] ?? 2, $1.key) }
+        // The system names each tier itself, so tiers of future chips are labelled without code changes.
+        let levels = (0..<Int(Sysctl.int32("hw.nperflevels") ?? 0)).map {
+            (name: Sysctl.string("hw.perflevel\($0).name"), count: Sysctl.int32("hw.perflevel\($0).logicalcpu"))
+        }
+        return sorted.enumerated().map { position, entry in
+            var label = name(kind: entry.key)
+            if levels.count == sorted.count, levels[position].count == Int32(entry.value.count), let tier = levels[position].name {
+                label = name(tier: tier)
+            }
+            return CoreGroup(id: entry.key, name: label, indices: entry.value.sorted())
+        }
     }
 
-    private static func name(kind: String, kinds: Int) -> String {
+    private static func name(kind: String) -> String {
         switch kind {
         case "E": String(localized: "Rdzenie efektywne")
         case "S": String(localized: "Superrdzenia")
-        // Some chips report their "Super" cores with the performance cluster type.
-        case "P" where kinds == 2 && fastestAreSuper: String(localized: "Superrdzenia")
         default: String(localized: "Rdzenie wydajne")
         }
     }
 
-    /// Newest chips call their fastest cores "Super".
-    static var fastestAreSuper: Bool { Sysctl.string("hw.perflevel0.name") == "Super" }
+    private static func name(tier: String) -> String {
+        switch tier {
+        case "Efficiency": String(localized: "Rdzenie efektywne")
+        case "Performance": String(localized: "Rdzenie wydajne")
+        case "Super": String(localized: "Superrdzenia")
+        default: tier
+        }
+    }
+
+    /// Two-tier chips whose fast cores are called "Super"; with more tiers the sensor family cannot be told apart.
+    static var fastestAreSuper: Bool { Sysctl.int32("hw.nperflevels") == 2 && Sysctl.string("hw.perflevel0.name") == "Super" }
 }

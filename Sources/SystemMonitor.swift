@@ -410,7 +410,9 @@ final class SystemMonitor {
         sensors = all
         let soc = all.filter { $0.kind == .soc }.map(\.value)
         socAvg = soc.isEmpty ? nil : soc.reduce(0, +) / Double(soc.count)
-        socMax = soc.max()
+        // The chip's per-core sensors are what other monitors list; the hottest of them is the CPU temperature.
+        let coreGroups = sensorGroups.filter { $0.kind == .soc }.map(\.value)
+        socMax = coreGroups.max() ?? soc.max()
         ssdTemp = all.filter { $0.kind == .ssd }.map(\.value).max()
         batteryTemp = all.filter { $0.kind == .battery }.map(\.value).max()
         if let t = socMax ?? socAvg { push(&tempHistory, t) }

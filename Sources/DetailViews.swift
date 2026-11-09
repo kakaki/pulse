@@ -432,16 +432,16 @@ struct SensorsDetail: View {
                 }
             }
             Card {
-                SectionTitle(text: "Temperatura SoC", trailing: String(localized: "średnio"))
+                SectionTitle(text: "Temperatura SoC", trailing: String(localized: "maks."))
                 if let avg = m.socAvg {
                     HStack {
-                        BigValue(value: Fmt.temp(avg))
+                        BigValue(value: Fmt.temp(m.socMax ?? avg))
                         Spacer()
                         Pill(text: Heat.label(m.socMax ?? avg), color: Heat.color(m.socMax ?? avg))
                     }
                     HistoryChart(metric: .temp, live: m.tempHistory, maxValue: 110, color: Heat.color(m.socMax ?? avg), height: 52)
                     HStack(spacing: 8) {
-                        MiniStat(title: "SoC maks.", value: Fmt.temp(m.socMax), color: Heat.color(m.socMax ?? 0), symbol: "flame.fill")
+                        MiniStat(title: "Średnio", value: Fmt.temp(avg), color: Heat.color(avg), symbol: "flame.fill")
                         if m.ssdTemp != nil {
                             MiniStat(title: "SSD", value: Fmt.temp(m.ssdTemp), color: Heat.color(m.ssdTemp ?? 0), symbol: "internaldrive")
                         }

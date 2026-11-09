@@ -4008,6 +4008,7 @@
       }
     },
     "SoC maks." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -5792,6 +5793,22 @@
         }
       }
     },
+    "maks." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "max."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "max"
+          }
+        }
+      }
+    },
     "ms" : {
       "localizations" : {
         "de" : {
@@ -5987,6 +6004,22 @@
         }
       }
     },
+    "Średnio" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durchschnitt"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Average"
+          }
+        }
+      }
+    },
     "Świetnie" : {
       "localizations" : {
         "de" : {
@@ -6004,6 +6037,7 @@
       }
     },
     "średnio" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
