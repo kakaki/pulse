@@ -9,6 +9,7 @@ struct DiskVolume: Identifiable, Equatable {
     let free: Int64
     let isSystem: Bool
     let isInternal: Bool
+    var path = "/"
     var used: Int64 { max(total - free, 0) }
     var usedFraction: Double { total > 0 ? Double(used) / Double(total) : 0 }
     var symbol: String { isInternal ? "internaldrive" : "externaldrive" }
@@ -35,7 +36,7 @@ enum DiskVolumes {
             let important = v.volumeAvailableCapacityForImportantUsage ?? 0
             let free = important > 0 ? important : Int64(v.volumeAvailableCapacity ?? 0)
             return DiskVolume(id: v.volumeUUIDString ?? path, name: v.volumeLocalizedName ?? url.lastPathComponent,
-                              total: Int64(total), free: free, isSystem: isSystem, isInternal: v.volumeIsInternal ?? false)
+                              total: Int64(total), free: free, isSystem: isSystem, isInternal: v.volumeIsInternal ?? false, path: path)
         }
         return volumes.sorted { $0.isSystem != $1.isSystem ? $0.isSystem : $0.name.localizedStandardCompare($1.name) == .orderedAscending }
     }

@@ -42,6 +42,19 @@ final class SMC {
         return (t, Array(out[48..<(48 + Int(size))]))
     }
 
+    /// Every key the SMC knows, in index order.
+    func allKeys() -> [String] {
+        guard let (_, b) = read("#KEY"), b.count >= 4 else { return [] }
+        let count = Int(b[0]) << 24 | Int(b[1]) << 16 | Int(b[2]) << 8 | Int(b[3])
+        return (0..<min(count, 20_000)).compactMap { index in
+            var input = [UInt8](repeating: 0, count: 80)
+            input[42] = 8 // kSMCGetKeyFromIndex
+            withUnsafeBytes(of: UInt32(index).littleEndian) { input.replaceSubrange(44..<48, with: $0) }
+            guard let out = call(input) else { return nil }
+            return String(bytes: out[0..<4].reversed(), encoding: .ascii)
+        }
+    }
+
     /// Writes a number in the key's own SMC format. Needs root.
     func write(_ key: String, _ value: Double) -> Bool {
         var input = [UInt8](repeating: 0, count: 80)

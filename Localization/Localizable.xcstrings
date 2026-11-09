@@ -389,6 +389,22 @@
         }
       }
     },
+    "Automatycznie" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatisch"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatic"
+          }
+        }
+      }
+    },
     "Bardzo słaby" : {
       "localizations" : {
         "de" : {
@@ -507,6 +523,22 @@
         }
       }
     },
+    "Brak aktywności" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Aktivität"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No activity"
+          }
+        }
+      }
+    },
     "Brak pamięci" : {
       "localizations" : {
         "de" : {
@@ -615,6 +647,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "CPU – last hour"
+          }
+        }
+      }
+    },
+    "CPU – rdzenie efektywne" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CPU – Effizienzkerne"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CPU – efficiency cores"
+          }
+        }
+      }
+    },
+    "CPU – rdzenie wydajne" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CPU – Leistungskerne"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CPU – performance cores"
+          }
+        }
+      }
+    },
+    "CPU – superrdzenia" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CPU – Super-Kerne"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CPU – super cores"
           }
         }
       }
@@ -983,6 +1063,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Good"
+          }
+        }
+      }
+    },
+    "Dodaj pomocnika" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hilfsprogramm hinzufügen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add helper"
           }
         }
       }
@@ -1723,6 +1819,22 @@
         }
       }
     },
+    "Mniej" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weniger"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Less"
+          }
+        }
+      }
+    },
     "Moc baterii W" : {
       "localizations" : {
         "de" : {
@@ -2360,6 +2472,7 @@
       }
     },
     "Otwórz…" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2727,6 +2840,22 @@
         }
       }
     },
+    "Podzespoły" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Komponenten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Components"
+          }
+        }
+      }
+    },
     "Pojemność maks." : {
       "localizations" : {
         "de" : {
@@ -2919,18 +3048,34 @@
         }
       }
     },
-    "Pomocnik działa z uprawnieniami systemowymi i zmienia obroty tylko, gdy Pulse jest uruchomiony. Po wyjściu z aplikacji, przy usypianiu lub błędzie czujnika wentylator wraca do trybu automatycznego. Od 95° zawsze pracuje na maksimum." : {
+    "Pomocnik działa z uprawnieniami systemowymi i zmienia obroty tylko, gdy Pulse jest uruchomiony. Po wyjściu z aplikacji, przy usypianiu lub błędzie czujnika wentylator wraca do trybu automatycznego. Od %@ zawsze pracuje na maksimum." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Das Hilfsprogramm läuft mit Systemrechten und ändert die Lüfterdrehzahl nur, solange Pulse läuft. Beim Beenden der App, im Ruhezustand oder bei einem Sensorfehler kehrt der Lüfter in den Automatikbetrieb zurück. Ab 95° läuft er immer mit maximaler Drehzahl."
+            "value" : "Das Hilfsprogramm läuft mit Systemrechten und ändert die Lüfterdrehzahl nur, solange Pulse läuft. Beim Beenden der App, im Ruhezustand oder bei einem Sensorfehler kehrt der Lüfter in den Automatikbetrieb zurück. Ab %@ läuft er immer mit maximaler Drehzahl."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The helper runs with system privileges and changes the fan speed only while Pulse is running. When you quit the app, the Mac sleeps or a sensor fails, the fan returns to automatic. From 95° it always runs at maximum."
+            "value" : "The helper runs with system privileges and changes the fan speed only while Pulse is running. When you quit the app, the Mac sleeps or a sensor fails, the fan returns to automatic. From %@ it always runs at maximum."
+          }
+        }
+      }
+    },
+    "Pomocnik nie może odczytać temperatury – wentylator pracuje automatycznie." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Hilfsprogramm kann die Temperatur nicht lesen – der Lüfter läuft automatisch."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The helper cannot read the temperature – the fan is running automatically."
           }
         }
       }
@@ -3177,6 +3322,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Processes · CPU"
+          }
+        }
+      }
+    },
+    "Procesy · dysk" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prozesse · Festplatte"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Processes · disk"
           }
         }
       }
@@ -3564,6 +3725,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "GPU cores"
+          }
+        }
+      }
+    },
+    "Rdzenie efektywne" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Effizienzkerne"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Efficiency cores"
+          }
+        }
+      }
+    },
+    "Rdzenie wydajne" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leistungskerne"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Performance cores"
           }
         }
       }
@@ -3959,6 +4152,22 @@
         }
       }
     },
+    "Sterowanie" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Steuerung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Control"
+          }
+        }
+      }
+    },
     "Sterowanie wentylatorem nie jest obsługiwane na tym Macu." : {
       "localizations" : {
         "de" : {
@@ -3975,6 +4184,38 @@
         }
       }
     },
+    "Sterowanie wymaga pomocnika Pulse" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Lüftersteuerung benötigt das Pulse-Hilfsprogramm"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fan control needs the Pulse helper"
+          }
+        }
+      }
+    },
+    "Steruj wentylatorem" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lüfter steuern"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Control fan"
+          }
+        }
+      }
+    },
     "Steruj wentylatorem według krzywej" : {
       "localizations" : {
         "de" : {
@@ -3987,6 +4228,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Control the fan with a curve"
+          }
+        }
+      }
+    },
+    "Steruj wentylatorem…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lüfter steuern…"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Control fan…"
           }
         }
       }
@@ -4019,6 +4276,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Style"
+          }
+        }
+      }
+    },
+    "Superrdzenia" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Super-Kerne"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Super cores"
           }
         }
       }
@@ -4115,6 +4388,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Details"
+          }
+        }
+      }
+    },
+    "Szczyt" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spitze"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peak"
           }
         }
       }
@@ -4600,6 +4889,22 @@
         }
       }
     },
+    "W Ustawieniach systemowych przejdź do: Ogólne → Rzeczy otwierane po zalogowaniu i rozszerzenia, i włącz przełącznik przy Pulse. macOS poprosi o hasło lub Touch ID. Ta strona sama wykryje zmianę." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gehe in den Systemeinstellungen zu Allgemein → Anmeldeobjekte & Erweiterungen und aktiviere den Schalter neben Pulse. macOS fragt nach deinem Passwort oder Touch ID. Diese Seite erkennt die Änderung von selbst."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In System Settings, go to General → Login Items & Extensions and turn on the switch next to Pulse. macOS will ask for your password or Touch ID. This page will detect the change on its own."
+          }
+        }
+      }
+    },
     "W normie" : {
       "localizations" : {
         "de" : {
@@ -4660,6 +4965,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Value in the menu bar and on the tile"
+          }
+        }
+      }
+    },
+    "Według krzywej" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nach Kurve"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Following curve"
           }
         }
       }
@@ -4810,6 +5131,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Slow"
+          }
+        }
+      }
+    },
+    "Wszystkie" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All"
           }
         }
       }
@@ -5038,6 +5375,22 @@
         }
       }
     },
+    "Włącz pomocnika Pulse" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pulse-Hilfsprogramm aktivieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn on the Pulse helper"
+          }
+        }
+      }
+    },
     "Zajęte miejsce" : {
       "localizations" : {
         "de" : {
@@ -5199,6 +5552,7 @@
       }
     },
     "Zezwól na działanie pomocnika Pulse w Ustawieniach systemowych." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -5242,6 +5596,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Green"
+          }
+        }
+      }
+    },
+    "Zmiana obrotów wentylatora wymaga uprawnień systemowych, dlatego Pulse musi dodać małego pomocnika. Trzeba to zrobić tylko raz i można go później usunąć." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Ändern der Lüfterdrehzahl erfordert Systemrechte, daher muss Pulse ein kleines Hilfsprogramm hinzufügen. Das ist nur einmal nötig und lässt sich später wieder entfernen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changing the fan speed requires system privileges, so Pulse has to add a small helper. You only need to do this once, and you can remove it later."
           }
         }
       }

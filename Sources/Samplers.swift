@@ -167,11 +167,14 @@ struct ProcessStat: Identifiable, Equatable {
     let name: String
     let cpu: Double      // fraction of one core (1.0 = 100%)
     let memory: UInt64   // physical footprint in bytes
+    var diskRead: Double = 0    // bytes per second
+    var diskWrite: Double = 0
 }
 
 final class ProcessSampler {
     private var previous: [pid_t: UInt64] = [:]
     private var previousTime: Date?
+    private var previousIO: [pid_t: (read: UInt64, write: UInt64)] = [:]
     private let timebase: Double = {
         var info = mach_timebase_info_data_t()
         mach_timebase_info(&info)
@@ -188,6 +191,7 @@ final class ProcessSampler {
         let now = Date()
         let dt = previousTime.map { now.timeIntervalSince($0) } ?? 0
         var current: [pid_t: UInt64] = [:]
+        var currentIO: [pid_t: (read: UInt64, write: UInt64)] = [:]
         var result: [ProcessStat] = []
         result.reserveCapacity(Int(count))
 
@@ -205,9 +209,17 @@ final class ProcessSampler {
             if dt > 0, let prev = previous[pid], cpuTime >= prev {
                 cpu = Double(cpuTime - prev) * timebase / 1e9 / dt
             }
-            result.append(ProcessStat(id: pid, name: Self.name(for: pid), cpu: cpu, memory: usage.ri_phys_footprint))
+            currentIO[pid] = (usage.ri_diskio_bytesread, usage.ri_diskio_byteswritten)
+            var diskRead = 0.0, diskWrite = 0.0
+            if dt > 0, let prev = previousIO[pid] {
+                if usage.ri_diskio_bytesread >= prev.read { diskRead = Double(usage.ri_diskio_bytesread - prev.read) / dt }
+                if usage.ri_diskio_byteswritten >= prev.write { diskWrite = Double(usage.ri_diskio_byteswritten - prev.write) / dt }
+            }
+            result.append(ProcessStat(id: pid, name: Self.name(for: pid), cpu: cpu, memory: usage.ri_phys_footprint,
+                                      diskRead: diskRead, diskWrite: diskWrite))
         }
         previous = current
+        previousIO = currentIO
         previousTime = now
         return result
     }

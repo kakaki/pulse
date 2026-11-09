@@ -51,8 +51,12 @@ enum AppActions {
     static var closePopovers: () -> Void = {}
 
     static func openSettings(_ module: Module? = nil) {
+        openSettings(page: module.map { .module($0) })
+    }
+
+    static func openSettings(page: SettingsView.Page?) {
         closePopovers()
-        if let module { SettingsRouter.shared.page = .module(module) }
+        if let page { SettingsRouter.shared.page = page }
         SettingsWindowController.shared.show()
     }
 }

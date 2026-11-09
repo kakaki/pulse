@@ -153,6 +153,7 @@ struct Sparkline: View {
     var secondary: [Double]? = nil
     var secondaryColor: Color = .orange
     var length: Int = SystemMonitor.historyLength
+    var mirrored = false
     /// Formats the value shown while hovering; without it the chart has no hover readout.
     var format: ((Double) -> String)? = nil
     /// Optional time caption for the hovered point; the argument is the number of points back from the newest.
@@ -169,7 +170,7 @@ struct Sparkline: View {
             .map { Point(id: "a\($0.offset)", series: "a", x: n - values.count + $0.offset, y: $0.element) }
         if let secondary {
             result += secondary.enumerated().filter { $0.element.isFinite }
-                .map { Point(id: "b\($0.offset)", series: "b", x: n - secondary.count + $0.offset, y: $0.element) }
+                .map { Point(id: "b\($0.offset)", series: "b", x: n - secondary.count + $0.offset, y: mirrored ? -$0.element : $0.element) }
         }
         return result
     }
@@ -183,7 +184,7 @@ struct Sparkline: View {
         Chart(points) { p in
             let c = p.series == "a" ? color : secondaryColor
             AreaMark(x: .value("t", p.x), yStart: .value("0", 0), yEnd: .value("v", p.y), series: .value("s", p.series))
-                .foregroundStyle(LinearGradient(colors: [c.opacity(0.32), c.opacity(0.0)], startPoint: .top, endPoint: .bottom))
+                .foregroundStyle(LinearGradient(colors: [c.opacity(0.32), c.opacity(0.0)], startPoint: p.y < 0 ? .bottom : .top, endPoint: p.y < 0 ? .top : .bottom))
                 .interpolationMethod(.monotone)
             LineMark(x: .value("t", p.x), y: .value("v", p.y), series: .value("s", p.series))
                 .foregroundStyle(c)
@@ -191,7 +192,7 @@ struct Sparkline: View {
                 .interpolationMethod(.monotone)
         }
         .chartXScale(domain: 0...max(length - 1, 1))
-        .chartYScale(domain: 0...top)
+        .chartYScale(domain: (mirrored ? -top : 0)...top)
         .chartXAxis(.hidden)
         .chartYAxis {
             AxisMarks(values: .automatic(desiredCount: 3)) { _ in

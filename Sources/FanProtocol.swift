@@ -16,7 +16,7 @@ enum FanHelperInfo {
 
 /// Error codes the helper replies with; the app turns them into messages.
 enum FanHelperError {
-    static let unsupported = "unsupported", noFans = "noFans", invalidCurve = "invalidCurve", writeFailed = "writeFailed"
+    static let unsupported = "unsupported", noFans = "noFans", noSensor = "noSensor", invalidCurve = "invalidCurve", writeFailed = "writeFailed"
 }
 
 @objc protocol FanHelperProtocol {

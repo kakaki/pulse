@@ -72,7 +72,7 @@ final class HistoryStore {
     private var coarseSlot = HistoryStore.minuteNow() / 10
     private var coarseSums: [String: (sum: Double, count: Int)] = [:]
     private var currentMinute = HistoryStore.minuteNow()
-    private var sums: [HistoryMetric: (sum: Double, count: Int)] = [:]
+    private var sums: [String: (sum: Double, count: Int)] = [:]
     private var lastSave = Date()
 
     static let url: URL = {
@@ -93,18 +93,21 @@ final class HistoryStore {
 
     private static func minuteNow() -> Int { Int(Date().timeIntervalSince1970 / 60) }
 
-    func add(_ metric: HistoryMetric, _ value: Double?) {
+    func add(_ metric: HistoryMetric, _ value: Double?) { add(key: metric.rawValue, value) }
+
+    /// Also used for per-sensor and per-fan histories.
+    func add(key: String, _ value: Double?) {
         guard let value, value.isFinite else { return }
         let now = Self.minuteNow()
         if now != currentMinute { flush(); currentMinute = now }
-        let s = sums[metric] ?? (0, 0)
-        sums[metric] = (s.sum + value, s.count + 1)
+        let s = sums[key] ?? (0, 0)
+        sums[key] = (s.sum + value, s.count + 1)
     }
 
     private func flush() {
         guard !sums.isEmpty else { return }
         var values: [String: Double] = [:]
-        for (k, v) in sums where v.count > 0 { values[k.rawValue] = v.sum / Double(v.count) }
+        for (k, v) in sums where v.count > 0 { values[k] = v.sum / Double(v.count) }
         buckets.append(Bucket(minute: currentMinute, values: values))
         addCoarse(minute: currentMinute, values: values)
         let oldest = Self.minuteNow() - Self.minutes
@@ -146,13 +149,15 @@ final class HistoryStore {
 
     /// Fixed-length series (oldest first) for the range; missing slots are NaN.
     /// The last 24 h come from per-minute data, older points from the 10-minute averages.
-    func series(_ metric: HistoryMetric, range: HistoryRange) -> [Double] {
+    func series(_ metric: HistoryMetric, range: HistoryRange) -> [Double] { series(key: metric.rawValue, range: range) }
+
+    func series(key: String, range: HistoryRange) -> [Double] {
         let span = range.span, step = range.step
         let now = Self.minuteNow()
         var slots = [(sum: Double, count: Int)](repeating: (0, 0), count: span / step)
         func add(_ b: Bucket, weight: Int) {
             let age = now - b.minute           // 1 = previous minute
-            guard age >= 1, age <= span, let v = b.values[metric.rawValue] else { return }
+            guard age >= 1, age <= span, let v = b.values[key] else { return }
             let idx = slots.count - 1 - (age - 1) / step
             slots[idx].sum += v * Double(weight); slots[idx].count += weight
         }
@@ -210,7 +215,7 @@ final class HistoryStore {
 struct HistoryChart: View {
     @Environment(SystemMonitor.self) private var m
     @AppStorage("historyRange") private var rangeRaw = 0
-    var metric: HistoryMetric
+    var metric: HistoryMetric? = nil
     var live: [Double]
     var maxValue: Double? = nil
     var color: Color
@@ -218,16 +223,21 @@ struct HistoryChart: View {
     var live2: [Double]? = nil
     var color2: Color = .orange
     var height: CGFloat = 60
+    /// For histories that are not a `HistoryMetric` (one sensor, one fan).
+    var key: String? = nil
+    var format: ((Double) -> String)? = nil
+    /// Draws the second series downwards from the zero line.
+    var mirrored = false
 
     private var range: HistoryRange { HistoryRange(rawValue: rangeRaw) ?? .live }
 
     var body: some View {
         VStack(spacing: 6) {
-            let values = range == .live ? live : m.history.series(metric, range: range)
+            let values = range == .live ? live : m.history.series(key: key ?? metric?.rawValue ?? "", range: range)
             let second: [Double]? = metric2.map { range == .live ? (live2 ?? []) : m.history.series($0, range: range) }
             Sparkline(values: values, maxValue: maxValue, color: color, secondary: second, secondaryColor: color2,
                       length: range == .live ? SystemMonitor.historyLength : values.count,
-                      format: metric.format, timeLabel: range == .live ? nil : { range.timeLabel(pointsBack: $0) })
+                      mirrored: mirrored, format: format ?? metric?.format, timeLabel: range == .live ? nil : { range.timeLabel(pointsBack: $0) })
                 .frame(height: height)
                 .overlay {
                     if range != .live, !values.contains(where: { $0.isFinite }) {

@@ -26,6 +26,9 @@ enum Snapshot {
                 monitor.applyDemo(); NetworkExtras.shared.applyDemo(); DiskUsage.shared.applyDemo()
             }
             for s in monitor.sensors { print("sensor:", s.id, s.kind, String(format: "%.1f", s.value)) }
+            for s in monitor.sensorGroups { print("group:", s.id, s.name, String(format: "%.1f", s.value)) }
+            print("coreGroups:", monitor.coreGroups.map { "\($0.name)=\($0.indices)" })
+            print("volumeRates:", monitor.volumeRates)
             print("gpu:", monitor.gpu ?? -1, "battery:", monitor.battery)
             let csv = monitor.history.csv().split(separator: "\n")
             print("csv:", csv.count, csv.prefix(2).joined(separator: " | "), "|", csv.last ?? "")

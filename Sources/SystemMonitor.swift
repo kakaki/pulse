@@ -21,6 +21,7 @@ final class SystemMonitor {
     private(set) var cpuUser: Double = 0
     private(set) var cpuSystem: Double = 0
     private(set) var cores: [Double] = []
+    let coreGroups = CoreTopology.groups()
     private(set) var cpuHistory: [Double] = []
     private(set) var loadAverage: [Double] = [0, 0, 0]
 
@@ -42,6 +43,10 @@ final class SystemMonitor {
     private(set) var diskFree: Int64 = 0
     private(set) var readRate: Double = 0
     private(set) var writeRate: Double = 0
+    private(set) var peakRead: Double = 0
+    private(set) var peakWrite: Double = 0
+    /// Current speed per volume (`DiskVolume.id`).
+    private(set) var volumeRates: [String: DiskRates] = [:]
     private(set) var readHistory: [Double] = []
     private(set) var writeHistory: [Double] = []
     var diskFraction: Double { diskTotal > 0 ? Double(diskTotal - diskFree) / Double(diskTotal) : 0 }
@@ -56,6 +61,8 @@ final class SystemMonitor {
 
     // MARK: Temperatures
     private(set) var sensors: [TempSensor] = []
+    /// Readable per-component summary (Apple Silicon); empty where `sensors` is already readable.
+    private(set) var sensorGroups: [TempSensor] = []
     private(set) var socAvg: Double?
     private(set) var socMax: Double?
     private(set) var ssdTemp: Double?
@@ -70,6 +77,8 @@ final class SystemMonitor {
     // MARK: Network
     private(set) var netIn: Double = 0
     private(set) var netOut: Double = 0
+    private(set) var peakIn: Double = 0
+    private(set) var peakOut: Double = 0
     private(set) var netInHistory: [Double] = []
     private(set) var netOutHistory: [Double] = []
     private(set) var netInterface: String?
@@ -87,6 +96,8 @@ final class SystemMonitor {
     // MARK: Battery
     private(set) var battery = BatteryInfo()
     private(set) var batteryHistory: [Double] = []
+    /// Live series of single sensors and fans, by history key.
+    private(set) var itemHistory: [String: [Double]] = [:]
 
     // MARK: Power saving
     /// True while Pulse refreshes less often (on battery or in Low Power Mode).
@@ -101,6 +112,9 @@ final class SystemMonitor {
     private(set) var processes: [ProcessStat] = []
     var topByCPU: [ProcessStat] { Array(processes.sorted { $0.cpu > $1.cpu }.prefix(5)) }
     var topByMemory: [ProcessStat] { Array(processes.sorted { $0.memory > $1.memory }.prefix(5)) }
+    var topByDisk: [ProcessStat] {
+        Array(processes.filter { $0.diskRead + $0.diskWrite > 0 }.sorted { $0.diskRead + $0.diskWrite > $1.diskRead + $1.diskWrite }.prefix(5))
+    }
     /// Number of open dropdowns that need the (costlier) per-process sample.
     @ObservationIgnored var processWatchers = 0 {
         didSet { if processWatchers > 0 && oldValue == 0 { processes = processSampler.sample() } }
@@ -120,6 +134,7 @@ final class SystemMonitor {
     @ObservationIgnored private var prevNet: (rx: UInt32, tx: UInt32, time: Date)?
     @ObservationIgnored private let processSampler = ProcessSampler()
     @ObservationIgnored private let smcSampler = SMCSampler()
+    @ObservationIgnored private let diskActivity = DiskActivitySampler()
     @ObservationIgnored let history = HistoryStore()
     @ObservationIgnored private var tick = 0
     @ObservationIgnored private var loop: Task<Void, Never>?
@@ -168,6 +183,7 @@ final class SystemMonitor {
         sampleMemory()
         if tick % 5 == 0 { sampleDiskCapacity() }
         sampleDiskIO()
+        volumeRates = diskActivity.sample(volumes)
         sampleTemperatures()
         sampleGPU()
         sampleNetwork()
@@ -212,10 +228,17 @@ final class SystemMonitor {
         history.add(.diskWrite, writeRate)
         history.add(.netIn, netIn)
         history.add(.netOut, netOut)
+        for s in sensorGroups.isEmpty ? sensors : sensorGroups { recordItem("sensor.\(s.id)", s.value) }
+        for fan in fans { recordItem("fan.\(fan.id)", fan.rpm) }
         if battery.present {
             history.add(.battery, battery.percent)
             history.add(.batteryPower, battery.watts)
         }
+    }
+
+    private func recordItem(_ key: String, _ value: Double) {
+        history.add(key: key, value)
+        push(&itemHistory[key, default: []], value)
     }
 
     private func push(_ array: inout [Double], _ value: Double) {
@@ -330,6 +353,8 @@ final class SystemMonitor {
             if dt > 0 {
                 readRate = read >= prev.read ? Double(read - prev.read) / dt : 0
                 writeRate = write >= prev.write ? Double(write - prev.write) / dt : 0
+                peakRead = max(peakRead, readRate)
+                peakWrite = max(peakWrite, writeRate)
                 push(&readHistory, readRate)
                 push(&writeHistory, writeRate)
             }
@@ -360,6 +385,8 @@ final class SystemMonitor {
                 netOut = Double(dOut) / dt
                 netSessionIn += dIn
                 netSessionOut += dOut
+                peakIn = max(peakIn, netIn)
+                peakOut = max(peakOut, netOut)
                 push(&netInHistory, netIn)
                 push(&netOutHistory, netOut)
             }
@@ -371,7 +398,15 @@ final class SystemMonitor {
 
     private func sampleTemperatures() {
         var all = tempReader.read()
-        if all.isEmpty { all = smcSampler.intelTemperatures() }
+        if all.isEmpty {
+            all = smcSampler.intelTemperatures()
+        } else {
+            let storage = all.filter { $0.kind == .ssd }.map(\.value).max()
+                .map { TempSensor(id: "ssd", name: "SSD", value: $0, kind: .ssd) }
+            let battery = all.filter { $0.kind == .battery }.map(\.value).max()
+                .map { TempSensor(id: "battery", name: String(localized: "Bateria"), value: $0, kind: .battery) }
+            sensorGroups = smcSampler.appleTemperatureGroups() + [storage, battery].compactMap { $0 }
+        }
         sensors = all
         let soc = all.filter { $0.kind == .soc }.map(\.value)
         socAvg = soc.isEmpty ? nil : soc.reduce(0, +) / Double(soc.count)
@@ -473,6 +508,12 @@ extension SystemMonitor {
         sensors = (1...6).map { TempSensor(id: "soc\($0)", name: "SoC \($0)", value: 41 + Double($0) * 1.4, kind: .soc) }
             + [TempSensor(id: "ssd", name: "SSD", value: 38, kind: .ssd),
                TempSensor(id: "bat", name: String(localized: "Bateria"), value: 31, kind: .battery)]
+        sensorGroups = [TempSensor(id: "cpuE", name: String(localized: "CPU – rdzenie efektywne"), value: 42, kind: .soc),
+                        TempSensor(id: "cpuP", name: String(localized: "CPU – rdzenie wydajne"), value: 49, kind: .soc),
+                        TempSensor(id: "gpu", name: String(localized: "Grafika"), value: 44, kind: .other),
+                        TempSensor(id: "mem", name: String(localized: "Pamięć"), value: 39, kind: .other),
+                        TempSensor(id: "ssd", name: "SSD", value: 38, kind: .ssd),
+                        TempSensor(id: "bat", name: String(localized: "Bateria"), value: 31, kind: .battery)]
         if hasFans { fans = fans.map { FanInfo(id: $0.id, rpm: $0.min + 600, min: $0.min, max: $0.max) } }
         systemPower = 7.4
         thermalState = .nominal

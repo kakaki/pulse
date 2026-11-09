@@ -41,7 +41,7 @@ lipo -create "$BIN"/PulseWidget-* -output "$WX/Contents/MacOS/PulseWidget"
 # Privileged fan helper (launchd daemon, only usable when Developer ID-signed)
 for ARCH in arm64 x86_64; do
   xcrun swiftc -O -swift-version 5 -target "$ARCH-apple-macos$MIN_MACOS" -sdk "$SDK" \
-    Helper/main.swift Sources/SMCClient.swift Sources/FanProtocol.swift -o "$BIN/PulseFanHelper-$ARCH"
+    Helper/main.swift Sources/SMCClient.swift Sources/FanProtocol.swift Sources/TemperatureReader.swift -o "$BIN/PulseFanHelper-$ARCH"
 done
 lipo -create "$BIN"/PulseFanHelper-* -output "$APP/Contents/MacOS/PulseFanHelper"
 mkdir -p "$APP/Contents/Library/LaunchDaemons"

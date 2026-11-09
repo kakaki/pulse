@@ -48,6 +48,34 @@ final class SMCSampler {
         return sensors.sorted { $0.kind.rawValue < $1.kind.rawValue }
     }
 
+    private struct SensorGroup { let id: String; let name: () -> String; let kind: TempSensor.Kind; let keys: [String] }
+
+    /// Apple Silicon temperature keys by family, found once. The families hold across chips, while exact keys do not.
+    private lazy var appleGroups: [SensorGroup] = {
+        guard let smc else { return [] }
+        let keys = smc.allKeys().filter { $0.hasPrefix("T") && smc.read($0)?.0 == "flt " }
+        func family(_ prefixes: String...) -> [String] { keys.filter { k in prefixes.contains { k.hasPrefix($0) } } }
+        let efficiency = family("Te")
+        let groups: [SensorGroup] = efficiency.isEmpty
+            ? [.init(id: "cpu", name: { "CPU" }, kind: .soc, keys: family("Tp", "Tf"))]
+            : [.init(id: "cpuE", name: { String(localized: "CPU – rdzenie efektywne") }, kind: .soc, keys: efficiency),
+               .init(id: "cpuP", name: { CoreTopology.fastestAreSuper ? String(localized: "CPU – superrdzenia") : String(localized: "CPU – rdzenie wydajne") }, kind: .soc, keys: family("Tp", "Tf"))]
+        return (groups + [
+            .init(id: "gpu", name: { String(localized: "Grafika") }, kind: .other, keys: family("Tg")),
+            .init(id: "mem", name: { String(localized: "Pamięć") }, kind: .other, keys: family("Tm")),
+            .init(id: "wifi", name: { "Wi‑Fi" }, kind: .other, keys: family("TW"))
+        ]).filter { !$0.keys.isEmpty }
+    }()
+
+    /// One reading per family (the hottest sensor in it).
+    func appleTemperatureGroups() -> [TempSensor] {
+        guard let smc else { return [] }
+        return appleGroups.compactMap { group in
+            guard let hottest = group.keys.compactMap({ smc.number($0) }).filter({ $0 > 5 && $0 < 130 }).max() else { return nil }
+            return TempSensor(id: group.id, name: group.name(), value: hottest, kind: group.kind)
+        }
+    }
+
     /// Whole-system power draw in watts (PSTR), if the SMC exposes it.
     func systemPower() -> Double? { smc?.number("PSTR") }
 }

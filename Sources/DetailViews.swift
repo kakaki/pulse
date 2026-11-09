@@ -60,7 +60,18 @@ struct CPUDetail: View {
             }
             Card {
                 SectionTitle(text: "Rdzenie")
-                CoreBars(values: m.cores, colors: colors)
+                if m.coreGroups.isEmpty {
+                    CoreBars(values: m.cores, colors: colors)
+                } else {
+                    ForEach(m.coreGroups) { group in
+                        let loads = group.indices.filter { $0 < m.cores.count }.map { m.cores[$0] }
+                        VStack(spacing: 5) {
+                            LegendItem(color: group.id == "E" ? colors[0] : colors[1], title: group.name,
+                                       value: Fmt.pct(loads.isEmpty ? 0 : loads.reduce(0, +) / Double(loads.count)))
+                            CoreBars(values: loads, colors: group.id == "E" ? [colors[0], colors[0].opacity(0.7)] : colors)
+                        }
+                    }
+                }
                 HStack(spacing: 8) {
                     MiniStat(title: "Obc. 1 min", value: String(format: "%.2f", m.loadAverage[0]))
                     MiniStat(title: "5 min", value: String(format: "%.2f", m.loadAverage[1]))
@@ -204,7 +215,10 @@ struct DiskDetail: View {
                 HStack(alignment: .firstTextBaseline) {
                     BigValue(value: Fmt.file(m.diskFree), unit: "wolne")
                     Spacer()
-                    Text(String(localized: "\(Fmt.pct(m.diskFraction)) zajęte")).font(.system(size: 11.5, weight: .medium)).foregroundStyle(.secondary)
+                    VStack(alignment: .trailing, spacing: 4) {
+                        DiskActivityDots(rates: m.volumes.first { $0.isSystem }.flatMap { m.volumeRates[$0.id] })
+                        Text(String(localized: "\(Fmt.pct(m.diskFraction)) zajęte")).font(.system(size: 11.5, weight: .medium)).foregroundStyle(.secondary)
+                    }
                 }
                 LinearMeter(value: m.diskFraction, colors: Module.disk.colors, height: 10)
             }
@@ -219,6 +233,7 @@ struct DiskDetail: View {
                                 VStack(alignment: .leading, spacing: 3) {
                                     HStack {
                                         Text(verbatim: v.name).font(.system(size: 12)).lineLimit(1)
+                                        DiskActivityDots(rates: m.volumeRates[v.id])
                                         Spacer()
                                         Text(String(localized: "\(Fmt.file(v.free)) wolne z \(Fmt.file(v.total))"))
                                             .font(.system(size: 11.5, weight: .medium)).monospacedDigit()
@@ -238,8 +253,10 @@ struct DiskDetail: View {
                     MiniStat(title: "Zapis", value: Fmt.rate(m.writeRate), color: writeColor, symbol: "arrow.up")
                 }
                 HistoryChart(metric: .diskRead, live: m.readHistory, color: readColor,
-                             metric2: .diskWrite, live2: m.writeHistory, color2: writeColor, height: 56)
+                             metric2: .diskWrite, live2: m.writeHistory, color2: writeColor, height: 56, mirrored: true)
+                PeakRow(down: m.peakRead, up: m.peakWrite, downColor: readColor, upColor: writeColor)
             }
+            ProcessList(metric: .disk)
             DiskUsageCard()
         }
     }
@@ -262,7 +279,8 @@ struct NetworkDetail: View {
                     MiniStat(title: "Wysyłanie", value: Fmt.rate(m.netOut), color: outColor, symbol: "arrow.up")
                 }
                 HistoryChart(metric: .netIn, live: m.netInHistory, color: inColor,
-                             metric2: .netOut, live2: m.netOutHistory, color2: outColor, height: 64)
+                             metric2: .netOut, live2: m.netOutHistory, color2: outColor, height: 64, mirrored: true)
+                PeakRow(down: m.peakIn, up: m.peakOut, downColor: inColor, upColor: outColor)
             }
             Card {
                 SectionTitle(text: "Aplikacje", trailing: "↓ / ↑")
@@ -353,12 +371,66 @@ struct NetworkDetail: View {
 // MARK: - Sensors
 
 struct SensorsDetail: View {
+    @AppStorage("sensors.detailed") private var showAllSensors = false
     @Environment(SystemMonitor.self) private var m
     @AppStorage("tempUnit") private var tempUnit = 0
+    @State private var expanded: String?
+
+    private var gpuTemperature: Double? {
+        (m.sensorGroups.first { $0.id == "gpu" } ?? m.sensors.first { $0.name == "GPU" })?.value
+    }
+
+    private func gauge(_ title: String, _ value: String, fraction: Double, color: Color) -> some View {
+        RingGauge(value: fraction, colors: [color.opacity(0.7), color], lineWidth: 6)
+            .frame(width: 76, height: 76)
+            .overlay {
+                VStack(spacing: 0) {
+                    Text(verbatim: title).font(.system(size: 9.5, weight: .semibold)).foregroundStyle(.secondary)
+                    Text(verbatim: value).font(.system(size: 15, weight: .bold, design: .rounded)).monospacedDigit()
+                }
+            }
+            .frame(maxWidth: .infinity)
+    }
+
+    /// A row that shows its own history chart when clicked; rows without a key are plain.
+    @ViewBuilder
+    private func expandable<Row: View>(key: String?, maxValue: Double?, color: Color, format: @escaping (Double) -> String,
+                                       @ViewBuilder row: () -> Row) -> some View {
+        VStack(spacing: 6) {
+            row()
+                .contentShape(.rect)
+                .onTapGesture { if let key { expanded = expanded == key ? nil : key } }
+            if let key, expanded == key {
+                HistoryChart(live: m.itemHistory[key] ?? [], maxValue: maxValue, color: color, height: 48, key: key, format: format)
+                    .padding(.bottom, 4)
+            }
+        }
+    }
+
+    private func chevron(_ key: String?) -> some View {
+        Image(systemName: "chevron.right")
+            .font(.system(size: 8, weight: .semibold))
+            .foregroundStyle(.tertiary)
+            .rotationEffect(.degrees(key != nil && expanded == key ? 90 : 0))
+            .opacity(key == nil ? 0 : 1)
+    }
 
     var body: some View {
         let _ = tempUnit
         VStack(spacing: 10) {
+            if m.socMax != nil || m.socAvg != nil || !m.sensors.isEmpty {
+                Card {
+                    HStack {
+                        let cpu = m.socMax ?? m.socAvg
+                        gauge("CPU", Fmt.temp(cpu), fraction: (cpu ?? 0) / 105, color: Heat.color(cpu ?? 0))
+                        if let gpu = gpuTemperature { gauge("GPU", Fmt.temp(gpu), fraction: gpu / 105, color: Heat.color(gpu)) }
+                        if m.hasFans, !m.fans.isEmpty {
+                            let level = m.fans.map(\.fraction).reduce(0, +) / Double(m.fans.count)
+                            gauge(String(localized: "Wentylator"), Fmt.pct(level), fraction: level, color: .cyan)
+                        }
+                    }
+                }
+            }
             Card {
                 SectionTitle(text: "Temperatura SoC", trailing: String(localized: "średnio"))
                 if let avg = m.socAvg {
@@ -396,6 +468,8 @@ struct SensorsDetail: View {
                 }
                 if m.hasFans {
                     ForEach(m.fans) { fan in
+                        expandable(key: "fan.\(fan.id)", maxValue: fan.max > 0 ? fan.max : nil, color: .cyan,
+                                   format: { String(localized: "\(Int($0)) obr/min") }) {
                         HStack(spacing: 10) {
                             Image(systemName: "fan.fill").foregroundStyle(.cyan)
                             Text(m.fans.count > 1 ? String(localized: "Wentylator \(fan.id + 1)") : String(localized: "Wentylator")).font(.system(size: 12))
@@ -403,8 +477,11 @@ struct SensorsDetail: View {
                             LinearMeter(value: fan.fraction, colors: [.cyan.opacity(0.7), .blue], height: 5).frame(width: 70)
                             Text("\(Int(fan.rpm)) obr/min").font(.system(size: 11.5, weight: .semibold)).monospacedDigit()
                                 .frame(width: 92, alignment: .trailing)
+                            chevron("fan.\(fan.id)")
+                        }
                         }
                     }
+                    if FanControl.isAvailable(on: m) { FanControlShortcut() }
                 } else {
                     InfoRow(title: "Wentylator", value: String(localized: "Brak – chłodzenie pasywne"))
                 }
@@ -414,10 +491,25 @@ struct SensorsDetail: View {
             }
             if !m.sensors.isEmpty {
                 Card {
-                    SectionTitle(text: "Wszystkie czujniki", trailing: "\(m.sensors.count)")
+                    let detailed = showAllSensors || m.sensorGroups.isEmpty
+                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                        if detailed {
+                            SectionTitle(text: "Wszystkie czujniki", trailing: "\(m.sensors.count)")
+                        } else {
+                            SectionTitle(text: "Podzespoły")
+                        }
+                        if !m.sensorGroups.isEmpty {
+                            Button(detailed ? String(localized: "Mniej") : String(localized: "Wszystkie")) { showAllSensors.toggle() }
+                                .buttonStyle(.plain)
+                                .font(.system(size: 10.5, weight: .medium))
+                                .foregroundStyle(Color.accentColor)
+                        }
+                    }
                     ScrollView {
                         VStack(spacing: 7) {
-                            ForEach(m.sensors) { s in
+                            ForEach(detailed ? m.sensors : m.sensorGroups) { s in
+                                let key: String? = detailed && !m.sensorGroups.isEmpty ? nil : "sensor.\(s.id)"
+                                expandable(key: key, maxValue: 110, color: Heat.color(s.value), format: { Fmt.temp($0) }) {
                                 HStack(spacing: 10) {
                                     Text(s.name).font(.system(size: 11.5)).lineLimit(1)
                                     Spacer()
@@ -426,11 +518,13 @@ struct SensorsDetail: View {
                                     Text(Fmt.temp(s.value))
                                         .font(.system(size: 11.5, weight: .semibold)).monospacedDigit()
                                         .frame(width: 34, alignment: .trailing)
+                                    chevron(key)
+                                }
                                 }
                             }
                         }
                     }
-                    .frame(maxHeight: 190)
+                    .frame(maxHeight: expanded == nil ? 190 : 300)
                     .scrollIndicators(.never)
                 }
             }
@@ -533,16 +627,17 @@ struct BatteryDetail: View {
 // MARK: - Processes
 
 struct ProcessList: View {
-    enum Metric { case cpu, memory }
+    enum Metric { case cpu, memory, disk }
     let metric: Metric
     @Environment(SystemMonitor.self) private var m
 
     var body: some View {
-        let list = metric == .cpu ? m.topByCPU : m.topByMemory
+        let list = metric == .cpu ? m.topByCPU : (metric == .memory ? m.topByMemory : m.topByDisk)
         Card {
-            SectionTitle(text: metric == .cpu ? String(localized: "Procesy · CPU") : String(localized: "Procesy · pamięć"), trailing: String(localized: "prawy klik: opcje"))
+            SectionTitle(text: metric == .cpu ? String(localized: "Procesy · CPU") : (metric == .memory ? String(localized: "Procesy · pamięć") : String(localized: "Procesy · dysk")), trailing: String(localized: "prawy klik: opcje"))
             if list.isEmpty {
-                Text("Zbieranie danych…").font(.system(size: 11.5)).foregroundStyle(.secondary)
+                Text(metric == .disk ? String(localized: "Brak aktywności") : String(localized: "Zbieranie danych…"))
+                    .font(.system(size: 11.5)).foregroundStyle(.secondary)
             }
             VStack(spacing: 7) {
                 ForEach(list) { p in
@@ -550,7 +645,7 @@ struct ProcessList: View {
                         ProcessIcon(pid: p.id).frame(width: 16, height: 16)
                         Text(p.name).font(.system(size: 12)).lineLimit(1)
                         Spacer()
-                        Text(metric == .cpu ? String(format: "%.1f%%", p.cpu * 100) : Fmt.memory(p.memory))
+                        Text(value(p))
                             .font(.system(size: 11.5, weight: .medium)).monospacedDigit()
                             .foregroundStyle(.secondary)
                     }
@@ -561,6 +656,46 @@ struct ProcessList: View {
         }
         .onAppear { m.processWatchers += 1 }
         .onDisappear { m.processWatchers = max(0, m.processWatchers - 1) }
+    }
+
+    private func value(_ p: ProcessStat) -> String {
+        switch metric {
+        case .cpu: String(format: "%.1f%%", p.cpu * 100)
+        case .memory: Fmt.memory(p.memory)
+        case .disk: "↓ \(Fmt.rate(p.diskRead)) ↑ \(Fmt.rate(p.diskWrite))"
+        }
+    }
+}
+
+/// Highest speeds seen since Pulse started.
+struct PeakRow: View {
+    let down: Double
+    let up: Double
+    let downColor: Color
+    let upColor: Color
+    var body: some View {
+        HStack(spacing: 10) {
+            Text("Szczyt").foregroundStyle(.secondary)
+            Spacer()
+            Text(verbatim: "↓ " + Fmt.rate(down)).foregroundStyle(downColor)
+            Text(verbatim: "↑ " + Fmt.rate(up)).foregroundStyle(upColor)
+        }
+        .font(.system(size: 11, weight: .medium))
+        .monospacedDigit()
+    }
+}
+
+/// Two small lights: lit while a volume is being read from or written to.
+struct DiskActivityDots: View {
+    let rates: DiskRates?
+    private func dot(_ on: Bool, _ color: Color) -> some View {
+        Circle().fill(on ? color : Color.secondary.opacity(0.25)).frame(width: 6, height: 6)
+    }
+    var body: some View {
+        HStack(spacing: 3) {
+            dot((rates?.read ?? 0) > 1024, Color(red: 0.35, green: 0.8, blue: 1.0))
+            dot((rates?.write ?? 0) > 1024, Color(red: 1.0, green: 0.45, blue: 0.6))
+        }
     }
 }
 

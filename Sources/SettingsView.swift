@@ -9,8 +9,9 @@ final class SettingsRouter {
 }
 
 struct SettingsView: View {
-    enum Page: Hashable { case general, alerts, module(Module), about }
+    enum Page: Hashable { case general, alerts, module(Module), fan, about }
     @State private var router = SettingsRouter.shared
+    @Environment(SystemMonitor.self) private var monitor
 
     var body: some View {
         NavigationSplitView {
@@ -26,6 +27,12 @@ struct SettingsView: View {
                         ModuleSidebarRow(module: module).tag(Page.module(module))
                     }
                 }
+                if FanControl.isAvailable(on: monitor) {
+                    Section("Sterowanie") {
+                        SidebarRow(title: String(localized: "Wentylator"), symbol: "fan.fill", colors: [.cyan, .blue], enabled: FanControl.shared.enabled)
+                            .tag(Page.fan)
+                    }
+                }
                 Section {
                     SidebarRow(title: String(localized: "O programie"), symbol: "info.circle.fill", colors: [.blue, .purple], enabled: nil)
                         .tag(Page.about)
@@ -37,6 +44,7 @@ struct SettingsView: View {
             case .general: GeneralSettings()
             case .alerts: AlertSettings()
             case .module(let module): ModuleSettings(module: module).id(module)
+            case .fan: FanSettings()
             case .about: AboutView()
             }
         }
@@ -136,7 +144,14 @@ struct ModuleSettings: View {
                 }
                 .padding(.vertical, 4)
             }
-            if module == .sensors { TemperatureUnitSection(); FanControlSection() }
+            if module == .sensors {
+                TemperatureUnitSection()
+                if FanControl.isAvailable(on: monitor) {
+                    Section {
+                        Button("Steruj wentylatorem…") { SettingsRouter.shared.page = .fan }
+                    }
+                }
+            }
             if module == .battery { EnergySavingSection() }
             ForEach(Alerts.Kind.kinds(for: module)) { AlertRow(kind: $0) }
         }
