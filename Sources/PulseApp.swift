@@ -23,7 +23,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         statusBar = StatusBarController(monitor: SystemMonitor.shared)
         _ = Updater.shared  // starts Sparkle (background checks) when a feed is configured
-        if !CommandLine.arguments.contains("--snapshot") { Alerts.shared.requestAuthorization() }
+        if !CommandLine.arguments.contains("--snapshot") { Alerts.shared.requestAuthorization(); FanControl.shared.start() }
         // Save history on SIGTERM too (pkill, logout), not only on a regular quit.
         signal(SIGTERM, SIG_IGN)
         let term = DispatchSource.makeSignalSource(signal: SIGTERM, queue: .main)

@@ -3,6 +3,14 @@
     <channel>
         <title>Pulse</title>
         <item>
+            <title>1.9</title>
+            <pubDate>Mon, 09 Nov 2026 19:50:34 +0100</pubDate>
+            <sparkle:version>12</sparkle:version>
+            <sparkle:shortVersionString>1.9</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://raw.githubusercontent.com/kakaki/pulse/main/updates/Pulse-1.9.dmg" length="4731722" type="application/octet-stream" sparkle:edSignature="JKlBnTYBBM2K99ZoNtJAIO5fS+tj76Q5KjWJljoF5dshaeya3tAMWu9huPkccSwzRn9p2m4kxSIzGpKW6ciEDA=="/>
+        </item>
+        <item>
             <title>1.8</title>
             <pubDate>Sun, 08 Nov 2026 18:28:49 +0100</pubDate>
             <sparkle:version>11</sparkle:version>

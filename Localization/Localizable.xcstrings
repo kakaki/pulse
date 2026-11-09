@@ -17,6 +17,7 @@
         }
       }
     },
+    "%" : {},
     "%@ wolne z %@" : {
       "localizations" : {
         "de" : {
@@ -1942,6 +1943,22 @@
         }
       }
     },
+    "Nie znaleziono wentylatora, którym można sterować." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Es wurde kein steuerbarer Lüfter gefunden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No controllable fan was found."
+          }
+        }
+      }
+    },
     "Niebieski" : {
       "localizations" : {
         "de" : {
@@ -1970,6 +1987,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Disconnected disk"
+          }
+        }
+      }
+    },
+    "Nieprawidłowa krzywa." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ungültige Kurve."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invalid curve."
           }
         }
       }
@@ -2322,6 +2355,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Open System Settings"
+          }
+        }
+      }
+    },
+    "Otwórz…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öffnen…"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open…"
           }
         }
       }
@@ -2870,6 +2919,22 @@
         }
       }
     },
+    "Pomocnik działa z uprawnieniami systemowymi i zmienia obroty tylko, gdy Pulse jest uruchomiony. Po wyjściu z aplikacji, przy usypianiu lub błędzie czujnika wentylator wraca do trybu automatycznego. Od 95° zawsze pracuje na maksimum." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Hilfsprogramm läuft mit Systemrechten und ändert die Lüfterdrehzahl nur, solange Pulse läuft. Beim Beenden der App, im Ruhezustand oder bei einem Sensorfehler kehrt der Lüfter in den Automatikbetrieb zurück. Ab 95° läuft er immer mit maximaler Drehzahl."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The helper runs with system privileges and changes the fan speed only while Pulse is running. When you quit the app, the Mac sleeps or a sensor fails, the fan returns to automatic. From 95° it always runs at maximum."
+          }
+        }
+      }
+    },
     "Poważny" : {
       "localizations" : {
         "de" : {
@@ -3291,6 +3356,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pin – always open this module"
+          }
+        }
+      }
+    },
+    "Przywróć domyślną krzywą" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standardkurve wiederherstellen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restore default curve"
           }
         }
       }
@@ -3878,6 +3959,38 @@
         }
       }
     },
+    "Sterowanie wentylatorem nie jest obsługiwane na tym Macu." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Lüftersteuerung wird auf diesem Mac nicht unterstützt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fan control is not supported on this Mac."
+          }
+        }
+      }
+    },
+    "Steruj wentylatorem według krzywej" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lüfter per Kurve steuern"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Control the fan with a curve"
+          }
+        }
+      }
+    },
     "Strona projektu" : {
       "localizations" : {
         "de" : {
@@ -3970,6 +4083,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "System & other"
+          }
+        }
+      }
+    },
+    "System odrzucił zmianę obrotów – wentylator pracuje automatycznie." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das System hat die Drehzahländerung abgelehnt – der Lüfter läuft automatisch."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The system rejected the speed change – the fan is running automatically."
           }
         }
       }
@@ -4387,6 +4516,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Module settings"
+          }
+        }
+      }
+    },
+    "Usuń pomocnika" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hilfsprogramm entfernen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove helper"
           }
         }
       }
@@ -5049,6 +5194,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Allow"
+          }
+        }
+      }
+    },
+    "Zezwól na działanie pomocnika Pulse w Ustawieniach systemowych." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erlaube das Pulse-Hilfsprogramm in den Systemeinstellungen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow the Pulse helper in System Settings."
           }
         }
       }

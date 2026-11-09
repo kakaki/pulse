@@ -19,7 +19,11 @@ UPDATE_URL=""
 [[ -f release.conf ]] && source ./release.conf
 
 NOTARIZE=1
-[[ "${1:-}" == "--no-notarize" ]] && NOTARIZE=0
+APPCAST=1
+for arg in "$@"; do
+  [[ "$arg" == "--no-notarize" ]] && NOTARIZE=0
+  [[ "$arg" == "--no-appcast" ]] && APPCAST=0   # notarized test DMG in dist/ only
+done
 PROFILE="${NOTARY_PROFILE:-pulse-notary}"
 
 IDENTITY="${IDENTITY:-$(security find-identity -v -p codesigning | grep -m1 '"Developer ID Application' | awk '{print $2}' || true)}"
@@ -41,6 +45,7 @@ SIGN=(codesign --force --sign "$IDENTITY")
 
 # Inside-out: Sparkle, the widget extension, then the app.
 if [[ "$IDENTITY" == "-" ]]; then sign_sparkle "$APP" -; else sign_sparkle "$APP" "$IDENTITY" --options runtime --timestamp; fi
+"${SIGN[@]}" --identifier local.pulse.menubar.fanhelper "$APP/Contents/MacOS/PulseFanHelper"
 "${SIGN[@]}" --entitlements Widget/PulseWidget.entitlements "$WX"
 "${SIGN[@]}" --entitlements Pulse.entitlements "$APP"
 codesign --verify --deep --strict --verbose=1 "$APP"
@@ -68,7 +73,7 @@ mkdir -p "$OUT"
 cp "$DMG" "$OUT/"
 echo "Gotowe: $OUT/Pulse-$VERSION.dmg"
 
-if [[ -n "$UPDATE_URL" && $NOTARIZE == 1 && "$IDENTITY" != "-" ]]; then
+if [[ -n "$UPDATE_URL" && $APPCAST == 1 && $NOTARIZE == 1 && "$IDENTITY" != "-" ]]; then
   mkdir -p updates
   cp "$DMG" updates/
   ./Vendor/Sparkle/bin/generate_appcast --account pulse --maximum-deltas 0 \

@@ -136,7 +136,7 @@ struct ModuleSettings: View {
                 }
                 .padding(.vertical, 4)
             }
-            if module == .sensors { TemperatureUnitSection() }
+            if module == .sensors { TemperatureUnitSection(); FanControlSection() }
             if module == .battery { EnergySavingSection() }
             ForEach(Alerts.Kind.kinds(for: module)) { AlertRow(kind: $0) }
         }

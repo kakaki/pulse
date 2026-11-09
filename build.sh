@@ -38,6 +38,14 @@ for ARCH in arm64 x86_64; do
     Widget/PulseWidget.swift Sources/WidgetData.swift -o "$BIN/PulseWidget-$ARCH"
 done
 lipo -create "$BIN"/PulseWidget-* -output "$WX/Contents/MacOS/PulseWidget"
+# Privileged fan helper (launchd daemon, only usable when Developer ID-signed)
+for ARCH in arm64 x86_64; do
+  xcrun swiftc -O -swift-version 5 -target "$ARCH-apple-macos$MIN_MACOS" -sdk "$SDK" \
+    Helper/main.swift Sources/SMCClient.swift Sources/FanProtocol.swift -o "$BIN/PulseFanHelper-$ARCH"
+done
+lipo -create "$BIN"/PulseFanHelper-* -output "$APP/Contents/MacOS/PulseFanHelper"
+mkdir -p "$APP/Contents/Library/LaunchDaemons"
+cp Helper/fanhelper.plist "$APP/Contents/Library/LaunchDaemons/local.pulse.menubar.fanhelper.plist"
 cp Widget/Info.plist "$WX/Contents/"
 # The widget's version must match the app's.
 for k in CFBundleShortVersionString CFBundleVersion; do
@@ -62,6 +70,7 @@ for lproj in "$LOC"/out/*.lproj; do
 done
 xattr -cr "$APP"
 sign_sparkle "$APP" -
+codesign --force --sign - --identifier local.pulse.menubar.fanhelper "$APP/Contents/MacOS/PulseFanHelper" >/dev/null
 codesign --force --sign - --entitlements Widget/PulseWidget.entitlements "$WX" >/dev/null
 codesign --force --sign - "$APP" >/dev/null
 echo "Zbudowano: $APP"
