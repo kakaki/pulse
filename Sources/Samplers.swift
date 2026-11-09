@@ -242,7 +242,14 @@ final class ProcessSampler {
         return name
     }
 
+    private static var icons: [pid_t: NSImage?] = [:]
+
+    /// Looked up once per process: asking LaunchServices on every panel redraw is expensive.
     static func icon(for pid: pid_t) -> NSImage? {
-        NSRunningApplication(processIdentifier: pid)?.icon
+        if let known = icons[pid] { return known }
+        if icons.count > 400 { icons.removeAll() }
+        let image = NSRunningApplication(processIdentifier: pid)?.icon
+        icons[pid] = image
+        return image
     }
 }

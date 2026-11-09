@@ -96,6 +96,13 @@ final class StatusBarController: NSObject, NSPopoverDelegate {
         self.monitor = monitor
         super.init()
         AppActions.closePopovers = { [weak self] in self?.popovers.values.forEach { $0.performClose(nil) } }
+        // Debug helper: `Pulse --open-panel` opens the first item's panel, for measuring its cost.
+        if CommandLine.arguments.contains("--open-panel") {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
+                guard let self, let button = self.items.values.first?.button else { return }
+                self.handleClick(button, at: nil)
+            }
+        }
         syncItems()
         monitor.onUpdate = { [weak self] in
             self?.renderImages()

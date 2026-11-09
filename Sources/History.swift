@@ -151,9 +151,14 @@ final class HistoryStore {
     /// The last 24 h come from per-minute data, older points from the 10-minute averages.
     func series(_ metric: HistoryMetric, range: HistoryRange) -> [Double] { series(key: metric.rawValue, range: range) }
 
+    /// Data only changes once a minute, while panels redraw every refresh.
+    private var seriesCache: [String: (minute: Int, values: [Double])] = [:]
+
     func series(key: String, range: HistoryRange) -> [Double] {
         let span = range.span, step = range.step
         let now = Self.minuteNow()
+        let cacheKey = "\(key)|\(range.rawValue)"
+        if let cached = seriesCache[cacheKey], cached.minute == now { return cached.values }
         var slots = [(sum: Double, count: Int)](repeating: (0, 0), count: span / step)
         func add(_ b: Bucket, weight: Int) {
             let age = now - b.minute           // 1 = previous minute
@@ -165,7 +170,9 @@ final class HistoryStore {
         if span > Self.minutes {
             for b in coarse where now - b.minute > Self.minutes { add(b, weight: 10) }
         }
-        return slots.map { $0.count > 0 ? $0.sum / Double($0.count) : .nan }
+        let values = slots.map { $0.count > 0 ? $0.sum / Double($0.count) : .nan }
+        seriesCache[cacheKey] = (now, values)
+        return values
     }
 
     /// CSV (semicolon-separated, decimal comma – opens directly in Polish Excel / Numbers):

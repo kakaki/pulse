@@ -69,15 +69,23 @@ struct Pill: View {
 }
 
 struct RingGauge: View {
+    /// Coarse value for meters that only need to animate on visible jumps.
+    static func step(_ value: Double) -> Int { Int((value * 20).rounded()) }
+
     var value: Double
     var colors: [Color]
     var lineWidth: CGFloat = 7
 
+    /// What the ring draws. Small jitter is applied directly; only real jumps animate, because each
+    /// animation redraws the blurred glow for every frame and that was the panel's main CPU cost.
+    @State private var shown: Double?
+
     var body: some View {
+        let current = shown ?? value
         ZStack {
             Circle().stroke(.primary.opacity(0.08), lineWidth: lineWidth)
             Circle()
-                .trim(from: 0, to: max(0.005, min(value, 1)))
+                .trim(from: 0, to: max(0.005, min(current, 1)))
                 .stroke(
                     AngularGradient(colors: colors + [colors.last ?? .blue], center: .center),
                     style: StrokeStyle(lineWidth: lineWidth, lineCap: .round)
@@ -85,7 +93,13 @@ struct RingGauge: View {
                 .rotationEffect(.degrees(-90))
                 .shadow(color: (colors.last ?? .blue).opacity(0.4), radius: 4)
         }
-        .animation(.smooth(duration: 0.6), value: value)
+        .onChange(of: value) { _, new in
+            if abs(new - current) >= 0.05 {
+                withAnimation(.smooth(duration: 0.6)) { shown = new }
+            } else {
+                shown = new
+            }
+        }
     }
 }
 
@@ -103,7 +117,7 @@ struct LinearMeter: View {
             }
         }
         .frame(height: height)
-        .animation(.smooth(duration: 0.5), value: value)
+        .animation(.smooth(duration: 0.5), value: RingGauge.step(value))
     }
 }
 
@@ -125,7 +139,7 @@ struct SegmentBar: View {
             .clipShape(.rect(cornerRadius: height / 2.5, style: .continuous))
         }
         .frame(height: height)
-        .animation(.smooth(duration: 0.5), value: segments.map(\.value))
+        .animation(.smooth(duration: 0.5), value: segments.map { RingGauge.step($0.value) })
     }
 }
 
@@ -203,7 +217,6 @@ struct Sparkline: View {
         .chartOverlay { proxy in
             if format != nil { hoverLayer(proxy) }
         }
-        .animation(.smooth(duration: 0.4), value: values)
     }
 
     /// Value of a series at chart position `x`; nil where the series has no sample.
@@ -288,7 +301,7 @@ struct CoreBars: View {
                 .clipShape(.rect(cornerRadius: 3, style: .continuous))
             }
         }
-        .animation(.smooth(duration: 0.5), value: values)
+        .animation(.smooth(duration: 0.5), value: values.map(RingGauge.step))
     }
 }
 
