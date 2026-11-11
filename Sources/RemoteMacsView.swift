@@ -11,12 +11,12 @@ struct RemoteMacsDetail: View {
         VStack(spacing: 10) {
             if remote.peers.isEmpty {
                 Card {
-                    SectionTitle(text: "Inne Maki")
+                    SectionTitle(text: "Inne komputery")
                     VStack(spacing: 8) {
                         ProgressView().controlSize(.small)
-                        Text("Szukam innych Maców z Pulse w tej sieci…")
+                        Text("Szukam innych komputerów z Pulse w tej sieci…")
                             .font(.system(size: 12, weight: .medium))
-                        Text("Na każdym z nich zainstaluj Pulse 1.11 lub nowszy i włącz Ustawienia → Inne Maki → „Udostępniaj odczyty tego Maca”.")
+                        Text("Na każdym Macu zainstaluj Pulse 1.11 lub nowszy, a na Windowsie PulseWin, i włącz w ustawieniach udostępnianie odczytów.")
                             .font(.system(size: 11)).foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)
                             .fixedSize(horizontal: false, vertical: true)
@@ -262,7 +262,7 @@ struct RemoteMacCard: View {
         case .sending:
             return (String(localized: "Wysyłam prośbę…"), true, nil, .accentColor)
         case .refused:
-            return (String(localized: "Ten Mac nie pozwala na zdalną aktualizację (Ustawienia → Inne Maki)."), false, nil, .orange)
+            return (String(localized: "Ten Mac nie pozwala na zdalną aktualizację (Ustawienia → Inne komputery)."), false, nil, .orange)
         case .unavailable:
             return (String(localized: "Ta kopia Pulse nie ma aktualizatora."), false, nil, .orange)
         case .tooOld:
@@ -320,16 +320,16 @@ struct RemoteSharingSection: View {
         Section {
             Toggle(isOn: $share) {
                 Text("Udostępniaj odczyty tego Maca w sieci lokalnej")
-                Text("Inne Maki z Pulse w tej samej sieci zobaczą obciążenie, temperatury, wentylatory i najbardziej obciążające procesy tego Maca. Nic nie wychodzi poza sieć lokalną.")
+                Text("Inne komputery z Pulse lub PulseWin w tej samej sieci zobaczą obciążenie, temperatury, wentylatory i najbardziej obciążające procesy tego Maca. Nic nie wychodzi poza sieć lokalną.")
             }
             Toggle(isOn: $allowUpdate) {
-                Text("Pozwól innym Macom zaktualizować Pulse")
-                Text("Inny Mac może poprosić o instalację najnowszej wersji Pulse. Instalowana jest tylko oficjalna, podpisana aktualizacja – nic więcej nie da się zdalnie zmienić ani uruchomić.")
+                Text("Pozwól innym komputerom zaktualizować Pulse")
+                Text("Inny komputer z Pulse może poprosić o instalację najnowszej wersji Pulse na tym Macu. Instalowana jest tylko oficjalna, podpisana aktualizacja – nic więcej nie da się zdalnie zmienić ani uruchomić.")
             }
             .disabled(!share)
             TextField(text: $customName, prompt: Text(verbatim: RemoteMacs.computerName)) {
                 Text("Nazwa w sieci")
-                Text("Pod tą nazwą inne Maki zobaczą ten Mac. Puste pole: nazwa komputera z Ustawień systemowych.")
+                Text("Pod tą nazwą inne komputery zobaczą ten Mac. Puste pole: nazwa komputera z Ustawień systemowych.")
             }
             if let error = remote.listenerError {
                 Text(error).font(.callout).foregroundStyle(.orange)
@@ -337,7 +337,7 @@ struct RemoteSharingSection: View {
         } header: {
             Text("Udostępnianie")
         } footer: {
-            Text("Włącz udostępnianie na każdym Macu, który chcesz widzieć. Przy pierwszym uruchomieniu macOS zapyta o dostęp do sieci lokalnej: wybierz Zezwól. Panel „Inne Maki” pokaże każdy Mac z Pulse w tej samej sieci.")
+            Text("Włącz udostępnianie na każdym komputerze, który chcesz widzieć. Przy pierwszym uruchomieniu macOS zapyta o dostęp do sieci lokalnej: wybierz Zezwól. Panel „Inne komputery” pokaże każdy komputer z Pulse w tej samej sieci.")
         }
     }
 }

@@ -17,7 +17,9 @@
         }
       }
     },
-    "%" : {},
+    "%" : {
+
+    },
     "%@ (niedostępny)" : {
       "localizations" : {
         "de" : {
@@ -186,7 +188,9 @@
         }
       }
     },
-    "0" : {},
+    "0" : {
+
+    },
     "1 s" : {
       "localizations" : {
         "de" : {
@@ -1762,6 +1766,7 @@
       }
     },
     "Inne Maki" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1795,6 +1800,7 @@
       }
     },
     "Inne Maki z Pulse w tej samej sieci zobaczą obciążenie, temperatury, wentylatory i najbardziej obciążające procesy tego Maca. Nic nie wychodzi poza sieć lokalną." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1826,7 +1832,40 @@
         }
       }
     },
+    "Inne komputery" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Andere Computer"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Other Computers"
+          }
+        }
+      }
+    },
+    "Inne komputery z Pulse lub PulseWin w tej samej sieci zobaczą obciążenie, temperatury, wentylatory i najbardziej obciążające procesy tego Maca. Nic nie wychodzi poza sieć lokalną." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Andere Computer mit Pulse oder PulseWin im selben Netzwerk sehen Auslastung, Temperaturen, Lüfter und die aktivsten Prozesse dieses Macs. Nichts verlässt das lokale Netzwerk."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Other computers running Pulse or PulseWin on the same network will see this Mac’s load, temperatures, fans and busiest processes. Nothing leaves the local network."
+          }
+        }
+      }
+    },
     "Inny Mac może poprosić o instalację najnowszej wersji Pulse. Instalowana jest tylko oficjalna, podpisana aktualizacja – nic więcej nie da się zdalnie zmienić ani uruchomić." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1838,6 +1877,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Another Mac can ask this Mac to install the latest version of Pulse. Only the official, signed update is installed – nothing else can be changed or run remotely."
+          }
+        }
+      }
+    },
+    "Inny komputer z Pulse może poprosić o instalację najnowszej wersji Pulse na tym Macu. Instalowana jest tylko oficjalna, podpisana aktualizacja – nic więcej nie da się zdalnie zmienić ani uruchomić." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ein anderer Computer mit Pulse kann die Installation der neuesten Pulse-Version auf diesem Mac anstoßen. Installiert wird nur das offizielle, signierte Update – sonst lässt sich nichts aus der Ferne ändern oder ausführen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Another computer running Pulse can ask this Mac to install the latest version of Pulse. Only the official, signed update is installed – nothing else can be changed or run remotely."
           }
         }
       }
@@ -1998,6 +2053,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Module colors"
+          }
+        }
+      }
+    },
+    "Komputerów w sieci: %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Computer im Netzwerk: %lld"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Computers on the network: %lld"
           }
         }
       }
@@ -2211,6 +2282,7 @@
       }
     },
     "Maców w sieci: %lld" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2414,7 +2486,24 @@
         }
       }
     },
+    "Na każdym Macu zainstaluj Pulse 1.11 lub nowszy, a na Windowsie PulseWin, i włącz w ustawieniach udostępnianie odczytów." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Installiere auf jedem Mac Pulse 1.11 oder neuer, unter Windows PulseWin, und aktiviere in den Einstellungen das Teilen der Messwerte."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Install Pulse 1.11 or later on each Mac, or PulseWin on Windows, and turn on sharing readings in its settings."
+          }
+        }
+      }
+    },
     "Na każdym z nich zainstaluj Pulse 1.11 lub nowszy i włącz Ustawienia → Inne Maki → „Udostępniaj odczyty tego Maca”." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2767,6 +2856,7 @@
       }
     },
     "Obciążenie, temperatury i wentylatory pozostałych Maców w sieci lokalnej." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2778,6 +2868,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Load, temperatures and fans of your other Macs on the local network."
+          }
+        }
+      }
+    },
+    "Obciążenie, temperatury i wentylatory pozostałych komputerów w sieci lokalnej." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auslastung, Temperaturen und Lüfter deiner anderen Computer im lokalen Netzwerk."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Load, temperatures and fans of your other computers on the local network."
           }
         }
       }
@@ -3440,6 +3546,7 @@
       }
     },
     "Pod tą nazwą inne Maki zobaczą ten Mac. Puste pole: nazwa komputera z Ustawień systemowych." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -3451,6 +3558,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Other Macs see this Mac under this name. Leave it empty to use the computer name from System Settings."
+          }
+        }
+      }
+    },
+    "Pod tą nazwą inne komputery zobaczą ten Mac. Puste pole: nazwa komputera z Ustawień systemowych." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unter diesem Namen sehen andere Computer diesen Mac. Leer lassen, um den Computernamen aus den Systemeinstellungen zu verwenden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Other computers see this Mac under this name. Leave it empty to use the computer name from System Settings."
           }
         }
       }
@@ -3888,6 +4011,7 @@
       }
     },
     "Pozwól innym Macom zaktualizować Pulse" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -3899,6 +4023,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Let other Macs update Pulse"
+          }
+        }
+      }
+    },
+    "Pozwól innym komputerom zaktualizować Pulse" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anderen Computern erlauben, Pulse zu aktualisieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Let other computers update Pulse"
           }
         }
       }
@@ -4805,7 +4945,9 @@
         }
       }
     },
-    "Sparkle" : {},
+    "Sparkle" : {
+
+    },
     "Spokojnie" : {
       "localizations" : {
         "de" : {
@@ -5240,6 +5382,7 @@
       }
     },
     "Szukam innych Maców z Pulse w tej sieci…" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -5251,6 +5394,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Looking for other Macs running Pulse on this network…"
+          }
+        }
+      }
+    },
+    "Szukam innych komputerów z Pulse w tej sieci…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suche nach anderen Computern mit Pulse in diesem Netzwerk …"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Looking for other computers running Pulse on this network…"
           }
         }
       }
@@ -5480,6 +5639,7 @@
       }
     },
     "Ten Mac nie pozwala na zdalną aktualizację (Ustawienia → Inne Maki)." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -5491,6 +5651,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "This Mac doesn’t allow remote updates (Settings → Other Macs)."
+          }
+        }
+      }
+    },
+    "Ten Mac nie pozwala na zdalną aktualizację (Ustawienia → Inne komputery)." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser Mac erlaubt keine Updates aus der Ferne (Einstellungen → Andere Computer)."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This Mac doesn’t allow remote updates (Settings → Other Computers)."
           }
         }
       }
@@ -6528,6 +6704,7 @@
       }
     },
     "Włącz udostępnianie na każdym Macu, który chcesz widzieć. Przy pierwszym uruchomieniu macOS zapyta o dostęp do sieci lokalnej: wybierz Zezwól. Panel „Inne Maki” pokaże każdy Mac z Pulse w tej samej sieci." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -6539,6 +6716,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Turn on sharing on every Mac you want to see. The first time, macOS asks for access to the local network: choose Allow. The Other Macs panel shows every Mac running Pulse on the same network."
+          }
+        }
+      }
+    },
+    "Włącz udostępnianie na każdym komputerze, który chcesz widzieć. Przy pierwszym uruchomieniu macOS zapyta o dostęp do sieci lokalnej: wybierz Zezwól. Panel „Inne komputery” pokaże każdy komputer z Pulse w tej samej sieci." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktiviere die Freigabe auf jedem Computer, den du sehen möchtest. Beim ersten Start fragt macOS nach Zugriff auf das lokale Netzwerk: Wähle Erlauben. Das Feld „Andere Computer“ zeigt jeden Computer mit Pulse im selben Netzwerk."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn on sharing on every computer you want to see. The first time, macOS asks for access to the local network: choose Allow. The Other Computers panel shows every computer running Pulse on the same network."
           }
         }
       }
@@ -7040,9 +7233,15 @@
         }
       }
     },
-    "s" : {},
-    "t" : {},
-    "v" : {},
+    "s" : {
+
+    },
+    "t" : {
+
+    },
+    "v" : {
+
+    },
     "wolne" : {
       "localizations" : {
         "de" : {
@@ -7252,7 +7451,9 @@
         }
       }
     },
-    "—" : {},
+    "—" : {
+
+    },
     "↓%@ ↑%@" : {
       "localizations" : {
         "de" : {

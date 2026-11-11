@@ -90,7 +90,7 @@ struct DropdownHeader: View {
                 Text(module.title).font(.system(size: 14, weight: .bold))
                 Group {
                     if module == .macs {
-                        Text("Maców w sieci: \(RemoteMacs.shared.peers.count)")
+                        Text("Komputerów w sieci: \(RemoteMacs.shared.peers.count)")
                     } else {
                         Text("\(m.chipName) · \(Fmt.memory(m.memTotal)) RAM")
                     }
@@ -141,7 +141,7 @@ enum OverviewItem: String, CaseIterable, Identifiable {
         switch self {
         case .cpu: "CPU"; case .gpu: "GPU"; case .mem: String(localized: "Pamięć"); case .disk: String(localized: "Dysk")
         case .temp: String(localized: "Temperatura"); case .net: String(localized: "Sieć"); case .bat: String(localized: "Bateria")
-        case .macs: String(localized: "Inne Maki")
+        case .macs: String(localized: "Inne komputery")
         }
     }
     var key: String { "overview.show.\(rawValue)" }
@@ -240,7 +240,7 @@ struct OverviewContent: View {
         case .network: (netLevel, Fmt.rate(m.netIn, compact: true), String(localized: "Sieć"))
         case .battery: (m.battery.percent, Fmt.pct(m.battery.percent), String(localized: "Bateria"))
         case .macs:
-            { let s = RemoteMacs.shared.summary; return (s.value, s.text, String(localized: "Inne Maki")) }()
+            { let s = RemoteMacs.shared.summary; return (s.value, s.text, String(localized: "Inne komputery")) }()
         case .overview: (0, "", "")
         }
     }

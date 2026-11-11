@@ -27,7 +27,7 @@ enum Module: String, CaseIterable, Identifiable {
         case .network: String(localized: "Sieć")
         case .sensors: String(localized: "Czujniki")
         case .battery: String(localized: "Bateria")
-        case .macs: String(localized: "Inne Maki")
+        case .macs: String(localized: "Inne komputery")
         }
     }
 
@@ -41,7 +41,7 @@ enum Module: String, CaseIterable, Identifiable {
         case .network: "NET"
         case .sensors: "TEMP"
         case .battery: "BAT"
-        case .macs: "MACS"
+        case .macs: "LAN"
         }
     }
 

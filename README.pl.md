@@ -34,7 +34,7 @@
   - **Sieć:** wysyłanie i pobieranie, ruch per aplikacja, opóźnienie, adres lokalny i publiczny
   - **Czujniki:** temperatury SoC, SSD i baterii, wentylatory, stan termiczny
   - **Bateria:** wykres naładowania, kondycja, cykle, pobór mocy, moc zasilacza, baterie urządzeń Bluetooth (AirPods, klawiatura, mysz)
-  - **Inne Maki:** obciążenie, temperatury, wentylatory, procesy i kontenery Dockera innych Maców z Pulse w sieci lokalnej; zdalna aktualizacja Pulse na nich (jeśli dany Mac na to pozwala)
+  - **Inne komputery:** obciążenie, temperatury, wentylatory, procesy i kontenery Dockera innych Maców z Pulse oraz komputerów z Windowsem i PulseWin w sieci lokalnej; zdalna aktualizacja Pulse na Makach (jeśli dany Mac na to pozwala)
 - **Limit ładowania** w MacBookach (50–95%), żeby bateria nie stała stale na 100%.
 - **Historia z 2 min, 1 h, 24 h, 7 dni i 30 dni**, z eksportem do CSV.
 - **Przydatne akcje:** zwalnianie pamięci (`purge`, pyta o hasło administratora), kończenie procesów prawym klikiem, kopiowanie adresu IP kliknięciem.
