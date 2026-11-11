@@ -81,9 +81,11 @@ final class RemoteMacs {
     struct Peer: Identifiable {
         let id: String
         var report: RemoteReport
-        var lastSeen: Date
-        var isStale: Bool { Date().timeIntervalSince(lastSeen) > 20 }
+        /// No answer for 20 s. Stored (not computed from a timestamp) so an unchanged answer doesn't redraw the panel.
+        var isStale = false
     }
+    /// When each peer last answered; not observed, so polling alone never invalidates the views.
+    @ObservationIgnored private var lastSeen: [String: Date] = [:]
 
     private(set) var peers: [Peer] = []
     private(set) var listenerError: String?
@@ -239,8 +241,13 @@ final class RemoteMacs {
             || (overviewWatchers > 0 && OverviewItem.macs.showsTile)
         if browse && browser == nil { startBrowser() }
         if !browse && browser != nil { stopBrowser() }
+        let now = Date()
+        for i in peers.indices where !peers[i].isStale && now.timeIntervalSince(lastSeen[peers[i].id] ?? .distantPast) > 20 {
+            peers[i].isStale = true
+        }
         if browse {
-            let every: TimeInterval = panelWatchers > 0 ? 1.5 : (overviewWatchers > 0 ? 3 : 6)
+            // Other Macs refresh every 2–5 s themselves; asking more often only redraws the same numbers.
+            let every: TimeInterval = panelWatchers > 0 ? 3 : (overviewWatchers > 0 ? 4 : 6)
             if Date().timeIntervalSince(lastPoll) >= every { lastPoll = Date(); poll() }
         }
         if UserDefaults.standard.bool(forKey: "remote.debug") {
@@ -372,9 +379,11 @@ final class RemoteMacs {
     private func received(_ report: RemoteReport?, key: String) {
         inFlight.remove(key)
         guard let report, endpoints[key] != nil else { return }
-        let peer = Peer(id: key, report: report, lastSeen: Date())
+        lastSeen[key] = Date()
+        let peer = Peer(id: key, report: report)
         if let i = peers.firstIndex(where: { $0.id == key }) {
-            peers[i] = peer
+            // Same answer as last time (the other Mac hasn't refreshed yet): nothing to redraw.
+            if peers[i].report != report || peers[i].isStale { peers[i] = peer }
         } else {
             peers.append(peer)
             peers.sort { $0.report.name.localizedStandardCompare($1.report.name) == .orderedAscending }
@@ -424,7 +433,7 @@ extension RemoteMacs {
                 cpuHistory: demoSeries(n, base: cpu, amp: 0.12, seed: seed), gpu: nil, mem: 0.71, memTotal: 16 << 30, memPressure: 0,
                 temp: temp, tempHistory: demoSeries(n, base: temp, amp: 4, seed: seed + 1), fans: fans, power: 38,
                 thermal: temp > 88 ? 2 : 0, netIn: 2_400_000, netOut: 310_000, uptime: 6 * 86400 + 3 * 3600,
-                processes: procs.map { .init(name: $0.0, cpu: $0.1) }), lastSeen: Date())
+                processes: procs.map { .init(name: $0.0, cpu: $0.1) }))
         }
         let mb: UInt64 = 1 << 20
         peers = [
@@ -435,6 +444,7 @@ extension RemoteMacs {
                    fans: [.init(rpm: 1000, min: 1000, max: 4900)], seed: 21,
                    procs: [("Xcode", 0.6), ("Safari", 0.2)]),
         ]
+        for peer in peers { lastSeen[peer.id] = Date() }
         peers[0].report.containers = [
             .init(id: "c1", name: "gitlab-runner", image: "gitlab/gitlab-runner:latest", cpu: 2.84, memory: 1_210 * mb, memoryLimit: 8192 * mb),
             .init(id: "c2", name: "postgres", image: "postgres:17", cpu: 0.06, memory: 180 * mb, memoryLimit: 8192 * mb),
