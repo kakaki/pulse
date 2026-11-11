@@ -539,6 +539,22 @@
         }
       }
     },
+    "Brak odpowiedzi" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Antwort"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No response"
+          }
+        }
+      }
+    },
     "Brak pamięci" : {
       "localizations" : {
         "de" : {
@@ -1515,6 +1531,38 @@
         }
       }
     },
+    "Inne Maki" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Andere Macs"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Other Macs"
+          }
+        }
+      }
+    },
+    "Inne Maki z Pulse w tej samej sieci zobaczą obciążenie, temperatury, wentylatory i najbardziej obciążające procesy tego Maca. Nic nie wychodzi poza sieć lokalną i niczego nie da się zdalnie zmienić." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Andere Macs mit Pulse im selben Netzwerk sehen Auslastung, Temperaturen, Lüfter und die aktivsten Prozesse dieses Macs. Nichts verlässt das lokale Netzwerk, und nichts lässt sich aus der Ferne ändern."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Other Macs running Pulse on the same network will see this Mac’s load, temperatures, fans and busiest processes. Nothing leaves the local network, and nothing can be changed remotely."
+          }
+        }
+      }
+    },
     "Inne dyski" : {
       "localizations" : {
         "de" : {
@@ -1771,6 +1819,22 @@
         }
       }
     },
+    "Maców w sieci: %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Macs im Netzwerk: %lld"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Macs on the network: %lld"
+          }
+        }
+      }
+    },
     "Mało miejsca na dysku" : {
       "localizations" : {
         "de" : {
@@ -1959,6 +2023,22 @@
         }
       }
     },
+    "Na każdym z nich zainstaluj Pulse 1.11 lub nowszy i włącz Ustawienia → Inne Maki → „Udostępniaj odczyty tego Maca”." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Installiere auf jedem von ihnen Pulse 1.11 oder neuer und aktiviere Einstellungen → Andere Macs → „Messwerte dieses Macs teilen“."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On each of them, install Pulse 1.11 or later and turn on Settings → Other Macs → “Share this Mac’s readings”."
+          }
+        }
+      }
+    },
     "Napięcie" : {
       "localizations" : {
         "de" : {
@@ -1971,6 +2051,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Voltage"
+          }
+        }
+      }
+    },
+    "Nazwa w sieci" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name im Netzwerk"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Network name"
           }
         }
       }
@@ -2259,6 +2355,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Usage, cores, load average and processes."
+          }
+        }
+      }
+    },
+    "Obciążenie, temperatury i wentylatory pozostałych Maców w sieci lokalnej." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auslastung, Temperaturen und Lüfter deiner anderen Macs im lokalen Netzwerk."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Load, temperatures and fans of your other Macs on the local network."
           }
         }
       }
@@ -2568,6 +2680,22 @@
         }
       }
     },
+    "Pamięć RAM" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arbeitsspeicher"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memory"
+          }
+        }
+      }
+    },
     "Pamięć aplikacji, związana, skompresowana i swap." : {
       "localizations" : {
         "de" : {
@@ -2728,6 +2856,22 @@
         }
       }
     },
+    "Pobieram listę procesów…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prozesse werden geladen …"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading processes…"
+          }
+        }
+      }
+    },
     "Pobieranie" : {
       "localizations" : {
         "de" : {
@@ -2740,6 +2884,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Download"
+          }
+        }
+      }
+    },
+    "Pobieranie / wysyłanie" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Download / Upload"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Download / upload"
           }
         }
       }
@@ -2788,6 +2948,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Drawing %@"
+          }
+        }
+      }
+    },
+    "Pobór mocy" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leistungsaufnahme"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Power draw"
           }
         }
       }
@@ -4409,6 +4585,22 @@
         }
       }
     },
+    "Szukam innych Maców z Pulse w tej sieci…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suche nach anderen Macs mit Pulse in diesem Netzwerk …"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Looking for other Macs running Pulse on this network…"
+          }
+        }
+      }
+    },
     "Szum" : {
       "localizations" : {
         "de" : {
@@ -4601,6 +4793,38 @@
         }
       }
     },
+    "Ten Mac nie udostępnia swoich odczytów." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser Mac teilt seine Messwerte nicht."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This Mac doesn’t share its readings."
+          }
+        }
+      }
+    },
+    "Ten Mac też udostępnia swoje odczyty." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser Mac teilt seine Messwerte ebenfalls."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This Mac shares its readings too."
+          }
+        }
+      }
+    },
     "Tiler" : {
       "localizations" : {
         "de" : {
@@ -4678,6 +4902,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The same notification appears at most every 30 minutes and not again until the value is back to normal. Set thresholds on the module pages: CPU, Memory, Disk, Sensors and Battery."
+          }
+        }
+      }
+    },
+    "Udostępniaj" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teilen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share"
+          }
+        }
+      }
+    },
+    "Udostępniaj odczyty tego Maca w sieci lokalnej" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Messwerte dieses Macs im lokalen Netzwerk teilen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share this Mac’s readings on the local network"
+          }
+        }
+      }
+    },
+    "Udostępnianie" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Freigabe"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sharing"
           }
         }
       }
@@ -5056,6 +5328,22 @@
         }
       }
     },
+    "Wersja Pulse" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pulse-Version"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pulse version"
+          }
+        }
+      }
+    },
     "Wi‑Fi" : {
       "localizations" : {
         "de" : {
@@ -5388,6 +5676,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Turn on the Pulse helper"
+          }
+        }
+      }
+    },
+    "Włącz udostępnianie na każdym Macu, który chcesz widzieć. Przy pierwszym uruchomieniu macOS zapyta o dostęp do sieci lokalnej: wybierz Zezwól. Panel „Inne Maki” pokaże każdy Mac z Pulse w tej samej sieci." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktiviere die Freigabe auf jedem Mac, den du sehen möchtest. Beim ersten Start fragt macOS nach Zugriff auf das lokale Netzwerk: Wähle Erlauben. Das Feld „Andere Macs“ zeigt jeden Mac mit Pulse im selben Netzwerk."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn on sharing on every Mac you want to see. The first time, macOS asks for access to the local network: choose Allow. The Other Macs panel shows every Mac running Pulse on the same network."
           }
         }
       }

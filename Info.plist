@@ -23,15 +23,21 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.10.2</string>
+	<string>1.11</string>
 	<key>CFBundleVersion</key>
-	<string>15</string>
+	<string>16</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>15.0</string>
 	<key>LSUIElement</key>
 	<true/>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_pulse-stats._tcp</string>
+	</array>
 	<key>NSHighResolutionCapable</key>
 	<true/>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Pulse używa sieci lokalnej, żeby pokazać odczyty Twoich innych Maców z Pulse i, jeśli to włączysz, udostępnić im odczyty tego Maca.</string>
 	<key>NSLocationUsageDescription</key>
 	<string>Pulse potrzebuje dostępu do lokalizacji tylko po to, by macOS pozwolił odczytać nazwę sieci Wi‑Fi. Lokalizacja nie jest nigdzie zapisywana ani wysyłana.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

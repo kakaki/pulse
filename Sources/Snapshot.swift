@@ -23,7 +23,7 @@ enum Snapshot {
                 monitor.refresh()
             }
             if args.contains("--demo") {
-                monitor.applyDemo(); NetworkExtras.shared.applyDemo(); DiskUsage.shared.applyDemo()
+                monitor.applyDemo(); NetworkExtras.shared.applyDemo(); DiskUsage.shared.applyDemo(); RemoteMacs.shared.applyDemo()
             }
             for s in monitor.sensors { print("sensor:", s.id, s.kind, String(format: "%.1f", s.value)) }
             for s in monitor.sensorGroups { print("group:", s.id, s.name, String(format: "%.1f", s.value)) }

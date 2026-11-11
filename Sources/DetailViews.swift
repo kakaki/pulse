@@ -11,6 +11,7 @@ struct ModuleDetail: View {
         case .network: NetworkDetail()
         case .sensors: SensorsDetail()
         case .battery: BatteryDetail()
+        case .macs: RemoteMacsDetail()
         }
     }
 }

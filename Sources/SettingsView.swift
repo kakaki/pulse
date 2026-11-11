@@ -153,6 +153,7 @@ struct ModuleSettings: View {
                 }
             }
             if module == .battery { EnergySavingSection() }
+            if module == .macs { RemoteSharingSection() }
             ForEach(Alerts.Kind.kinds(for: module)) { AlertRow(kind: $0) }
         }
         .formStyle(.grouped)
@@ -169,6 +170,7 @@ struct ModuleSettings: View {
         case .network: String(localized: "Prędkość pobierania i wysyłania, adres IP.")
         case .sensors: String(localized: "Temperatury SoC, SSD i baterii.")
         case .battery: String(localized: "Poziom naładowania, kondycja, cykle i moc.")
+        case .macs: String(localized: "Obciążenie, temperatury i wentylatory pozostałych Maców w sieci lokalnej.")
         }
     }
 }

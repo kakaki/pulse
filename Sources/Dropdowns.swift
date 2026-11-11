@@ -88,8 +88,14 @@ struct DropdownHeader: View {
                 .shadow(color: module.accentTint.opacity(0.35), radius: 6, y: 2)
             VStack(alignment: .leading, spacing: 1) {
                 Text(module.title).font(.system(size: 14, weight: .bold))
-                Text("\(m.chipName) · \(Fmt.memory(m.memTotal)) RAM")
-                    .font(.system(size: 10.5)).foregroundStyle(.secondary)
+                Group {
+                    if module == .macs {
+                        Text("Maców w sieci: \(RemoteMacs.shared.peers.count)")
+                    } else {
+                        Text("\(m.chipName) · \(Fmt.memory(m.memTotal)) RAM")
+                    }
+                }
+                .font(.system(size: 10.5)).foregroundStyle(.secondary)
             }
             Spacer()
         }
@@ -229,7 +235,7 @@ struct OverviewContent: View {
         case .sensors: ((m.socMax ?? 0) / 105, Fmt.temp(m.socMax ?? m.socAvg), String(localized: "Temp."))
         case .network: (netLevel, Fmt.rate(m.netIn, compact: true), String(localized: "Sieć"))
         case .battery: (m.battery.percent, Fmt.pct(m.battery.percent), String(localized: "Bateria"))
-        case .overview: (0, "", "")
+        case .overview, .macs: (0, "", "")
         }
     }
 
@@ -291,7 +297,7 @@ struct OverviewContent: View {
         case .sensors: m.tempHistory
         case .network: m.netInHistory
         case .battery: m.batteryHistory
-        case .overview: []
+        case .overview, .macs: []
         }
     }
 

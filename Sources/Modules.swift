@@ -14,7 +14,7 @@ enum DisplayMode: String, CaseIterable, Identifiable {
 }
 
 enum Module: String, CaseIterable, Identifiable {
-    case overview, cpu, gpu, memory, disk, network, sensors, battery
+    case overview, cpu, gpu, memory, disk, network, sensors, battery, macs
     var id: Self { self }
 
     var title: String {
@@ -27,6 +27,7 @@ enum Module: String, CaseIterable, Identifiable {
         case .network: String(localized: "Sieć")
         case .sensors: String(localized: "Czujniki")
         case .battery: String(localized: "Bateria")
+        case .macs: String(localized: "Inne Maki")
         }
     }
 
@@ -40,6 +41,7 @@ enum Module: String, CaseIterable, Identifiable {
         case .network: "NET"
         case .sensors: "TEMP"
         case .battery: "BAT"
+        case .macs: "MACS"
         }
     }
 
@@ -53,6 +55,7 @@ enum Module: String, CaseIterable, Identifiable {
         case .network: "arrow.up.arrow.down"
         case .sensors: "thermometer.medium"
         case .battery: "battery.75percent"
+        case .macs: "desktopcomputer.and.macbook"
         }
     }
 
@@ -66,6 +69,7 @@ enum Module: String, CaseIterable, Identifiable {
         case .network: [Color(red: 0.4, green: 0.85, blue: 1.0), Color(red: 1.0, green: 0.45, blue: 0.55)]
         case .sensors: [Color(red: 0.35, green: 0.9, blue: 0.5), Color(red: 1.0, green: 0.85, blue: 0.3), Color(red: 1.0, green: 0.35, blue: 0.3)]
         case .battery: [Color(red: 0.45, green: 0.95, blue: 0.45), Color(red: 0.2, green: 0.75, blue: 0.35)]
+        case .macs: [Color(red: 0.45, green: 0.8, blue: 1.0), Color(red: 0.35, green: 0.45, blue: 0.95)]
         }
     }
 
@@ -77,6 +81,7 @@ enum Module: String, CaseIterable, Identifiable {
         case .sensors: [.text, .graph, .ring]
         case .network: [.text, .graph]
         case .battery: [.text, .ring]
+        case .macs: [.text, .ring]
         case .cpu, .gpu, .memory, .disk: [.text, .graph, .bars, .ring]
         }
     }

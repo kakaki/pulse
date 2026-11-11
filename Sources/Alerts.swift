@@ -38,7 +38,7 @@ final class Alerts: NSObject, UNUserNotificationCenterDelegate {
             case .disk: [.disk]
             case .battery: [.battery]
             case .sensors: [.temp, .thermal]
-            case .overview, .gpu, .network: []
+            case .overview, .gpu, .network, .macs: []
             }
         }
         var enabledKey: String { "alerts.\(rawValue)" }

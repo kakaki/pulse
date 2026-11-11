@@ -127,6 +127,19 @@ struct StatusSnapshot {
             s.text = m.battery.present ? Fmt.pct(m.battery.percent) : "AC"
             s.symbol = m.battery.isCharging ? "bolt.fill" : (m.battery.onAC ? "powerplug.fill" : nil)
             s.level = Severity.battery(m.battery)
+        case .macs:
+            // The hottest of the other Macs: the one you are most likely to hear.
+            let live = RemoteMacs.shared.peers.filter { !$0.isStale }
+            s.symbol = "desktopcomputer.and.macbook"
+            if let hot = live.max(by: { ($0.report.temp ?? -1) < ($1.report.temp ?? -1) }), let t = hot.report.temp {
+                s.text = Fmt.temp(t); s.value = t / 100
+                s.history = hot.report.tempHistory; s.maxHistory = 100
+                s.level = Severity.temp(t)
+            } else if let busy = live.max(by: { $0.report.cpu < $1.report.cpu }) {
+                s.text = Fmt.pct(busy.report.cpu); s.value = busy.report.cpu; s.level = busy.report.cpu
+            } else {
+                s.text = "—"
+            }
         }
         return s
     }

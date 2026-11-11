@@ -198,6 +198,7 @@ final class SystemMonitor {
         uptime = ProcessInfo.processInfo.systemUptime
         recordHistory()
         if tick % 30 == 0 { publishWidget() }
+        RemoteMacs.shared.tick(self)
         tick += 1
         onUpdate?()
     }
