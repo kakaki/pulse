@@ -34,7 +34,7 @@
   - **Netzwerk:** Upload und Download, Datenverkehr pro App, Latenz, lokale und öffentliche IP
   - **Sensoren:** Temperaturen von SoC, SSD und Batterie, Lüfter, thermischer Zustand
   - **Batterie:** Ladeverlauf, Zustand, Ladezyklen, Leistungsaufnahme, Netzteilleistung, Akkus von Bluetooth-Geräten (AirPods, Tastatur, Maus)
-  - **Andere Macs:** Auslastung, Temperaturen, Lüfter, Prozesse und Docker-Container anderer Macs mit Pulse im lokalen Netzwerk
+  - **Andere Macs:** Auslastung, Temperaturen, Lüfter, Prozesse und Docker-Container anderer Macs mit Pulse im lokalen Netzwerk; Pulse dort aus der Ferne aktualisieren (wenn der Mac es erlaubt)
 - **Ladelimit** bei MacBooks (50–95 %), damit der Akku nicht ständig bei 100 % steht.
 - **Verlauf über 2 Min., 1 h, 24 h, 7 Tage und 30 Tage**, mit CSV-Export.
 - **Praktische Aktionen:** Speicher freigeben (`purge`, fragt nach dem Administratorpasswort), Prozesse per Rechtsklick beenden, IP-Adresse per Klick kopieren.

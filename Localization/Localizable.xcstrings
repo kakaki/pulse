@@ -315,6 +315,38 @@
         }
       }
     },
+    "Aktualizacja się nie udała." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Update ist fehlgeschlagen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The update failed."
+          }
+        }
+      }
+    },
+    "Aktualizacja uruchomiona…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Update gestartet …"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Update started…"
+          }
+        }
+      }
+    },
     "Aktualizacje" : {
       "localizations" : {
         "de" : {
@@ -359,6 +391,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Updates:"
+          }
+        }
+      }
+    },
+    "Aktualizuj" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktualisieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Update"
           }
         }
       }
@@ -621,6 +669,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No response"
+          }
+        }
+      }
+    },
+    "Brak odpowiedzi." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Antwort."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No response."
           }
         }
       }
@@ -1714,6 +1778,7 @@
       }
     },
     "Inne Maki z Pulse w tej samej sieci zobaczą obciążenie, temperatury, wentylatory i najbardziej obciążające procesy tego Maca. Nic nie wychodzi poza sieć lokalną i niczego nie da się zdalnie zmienić." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1725,6 +1790,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Other Macs running Pulse on the same network will see this Mac’s load, temperatures, fans and busiest processes. Nothing leaves the local network, and nothing can be changed remotely."
+          }
+        }
+      }
+    },
+    "Inne Maki z Pulse w tej samej sieci zobaczą obciążenie, temperatury, wentylatory i najbardziej obciążające procesy tego Maca. Nic nie wychodzi poza sieć lokalną." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Andere Macs mit Pulse im selben Netzwerk sehen Auslastung, Temperaturen, Lüfter und die aktivsten Prozesse dieses Macs. Nichts verlässt das lokale Netzwerk."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Other Macs running Pulse on the same network will see this Mac’s load, temperatures, fans and busiest processes. Nothing leaves the local network."
           }
         }
       }
@@ -1741,6 +1822,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Other disks"
+          }
+        }
+      }
+    },
+    "Inny Mac może poprosić o instalację najnowszej wersji Pulse. Instalowana jest tylko oficjalna, podpisana aktualizacja – nic więcej nie da się zdalnie zmienić ani uruchomić." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ein anderer Mac kann die Installation der neuesten Pulse-Version anstoßen. Installiert wird nur das offizielle, signierte Update – sonst lässt sich nichts aus der Ferne ändern oder ausführen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Another Mac can ask this Mac to install the latest version of Pulse. Only the official, signed update is installed – nothing else can be changed or run remotely."
+          }
+        }
+      }
+    },
+    "Instaluję – Pulse uruchomi się ponownie…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wird installiert – Pulse startet neu …"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Installing – Pulse will restart…"
           }
         }
       }
@@ -3630,6 +3743,22 @@
         }
       }
     },
+    "Ponów" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erneut versuchen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retry"
+          }
+        }
+      }
+    },
     "Poważny" : {
       "localizations" : {
         "de" : {
@@ -3754,6 +3883,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Remaining: %@"
+          }
+        }
+      }
+    },
+    "Pozwól innym Macom zaktualizować Pulse" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anderen Macs erlauben, Pulse zu aktualisieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Let other Macs update Pulse"
           }
         }
       }
@@ -4179,6 +4324,60 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pulse"
+          }
+        }
+      }
+    },
+    "Pulse %@ jest najnowszą wersją." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pulse %@ ist die neueste Version."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pulse %@ is the latest version."
+          }
+        }
+      }
+    },
+    "Pulse %@ · dostępna wersja %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pulse %1$@ · Version %2$@ verfügbar"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pulse %1$@ · version %2$@ available"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Pulse %1$@ · dostępna wersja %2$@"
+          }
+        }
+      }
+    },
+    "Pulse na tym Macu jest starszy niż 1.13 – zaktualizuj go raz ręcznie." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pulse auf diesem Mac ist älter als 1.13 – einmal manuell aktualisieren."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pulse on this Mac is older than 1.13 – update it by hand once."
           }
         }
       }
@@ -4655,6 +4854,22 @@
         }
       }
     },
+    "Sprawdzam aktualizacje…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suche nach Updates …"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Checking for updates…"
+          }
+        }
+      }
+    },
     "Sprawdź aktualizacje…" : {
       "localizations" : {
         "de" : {
@@ -4667,6 +4882,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Check for Updates…"
+          }
+        }
+      }
+    },
+    "Sprawdź aktualizację" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nach Update suchen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check for update"
           }
         }
       }
@@ -5104,6 +5335,22 @@
         }
       }
     },
+    "Ta kopia Pulse nie ma aktualizatora." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diese Pulse-Kopie hat keinen Updater."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This copy of Pulse has no updater."
+          }
+        }
+      }
+    },
     "Tekst" : {
       "localizations" : {
         "de" : {
@@ -5232,6 +5479,22 @@
         }
       }
     },
+    "Ten Mac nie pozwala na zdalną aktualizację (Ustawienia → Inne Maki)." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser Mac erlaubt keine Updates aus der Ferne (Einstellungen → Andere Macs)."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This Mac doesn’t allow remote updates (Settings → Other Macs)."
+          }
+        }
+      }
+    },
     "Ten Mac nie pozwala wstrzymać ładowania." : {
       "localizations" : {
         "de" : {
@@ -5260,6 +5523,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "This Mac doesn’t share its readings."
+          }
+        }
+      }
+    },
+    "Ten Mac sprawdzi i zainstaluje najnowszą wersję Pulse bez pytania." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser Mac sucht die neueste Pulse-Version und installiert sie ohne Rückfrage."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That Mac will check for and install the latest Pulse without asking."
           }
         }
       }
@@ -5864,6 +6143,22 @@
         }
       }
     },
+    "Wersja PulseWin" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PulseWin-Version"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PulseWin version"
+          }
+        }
+      }
+    },
     "Wi‑Fi" : {
       "localizations" : {
         "de" : {
@@ -6132,6 +6427,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "High temperature"
+          }
+        }
+      }
+    },
+    "Wysyłam prośbę…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anfrage wird gesendet …"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sending request…"
           }
         }
       }

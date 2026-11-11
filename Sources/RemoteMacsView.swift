@@ -72,6 +72,7 @@ struct RemoteMacCard: View {
                 .contentShape(.rect)
             }
             .buttonStyle(.plain)
+            if showsUpdate { updateRow }
             if expanded { details }
         }
         .opacity(peer.isStale ? 0.55 : 1)
@@ -86,7 +87,7 @@ struct RemoteMacCard: View {
 
     private var header: some View {
         HStack(spacing: 10) {
-            Image(systemName: RemoteMacs.symbol(for: r.model))
+            Image(systemName: RemoteMacs.symbol(for: r))
                 .font(.system(size: 15, weight: .semibold))
                 .foregroundStyle(.white)
                 .frame(width: 32, height: 32)
@@ -215,9 +216,70 @@ struct RemoteMacCard: View {
             if let power = r.power { InfoRow(title: "Pobór mocy", value: String(format: "%.1f W", power)) }
             InfoRow(title: "Pamięć RAM", value: Fmt.memory(r.memTotal))
             InfoRow(title: "Czas pracy", value: Fmt.duration(r.uptime))
-            if !r.version.isEmpty { InfoRow(title: "Wersja Pulse", value: r.version) }
+            if !r.version.isEmpty {
+                HStack {
+                    InfoRow(title: r.isWindows ? "Wersja PulseWin" : "Wersja Pulse", value: r.version)
+                    if !showsUpdate && !peer.isStale && !r.isWindows {
+                        Button("Sprawdź aktualizację") { RemoteMacs.shared.requestUpdate(peer) }
+                            .controlSize(.mini)
+                            .help(Text("Ten Mac sprawdzi i zainstaluje najnowszą wersję Pulse bez pytania."))
+                    }
+                }
+            }
         }
         .transition(.opacity)
+    }
+
+    // MARK: Update
+
+    private var request: RemoteMacs.UpdateRequest? { RemoteMacs.shared.updateRequests[peer.id] }
+
+    private var showsUpdate: Bool {
+        // PulseWin has its own versions and never updates remotely.
+        !peer.isStale && !r.isWindows && (RemoteMacs.isOlder(r.version) || request != nil || r.update != nil)
+    }
+
+    private var updateRow: some View {
+        let (text, busy, action, color) = updateStatus
+        return HStack(spacing: 6) {
+            if busy {
+                ProgressView().controlSize(.mini)
+            } else {
+                Image(systemName: "arrow.down.circle.fill").font(.system(size: 11)).foregroundStyle(color)
+            }
+            Text(verbatim: text).foregroundStyle(.secondary).lineLimit(2).fixedSize(horizontal: false, vertical: true)
+            Spacer(minLength: 4)
+            if let action {
+                Button(action) { RemoteMacs.shared.requestUpdate(peer) }.controlSize(.small)
+            }
+        }
+        .font(.system(size: 11.5))
+    }
+
+    /// Text, spinner, button title (nil: no button), icon colour.
+    private var updateStatus: (String, Bool, LocalizedStringKey?, Color) {
+        switch request {
+        case .sending:
+            return (String(localized: "Wysyłam prośbę…"), true, nil, .accentColor)
+        case .refused:
+            return (String(localized: "Ten Mac nie pozwala na zdalną aktualizację (Ustawienia → Inne Maki)."), false, nil, .orange)
+        case .unavailable:
+            return (String(localized: "Ta kopia Pulse nie ma aktualizatora."), false, nil, .orange)
+        case .tooOld:
+            return (String(localized: "Pulse na tym Macu jest starszy niż 1.13 – zaktualizuj go raz ręcznie."), false, nil, .orange)
+        case .unreachable:
+            return (String(localized: "Brak odpowiedzi."), false, "Ponów", .orange)
+        case .started, nil:
+            switch r.update.flatMap(Updater.RemoteState.init) {
+            case .checking: return (String(localized: "Sprawdzam aktualizacje…"), true, nil, .accentColor)
+            case .installing: return (String(localized: "Instaluję – Pulse uruchomi się ponownie…"), true, nil, .accentColor)
+            case .upToDate: return (String(localized: "Pulse \(r.version) jest najnowszą wersją."), false, nil, .green)
+            case .failed: return (String(localized: "Aktualizacja się nie udała."), false, "Ponów", .orange)
+            case nil:
+                if request == .started { return (String(localized: "Aktualizacja uruchomiona…"), true, nil, .accentColor) }
+                return (String(localized: "Pulse \(r.version) · dostępna wersja \(RemoteMacs.ownVersion)"), false, "Aktualizuj", .accentColor)
+            }
+        }
     }
 }
 
@@ -251,14 +313,20 @@ struct RemoteValuePickers: View {
 struct RemoteSharingSection: View {
     @AppStorage(RemoteMacs.shareKey) private var share = false
     @AppStorage(RemoteMacs.nameKey) private var customName = ""
+    @AppStorage(RemoteMacs.allowUpdateKey) private var allowUpdate = false
     private let remote = RemoteMacs.shared
 
     var body: some View {
         Section {
             Toggle(isOn: $share) {
                 Text("Udostępniaj odczyty tego Maca w sieci lokalnej")
-                Text("Inne Maki z Pulse w tej samej sieci zobaczą obciążenie, temperatury, wentylatory i najbardziej obciążające procesy tego Maca. Nic nie wychodzi poza sieć lokalną i niczego nie da się zdalnie zmienić.")
+                Text("Inne Maki z Pulse w tej samej sieci zobaczą obciążenie, temperatury, wentylatory i najbardziej obciążające procesy tego Maca. Nic nie wychodzi poza sieć lokalną.")
             }
+            Toggle(isOn: $allowUpdate) {
+                Text("Pozwól innym Macom zaktualizować Pulse")
+                Text("Inny Mac może poprosić o instalację najnowszej wersji Pulse. Instalowana jest tylko oficjalna, podpisana aktualizacja – nic więcej nie da się zdalnie zmienić ani uruchomić.")
+            }
+            .disabled(!share)
             TextField(text: $customName, prompt: Text(verbatim: RemoteMacs.computerName)) {
                 Text("Nazwa w sieci")
                 Text("Pod tą nazwą inne Maki zobaczą ten Mac. Puste pole: nazwa komputera z Ustawień systemowych.")

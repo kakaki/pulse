@@ -5,6 +5,7 @@ import SystemConfiguration
 
 /// What one Mac shares with the other Macs on the local network.
 /// Sent as JSON over a short TCP connection: the client writes "basic" or "full", the server answers and closes.
+/// "update" instead asks that Mac to install the newest Pulse from the official feed (answered with `UpdateReply`).
 struct RemoteReport: Codable, Equatable {
     struct Fan: Codable, Equatable { var rpm: Double; var min: Double; var max: Double }
     struct Proc: Codable, Equatable { var name: String; var cpu: Double }
@@ -34,7 +35,16 @@ struct RemoteReport: Codable, Equatable {
     var processes: [Proc]?
     /// Running Docker containers (full answers, only when Docker runs on that Mac).
     var containers: [DockerContainers.Container]?
+    /// An update asked for by another Mac: "checking", "installing", "upToDate", "failed" (1.13+).
+    var update: String?
+    /// "macos" or "windows" (PulseWin). Absent in reports from Pulse before 1.13, which are all Macs.
+    var platform: String?
+
+    var isWindows: Bool { platform == "windows" }
 }
+
+/// Answer to "update". Pulse before 1.13 answers with a report instead.
+struct UpdateReply: Codable { var update: String }
 
 extension RemoteReport {
     /// Reports come from anyone on the local network: keep every number finite and in a sane range and every list short,
@@ -58,6 +68,8 @@ extension RemoteReport {
         r.netIn = n(netIn, 0, 1e12); r.netOut = n(netOut, 0, 1e12)
         r.uptime = n(uptime, 0, 1e9)
         r.processes = processes.map { $0.prefix(10).map { .init(name: TextRepair.mojibake(t($0.name, 64)), cpu: n($0.cpu, 0, 1_024)) } }
+        r.update = update.flatMap { Updater.RemoteState(rawValue: $0) }?.rawValue
+        r.platform = platform == "windows" ? "windows" : (platform == nil ? nil : "macos")
         r.containers = containers.map { list in
             var seen = Set<String>()
             return list.prefix(40).compactMap { c in
@@ -77,6 +89,9 @@ final class RemoteMacs {
     static let shared = RemoteMacs()
     static let serviceType = "_pulse-stats._tcp"
     static let shareKey = "remote.share"
+    /// Other Macs may start a Pulse update here (only the signed one from the official feed). Off until allowed in Settings.
+    static let allowUpdateKey = "remote.allowUpdate"
+    static var allowsRemoteUpdate: Bool { UserDefaults.standard.object(forKey: allowUpdateKey) as? Bool ?? false }
 
     struct Peer: Identifiable {
         let id: String
@@ -207,8 +222,9 @@ final class RemoteMacs {
         return s.split(separator: " ").joined(separator: " ")
     }
 
-    static func symbol(for model: String) -> String {
-        let m = model.lowercased()
+    static func symbol(for report: RemoteReport) -> String {
+        if report.isWindows { return ["book", "pad", "laptop"].contains(where: report.model.lowercased().contains) ? "laptopcomputer" : "pc" }
+        let m = report.model.lowercased()
         if m.contains("mini") { return "macmini" }
         if m.contains("book") { return "laptopcomputer" }
         if m.contains("studio") { return "macstudio" }
@@ -269,7 +285,18 @@ final class RemoteMacs {
             fans: m.fans.map { .init(rpm: $0.rpm, min: $0.min, max: $0.max) }, power: m.systemPower,
             thermal: m.thermalState.rawValue, netIn: m.netIn, netOut: m.netOut, uptime: m.uptime,
             processes: full ? m.topByCPU.map { .init(name: $0.name, cpu: $0.cpu) } : nil,
-            containers: full && DockerContainers.shared.available ? DockerContainers.shared.containers : nil)
+            containers: full && DockerContainers.shared.available ? DockerContainers.shared.containers : nil,
+            update: Updater.shared.recentRemoteState?.rawValue, platform: "macos")
+    }
+
+    /// "update" from another Mac. The request carries nothing but the word: what gets installed comes from the feed
+    /// built into this app, and Sparkle checks its signatures.
+    fileprivate func updateReply() -> Data {
+        let answer: String
+        if !Self.allowsRemoteUpdate { answer = "refused" }
+        else if !Updater.shared.isConfigured { answer = "unavailable" }
+        else { answer = Updater.shared.installRemotely() ? "started" : "unavailable" }
+        return (try? JSONEncoder().encode(UpdateReply(update: answer))) ?? Data()
     }
 
     fileprivate func payload(full: Bool) -> Data {
@@ -317,9 +344,12 @@ final class RemoteMacs {
         queue.asyncAfter(deadline: .now() + 5) { connection.cancel() }
         connection.receive(minimumIncompleteLength: 1, maximumLength: 64) { data, _, _, error in
             guard error == nil else { connection.cancel(); return }
-            let full = data.map { String(decoding: $0, as: UTF8.self).hasPrefix("full") } ?? false
+            let text = data.map { String(decoding: $0, as: UTF8.self) } ?? ""
+            let full = text.hasPrefix("full"), update = text.hasPrefix("update")
             DispatchQueue.main.async {
-                let body = MainActor.assumeIsolated { RemoteMacs.shared.payload(full: full) }
+                let body = MainActor.assumeIsolated {
+                    update ? RemoteMacs.shared.updateReply() : RemoteMacs.shared.payload(full: full)
+                }
                 connection.send(content: body, isComplete: true, completion: .contentProcessed { _ in connection.cancel() })
             }
         }
@@ -380,6 +410,10 @@ final class RemoteMacs {
         inFlight.remove(key)
         guard let report, endpoints[key] != nil else { return }
         lastSeen[key] = Date()
+        if let asked = requestedFrom[key], asked != report.version {
+            requestedFrom[key] = nil
+            updateRequests[key] = nil
+        }
         let peer = Peer(id: key, report: report)
         if let i = peers.firstIndex(where: { $0.id == key }) {
             // Same answer as last time (the other Mac hasn't refreshed yet): nothing to redraw.
@@ -390,16 +424,61 @@ final class RemoteMacs {
         }
     }
 
+    // MARK: - Updating another Mac
+
+    enum UpdateRequest: Equatable { case sending, started, refused, unavailable, tooOld, unreachable }
+    /// Requests sent from this Mac, by peer id; cleared when that Mac reports a newer version.
+    private(set) var updateRequests: [String: UpdateRequest] = [:]
+    @ObservationIgnored private var requestedFrom: [String: String] = [:]   // peer id → its version when asked
+
+    static var ownVersion: String { Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "" }
+
+    /// That Mac runs an older Pulse than this one.
+    static func isOlder(_ version: String) -> Bool {
+        !version.isEmpty && version.compare(ownVersion, options: .numeric) == .orderedAscending
+    }
+
+    func requestUpdate(_ peer: Peer) {
+        guard let endpoint = endpoints[peer.id], updateRequests[peer.id] != .sending else { return }
+        updateRequests[peer.id] = .sending
+        requestedFrom[peer.id] = peer.report.version
+        let id = peer.id
+        Self.exchange(endpoint, command: "update", on: queue) { data in
+            MainActor.assumeIsolated {
+                let result: UpdateRequest
+                if let data, let reply = try? JSONDecoder().decode(UpdateReply.self, from: data) {
+                    result = switch reply.update {
+                    case "started": .started
+                    case "refused": .refused
+                    default: .unavailable
+                    }
+                } else if let data, (try? JSONDecoder().decode(RemoteReport.self, from: data)) != nil {
+                    result = .tooOld   // answered "update" with a report: Pulse before 1.13
+                } else {
+                    result = .unreachable
+                }
+                RemoteMacs.shared.updateRequests[id] = result
+            }
+        }
+    }
+
     /// One request: connect, send "basic"/"full", read the JSON until the server closes. Calls back on the main queue.
     private nonisolated static func fetch(_ endpoint: NWEndpoint, full: Bool, on queue: DispatchQueue,
                                           done: @escaping @Sendable (RemoteReport?) -> Void) {
+        exchange(endpoint, command: full ? "full" : "basic", on: queue) { data in
+            done(data.flatMap { try? JSONDecoder().decode(RemoteReport.self, from: $0) }?.sanitized())
+        }
+    }
+
+    /// Connect, send the command, read until the server closes (at most 512 KB, 4 s). Calls back on the main queue.
+    private nonisolated static func exchange(_ endpoint: NWEndpoint, command: String, on queue: DispatchQueue,
+                                             done: @escaping @Sendable (Data?) -> Void) {
         let connection = NWConnection(to: endpoint, using: .tcp)
         let box = FetchBox(done: done)
         func finish(_ data: Data?) {
             guard box.claim() else { return }
             connection.cancel()
-            let report = data.flatMap { try? JSONDecoder().decode(RemoteReport.self, from: $0) }?.sanitized()
-            DispatchQueue.main.async { box.done(report) }
+            DispatchQueue.main.async { box.done(data) }
         }
         func read() {
             connection.receive(minimumIncompleteLength: 1, maximumLength: 64 * 1024) { data, _, isComplete, error in
@@ -411,7 +490,7 @@ final class RemoteMacs {
         connection.stateUpdateHandler = { state in
             switch state {
             case .ready:
-                connection.send(content: Data((full ? "full\n" : "basic\n").utf8), completion: .contentProcessed { _ in })
+                connection.send(content: Data((command + "\n").utf8), completion: .contentProcessed { _ in })
                 read()
             case .failed, .cancelled: finish(nil)
             default: break
@@ -454,10 +533,10 @@ extension RemoteMacs {
 
 /// Per-request state; only touched on the remote queue.
 private final class FetchBox: @unchecked Sendable {
-    let done: @Sendable (RemoteReport?) -> Void
+    let done: @Sendable (Data?) -> Void
     var buffer = Data()
     private var finished = false
-    init(done: @escaping @Sendable (RemoteReport?) -> Void) { self.done = done }
+    init(done: @escaping @Sendable (Data?) -> Void) { self.done = done }
     func claim() -> Bool {
         if finished { return false }
         finished = true
