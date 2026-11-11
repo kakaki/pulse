@@ -224,7 +224,6 @@ final class ProcessSampler {
         return result
     }
 
-    private var nameCache: [pid_t: String] = [:]
 
     private static var cache: [pid_t: String] = [:]
     static func name(for pid: pid_t) -> String {
@@ -238,6 +237,7 @@ final class ProcessSampler {
             name = String(cString: buffer)
             if name.isEmpty { name = "PID \(pid)" }
         }
+        name = TextRepair.mojibake(name)
         cache[pid] = name
         return name
     }
@@ -251,5 +251,32 @@ final class ProcessSampler {
         let image = NSRunningApplication(processIdentifier: pid)?.icon
         icons[pid] = image
         return image
+    }
+}
+
+enum TextRepair {
+    private static let macCE = String.Encoding(rawValue: CFStringConvertEncodingToNSStringEncoding(
+        CFStringEncoding(CFStringEncodings.macCentralEurRoman.rawValue)))
+
+    /// Some system processes report names whose UTF-8 bytes were read as Mac Central European
+    /// ("UsŇāuga" instead of "Usługa"). Each run of non-ASCII characters that turns back into valid UTF-8 is repaired;
+    /// everything else (e.g. a correct "–") stays as it is.
+    static func mojibake(_ text: String) -> String {
+        guard text.unicodeScalars.contains(where: { !$0.isASCII }) else { return text }
+        var result = "", run = ""
+        func flush() {
+            if run.unicodeScalars.count >= 2, let bytes = run.data(using: macCE),
+               let fixed = String(data: bytes, encoding: .utf8), fixed.unicodeScalars.count < run.unicodeScalars.count {
+                result += fixed
+            } else {
+                result += run
+            }
+            run = ""
+        }
+        for ch in text {
+            if ch.unicodeScalars.allSatisfy(\.isASCII) { flush(); result.append(ch) } else { run.append(ch) }
+        }
+        flush()
+        return result
     }
 }

@@ -57,7 +57,7 @@ extension RemoteReport {
         r.thermal = min(max(thermal, 0), 3)
         r.netIn = n(netIn, 0, 1e12); r.netOut = n(netOut, 0, 1e12)
         r.uptime = n(uptime, 0, 1e9)
-        r.processes = processes.map { $0.prefix(10).map { .init(name: t($0.name, 64), cpu: n($0.cpu, 0, 1_024)) } }
+        r.processes = processes.map { $0.prefix(10).map { .init(name: TextRepair.mojibake(t($0.name, 64)), cpu: n($0.cpu, 0, 1_024)) } }
         r.containers = containers.map { list in
             var seen = Set<String>()
             return list.prefix(40).compactMap { c in
