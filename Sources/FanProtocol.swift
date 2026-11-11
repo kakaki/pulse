@@ -22,6 +22,23 @@ enum FanHelperError {
 @objc protocol FanHelperProtocol {
     func apply(curve: Data, reply: @escaping (String?) -> Void)
     func restoreAuto(reply: @escaping () -> Void)
+    /// Stop charging at `percent` (50…95) while Pulse runs; 0 turns the limit off.
+    func setChargeLimit(_ percent: Int, reply: @escaping (String?) -> Void)
+}
+
+/// Charge limit rules shared by the app (for display) and the helper.
+enum ChargeLimitRule {
+    static let range = 50...95
+    /// Charging resumes this many points below the limit.
+    static let hysteresis = 5
+
+    /// Which SMC keys stop charging on this Mac: CHTE on current Apple Silicon firmware, CH0B/CH0C on older.
+    enum Keys { case chte, ch0bc }
+    static func keys(_ smc: SMC) -> Keys? {
+        if smc.read("CHTE") != nil { return .chte }
+        if smc.read("CH0B") != nil && smc.read("CH0C") != nil { return .ch0bc }
+        return nil
+    }
 }
 
 /// Temperature (°C) → fan speed (0–100 % of the SMC's min…max range).

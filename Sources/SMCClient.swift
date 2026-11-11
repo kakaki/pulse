@@ -71,6 +71,20 @@ final class SMC {
         return call(input) != nil
     }
 
+    /// Writes raw bytes (must match the key's size). Needs root.
+    func write(_ key: String, bytes: [UInt8]) -> Bool {
+        var input = [UInt8](repeating: 0, count: 80)
+        withUnsafeBytes(of: Self.fourCC(key).littleEndian) { input.replaceSubrange(0..<4, with: $0) }
+        input[42] = 9 // kSMCGetKeyInfo
+        guard let info = call(input) else { return false }
+        let size = info.withUnsafeBytes { $0.load(fromByteOffset: 28, as: UInt32.self) }
+        guard bytes.count == Int(size) else { return false }
+        withUnsafeBytes(of: size) { input.replaceSubrange(28..<32, with: $0) }
+        input.replaceSubrange(48..<(48 + bytes.count), with: bytes)
+        input[42] = 6 // kSMCWriteKey
+        return call(input) != nil
+    }
+
     static func encode(_ value: Double, type: String) -> [UInt8]? {
         switch type {
         case "flt ": return withUnsafeBytes(of: Float32(value)) { Array($0) }

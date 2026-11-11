@@ -27,19 +27,21 @@
 - **Overview in a single menu bar item.** Show every module side by side, or give each one its own item. Click a value in the menu bar to open that module's details.
 - **Four value styles:** text, ring, bars or a mini graph. You can set the style, label and order separately for each value, and drag to reorder.
 - **Detailed panels** for every module:
-  - **CPU:** usage, per-core load, load average, top processes
-  - **GPU:** usage history, renderer and tiler load, GPU memory, cores, restarts
+  - **CPU:** usage, per-core load, load average, top processes, Docker containers
+  - **GPU:** usage history, renderer and tiler load, GPU memory, cores, restarts, processes using the GPU
   - **Memory:** pressure, app / wired / compressed memory, swap, top processes
   - **Disk:** used or free space as percent or GB/TB, multiple drives, read/write speed, and what takes up the space
   - **Network:** upload/download, traffic per app, latency, local and public IP
   - **Sensors:** SoC, SSD and battery temperatures, fans, thermal state
-  - **Battery:** charge chart, health, cycle count, power draw, adapter wattage
+  - **Battery:** charge chart, health, cycle count, power draw, adapter wattage, Bluetooth device batteries (AirPods, keyboard, mouse)
+  - **Other Macs:** load, temperatures, fans, processes and Docker containers of other Macs running Pulse on the local network
+- **Charge limit** on MacBooks (50–95%), so the battery doesn't sit at 100% all the time.
 - **History of 2 min, 1 h, 24 h, 7 d and 30 d**, with CSV export.
 - **Handy actions:** free up memory (`purge`, asks for your admin password), quit or force quit processes with a right-click, click an IP address to copy it.
 - **Notifications** for sustained CPU load, high temperature, thermal throttling, memory pressure, low disk space and low battery.
 - **Critical values pulse** in the menu bar, and values are colored under high load.
 - **Stays out of the way:** hides in full screen apps and while mirroring a display, and refreshes less often on battery and in Low Power Mode.
-- **Fits next to the notch:** when macOS hides Pulse for lack of space, it drops labels and switches to its narrowest style.
+- **Fits next to the notch:** when macOS hides Pulse for lack of space, it drops labels and switches to its narrowest style. You can also keep just the Pulse icon in the menu bar.
 - **A desktop widget** and launch at login.
 - **Automatic updates** through Sparkle. Every release is signed and notarized by Apple.
 

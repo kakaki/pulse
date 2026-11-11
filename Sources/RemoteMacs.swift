@@ -32,6 +32,42 @@ struct RemoteReport: Codable, Equatable {
     var uptime: Double
     /// Only in "full" answers, i.e. while someone has the Other Macs panel open.
     var processes: [Proc]?
+    /// Running Docker containers (full answers, only when Docker runs on that Mac).
+    var containers: [DockerContainers.Container]?
+}
+
+extension RemoteReport {
+    /// Reports come from anyone on the local network: keep every number finite and in a sane range and every list short,
+    /// so a broken or hostile peer cannot crash Pulse (e.g. `Int(1e300)` traps) or flood the panel.
+    func sanitized() -> RemoteReport {
+        func n(_ v: Double, _ lo: Double, _ hi: Double) -> Double { v.isFinite ? min(max(v, lo), hi) : lo }
+        func t(_ s: String, _ limit: Int = 80) -> String { String(s.prefix(limit)) }
+        var r = self
+        r.id = t(id, 64); r.name = t(name, 64); r.model = t(model); r.chip = t(chip); r.version = t(version, 16)
+        r.cpu = n(cpu, 0, 1)
+        r.cpuHistory = cpuHistory.suffix(400).map { n($0, 0, 1) }
+        r.gpu = gpu.map { n($0, 0, 1) }
+        r.mem = n(mem, 0, 1)
+        r.memTotal = min(memTotal, 1 << 50)
+        r.memPressure = min(max(memPressure, 0), 2)
+        r.temp = temp.map { n($0, 0, 150) }
+        r.tempHistory = tempHistory.suffix(400).map { n($0, 0, 150) }
+        r.fans = fans.prefix(8).map { .init(rpm: n($0.rpm, 0, 20_000), min: n($0.min, 0, 20_000), max: n($0.max, 0, 20_000)) }
+        r.power = power.map { n($0, 0, 2_000) }
+        r.thermal = min(max(thermal, 0), 3)
+        r.netIn = n(netIn, 0, 1e12); r.netOut = n(netOut, 0, 1e12)
+        r.uptime = n(uptime, 0, 1e9)
+        r.processes = processes.map { $0.prefix(10).map { .init(name: t($0.name, 64), cpu: n($0.cpu, 0, 1_024)) } }
+        r.containers = containers.map { list in
+            var seen = Set<String>()
+            return list.prefix(40).compactMap { c in
+                guard seen.insert(c.id).inserted else { return nil }   // duplicate ids would confuse the list
+                return .init(id: t(c.id, 80), name: t(c.name, 64), image: t(c.image, 120), cpu: n(c.cpu, 0, 1_024),
+                             memory: min(c.memory, 1 << 50), memoryLimit: min(c.memoryLimit, 1 << 50))
+            }
+        }
+        return r
+    }
 }
 
 /// Shares this Mac's readings over Bonjour and collects the readings of other Macs running Pulse.
@@ -192,6 +228,8 @@ final class RemoteMacs {
         if wantsProcesses != holdsProcessWatcher {
             holdsProcessWatcher = wantsProcesses
             m.processWatchers = max(0, m.processWatchers + (wantsProcesses ? 1 : -1))
+            let docker = DockerContainers.shared
+            docker.watchers = max(0, docker.watchers + (wantsProcesses ? 1 : -1))
         }
 
         let defaults = UserDefaults.standard
@@ -223,7 +261,8 @@ final class RemoteMacs {
             temp: m.socMax ?? m.socAvg, tempHistory: m.tempHistory.map { $0.isFinite ? $0 : 0 },
             fans: m.fans.map { .init(rpm: $0.rpm, min: $0.min, max: $0.max) }, power: m.systemPower,
             thermal: m.thermalState.rawValue, netIn: m.netIn, netOut: m.netOut, uptime: m.uptime,
-            processes: full ? m.topByCPU.map { .init(name: $0.name, cpu: $0.cpu) } : nil)
+            processes: full ? m.topByCPU.map { .init(name: $0.name, cpu: $0.cpu) } : nil,
+            containers: full && DockerContainers.shared.available ? DockerContainers.shared.containers : nil)
     }
 
     fileprivate func payload(full: Bool) -> Data {
@@ -350,7 +389,7 @@ final class RemoteMacs {
         func finish(_ data: Data?) {
             guard box.claim() else { return }
             connection.cancel()
-            let report = data.flatMap { try? JSONDecoder().decode(RemoteReport.self, from: $0) }
+            let report = data.flatMap { try? JSONDecoder().decode(RemoteReport.self, from: $0) }?.sanitized()
             DispatchQueue.main.async { box.done(report) }
         }
         func read() {
@@ -387,6 +426,7 @@ extension RemoteMacs {
                 thermal: temp > 88 ? 2 : 0, netIn: 2_400_000, netOut: 310_000, uptime: 6 * 86400 + 3 * 3600,
                 processes: procs.map { .init(name: $0.0, cpu: $0.1) }), lastSeen: Date())
         }
+        let mb: UInt64 = 1 << 20
         peers = [
             report("demo-mini", "Mac mini (Biuro)", "Mac mini", "Intel(R) Core(TM) i7-8700B CPU @ 3.20GHz", cpu: 0.86, temp: 91,
                    fans: [.init(rpm: 2300, min: 1800, max: 4900)], seed: 11,
@@ -394,6 +434,10 @@ extension RemoteMacs {
             report("demo-m4", "Mac mini M4", "Mac mini (2024)", "Apple M4", cpu: 0.18, temp: 52,
                    fans: [.init(rpm: 1000, min: 1000, max: 4900)], seed: 21,
                    procs: [("Xcode", 0.6), ("Safari", 0.2)]),
+        ]
+        peers[0].report.containers = [
+            .init(id: "c1", name: "gitlab-runner", image: "gitlab/gitlab-runner:latest", cpu: 2.84, memory: 1_210 * mb, memoryLimit: 8192 * mb),
+            .init(id: "c2", name: "postgres", image: "postgres:17", cpu: 0.06, memory: 180 * mb, memoryLimit: 8192 * mb),
         ]
     }
 }

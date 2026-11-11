@@ -8,7 +8,7 @@ final class Alerts: NSObject, UNUserNotificationCenterDelegate {
     static let shared = Alerts()
 
     enum Kind: String, CaseIterable, Identifiable {
-        case temp, thermal, cpu, memory, battery, disk
+        case temp, thermal, cpu, memory, battery, bluetooth, disk
         var id: String { rawValue }
         var title: String {
             switch self {
@@ -17,6 +17,7 @@ final class Alerts: NSObject, UNUserNotificationCenterDelegate {
             case .cpu: String(localized: "Długotrwałe obciążenie CPU")
             case .memory: String(localized: "Brak pamięci")
             case .battery: String(localized: "Niski poziom baterii")
+            case .bluetooth: String(localized: "Słaba bateria urządzenia Bluetooth")
             case .disk: String(localized: "Mało miejsca na dysku")
             }
         }
@@ -27,6 +28,7 @@ final class Alerts: NSObject, UNUserNotificationCenterDelegate {
             case .cpu: "cpu"
             case .memory: "memorychip"
             case .battery: "battery.25percent"
+            case .bluetooth: "keyboard.badge.ellipsis"
             case .disk: "internaldrive"
             }
         }
@@ -36,7 +38,7 @@ final class Alerts: NSObject, UNUserNotificationCenterDelegate {
             case .cpu: [.cpu]
             case .memory: [.memory]
             case .disk: [.disk]
-            case .battery: [.battery]
+            case .battery: [.battery, .bluetooth]
             case .sensors: [.temp, .thermal]
             case .overview, .gpu, .network, .macs: []
             }
@@ -51,6 +53,7 @@ final class Alerts: NSObject, UNUserNotificationCenterDelegate {
             case .cpu: 0.9
             case .memory, .thermal: 0
             case .battery: 0.15
+            case .bluetooth: 0.15
             case .disk: 10
             }
         }
@@ -154,7 +157,7 @@ struct AlertSettings: View {
                     }
                 }
             } footer: {
-                Text("To samo powiadomienie nie pojawi się częściej niż co 30 minut ani ponownie, zanim wartość nie wróci do normy. Progi ustawisz na stronach modułów: CPU, Pamięć, Dysk, Czujniki i Bateria.")
+                Text("To samo powiadomienie nie pojawi się częściej niż co 30 minut ani ponownie, zanim wartość nie wróci do normy. Progi ustawisz na stronach modułów: CPU, Pamięć, Dysk, Czujniki i Bateria (także dla urządzeń Bluetooth).")
             }
         }
         .formStyle(.grouped)
@@ -199,7 +202,7 @@ struct AlertRow: View {
                     Stepper("Próg: \(Fmt.temp(limit))", value: $limit, in: 70...110, step: 5)
                 case .cpu:
                     Stepper("Próg: \(Fmt.pct(limit)) przez 2 min", value: $limit, in: 0.5...1, step: 0.05)
-                case .battery:
+                case .battery, .bluetooth:
                     Stepper("Próg: \(Fmt.pct(limit))", value: $limit, in: 0.05...0.5, step: 0.05)
                 case .disk:
                     Stepper("Gdy wolne < \(Int(limit)) GB", value: $limit, in: 5...200, step: 5)

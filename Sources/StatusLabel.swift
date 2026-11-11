@@ -158,6 +158,31 @@ struct StatusSnapshot {
 
 @MainActor
 enum StatusRenderer {
+    /// Icon-only menu bar mode: the Pulse symbol, with a red dot while something is critical.
+    static func pulseIcon(alert: Bool, darkBar: Bool) -> NSImage {
+        let config = NSImage.SymbolConfiguration(pointSize: 14, weight: .semibold)
+        guard let symbol = NSImage(systemSymbolName: "waveform.path.ecg", accessibilityDescription: "Pulse")?
+            .withSymbolConfiguration(config) else { return NSImage() }
+        guard alert else { symbol.isTemplate = true; return symbol }
+        let size = NSSize(width: symbol.size.width + 3, height: max(symbol.size.height, 16))
+        let image = NSImage(size: size, flipped: false) { rect in
+            let tint: NSColor = darkBar ? .white : .black
+            let y = (rect.height - symbol.size.height) / 2
+            let tinted = NSImage(size: symbol.size, flipped: false) { r in
+                symbol.draw(in: r)
+                tint.set()
+                r.fill(using: .sourceAtop)
+                return true
+            }
+            tinted.draw(in: NSRect(x: 0, y: y, width: symbol.size.width, height: symbol.size.height))
+            NSColor.systemRed.setFill()
+            NSBezierPath(ovalIn: NSRect(x: rect.width - 7, y: rect.height - 7, width: 6, height: 6)).fill()
+            return true
+        }
+        image.isTemplate = false
+        return image
+    }
+
     /// Template (monochrome) image normally; when colorize is on and something is over threshold,
     /// a full-color image whose base color matches the menu bar appearance.
     static func image(module: Module, mode: DisplayMode, snapshot: StatusSnapshot, labels: Bool,

@@ -27,19 +27,21 @@
 - **Übersicht in einem einzigen Menüleistenobjekt.** Alle Module können nebeneinander stehen, oder jedes bekommt ein eigenes Objekt. Ein Klick auf einen Wert in der Menüleiste öffnet die Details dieses Moduls.
 - **Vier Darstellungsstile:** Text, Ring, Balken oder Mini-Diagramm. Stil, Beschriftung und Reihenfolge lassen sich für jeden Wert einzeln festlegen; die Reihenfolge änderst du per Drag & Drop.
 - **Detaillierte Fenster** für jedes Modul:
-  - **CPU:** Auslastung, Kerne, Durchschnittslast, Prozesse mit der höchsten Last
-  - **GPU:** Auslastungsverlauf, Last von Renderer und Tiler, GPU-Speicher, Kerne, Neustarts
+  - **CPU:** Auslastung, Kerne, Durchschnittslast, Prozesse mit der höchsten Last, Docker-Container
+  - **GPU:** Auslastungsverlauf, Last von Renderer und Tiler, GPU-Speicher, Kerne, Neustarts, Prozesse mit GPU-Nutzung
   - **Speicher:** Speicherdruck, App-, gebundener und komprimierter Speicher, Swap, Prozesse
   - **Festplatte:** belegter oder freier Speicher in Prozent oder GB/TB, mehrere Laufwerke, Lese- und Schreibrate, was den Platz belegt
   - **Netzwerk:** Upload und Download, Datenverkehr pro App, Latenz, lokale und öffentliche IP
   - **Sensoren:** Temperaturen von SoC, SSD und Batterie, Lüfter, thermischer Zustand
-  - **Batterie:** Ladeverlauf, Zustand, Ladezyklen, Leistungsaufnahme, Netzteilleistung
+  - **Batterie:** Ladeverlauf, Zustand, Ladezyklen, Leistungsaufnahme, Netzteilleistung, Akkus von Bluetooth-Geräten (AirPods, Tastatur, Maus)
+  - **Andere Macs:** Auslastung, Temperaturen, Lüfter, Prozesse und Docker-Container anderer Macs mit Pulse im lokalen Netzwerk
+- **Ladelimit** bei MacBooks (50–95 %), damit der Akku nicht ständig bei 100 % steht.
 - **Verlauf über 2 Min., 1 h, 24 h, 7 Tage und 30 Tage**, mit CSV-Export.
 - **Praktische Aktionen:** Speicher freigeben (`purge`, fragt nach dem Administratorpasswort), Prozesse per Rechtsklick beenden, IP-Adresse per Klick kopieren.
 - **Mitteilungen** bei anhaltender CPU-Last, hoher Temperatur, thermischer Drosselung, Speicherdruck, wenig Speicherplatz und niedrigem Akkustand.
 - **Kritische Werte blinken** in der Menüleiste, und bei hoher Last werden Werte eingefärbt.
 - **Stört nicht:** blendet sich im Vollbild und bei Bildschirmspiegelung aus und aktualisiert im Batteriebetrieb und im Stromsparmodus seltener.
-- **Passt neben die Kamera-Aussparung:** Wenn macOS Pulse aus Platzmangel ausblendet, entfallen Beschriftungen und der schmalste Stil wird gewählt.
+- **Passt neben die Kamera-Aussparung:** Wenn macOS Pulse aus Platzmangel ausblendet, entfallen Beschriftungen und der schmalste Stil wird gewählt. Auf Wunsch bleibt nur das Pulse-Symbol in der Menüleiste.
 - **Widget** für den Schreibtisch und Start beim Anmelden.
 - **Automatische Updates** über Sparkle. Jede Version ist von Apple signiert und notarisiert.
 

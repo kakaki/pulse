@@ -80,6 +80,7 @@ struct CPUDetail: View {
                 }
             }
             ProcessList(metric: .cpu)
+            DockerContainersCard()
         }
     }
 }
@@ -141,6 +142,7 @@ struct GPUDetail: View {
                     }
                 }
             }
+            if m.gpu != nil { GPUProcessList() }
         }
     }
 }
@@ -578,12 +580,15 @@ struct BatteryDetail: View {
                     HistoryChart(metric: .battery, live: m.batteryHistory, maxValue: 1, color: Module.battery.tint, height: 52)
                 }
                 healthCard(b)
+                if ChargeLimit.shared.isSupported { ChargeLimitShortcut(battery: b) }
+                BluetoothBatteriesCard()
             } else {
                 Card {
                     SectionTitle(text: "Bateria")
                     Label("Ten Mac jest zasilany z sieci.", systemImage: "powerplug.fill")
                         .font(.callout).foregroundStyle(.secondary)
                 }
+                BluetoothBatteriesCard(showEmpty: true)
             }
         }
     }

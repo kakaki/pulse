@@ -67,6 +67,7 @@ struct RemoteMacCard: View {
                     Sparkline(values: r.cpuHistory, maxValue: 1, color: cpuColors[1], format: Fmt.pct)
                         .frame(height: 34)
                     if !r.fans.isEmpty { fans }
+                    if let containers = r.containers, !containers.isEmpty { dockerSummary(containers) }
                 }
                 .contentShape(.rect)
             }
@@ -159,6 +160,24 @@ struct RemoteMacCard: View {
         }
     }
 
+    /// Always visible: how much the containers of that Mac take together, and the busiest one.
+    private func dockerSummary(_ containers: [DockerContainers.Container]) -> some View {
+        let cpu = containers.reduce(0) { $0 + $1.cpu }
+        let memory = containers.reduce(UInt64(0)) { $0 + $1.memory }
+        let top = containers.max { $0.cpu < $1.cpu }
+        return HStack(spacing: 6) {
+            Image(systemName: "shippingbox.fill").font(.system(size: 10)).foregroundStyle(.blue)
+            Text("Docker: \(containers.count)").foregroundStyle(.secondary).fixedSize()
+            if let top, top.cpu >= 0.05 {
+                Text(verbatim: "· " + top.name).foregroundStyle(.secondary).lineLimit(1).truncationMode(.tail)
+            }
+            Spacer(minLength: 4)
+            Text(verbatim: String(format: "%.0f%%", cpu * 100) + " CPU · " + Fmt.memory(memory))
+                .fontWeight(.semibold).monospacedDigit().lineLimit(1).fixedSize()
+        }
+        .font(.system(size: 11.5))
+    }
+
     @ViewBuilder private var details: some View {
         VStack(spacing: 6) {
             if let processes = r.processes, !processes.isEmpty {
@@ -177,6 +196,19 @@ struct RemoteMacCard: View {
                     Text("Pobieram listę procesów…").font(.system(size: 11)).foregroundStyle(.secondary)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            if let containers = r.containers, !containers.isEmpty {
+                SectionTitle(text: "Kontenery Dockera").padding(.top, 4)
+                ForEach(containers) { c in
+                    HStack {
+                        Image(systemName: "shippingbox.fill").font(.system(size: 10)).foregroundStyle(.blue)
+                        Text(verbatim: c.name).lineLimit(1)
+                        Spacer()
+                        Text(verbatim: String(format: "%.1f%%", c.cpu * 100) + " · " + Fmt.memory(c.memory))
+                            .monospacedDigit().foregroundStyle(.secondary)
+                    }
+                    .font(.system(size: 11.5))
+                }
             }
             Divider().padding(.vertical, 2)
             InfoRow(title: "Pobieranie / wysyłanie", value: "↓ \(Fmt.rate(r.netIn)) · ↑ \(Fmt.rate(r.netOut))")

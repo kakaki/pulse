@@ -120,6 +120,17 @@ final class SystemMonitor {
         didSet { if processWatchers > 0 && oldValue == 0 { processes = processSampler.sample() } }
     }
 
+    /// GPU time per process (Graphics panel only).
+    private(set) var gpuProcesses: [GPUProcessSampler.Entry] = []
+    private(set) var gpuProcessesLoaded = false
+    @ObservationIgnored var gpuProcessWatchers = 0 {
+        didSet {
+            if gpuProcessWatchers > 0 && oldValue == 0 { _ = gpuProcessSampler.sample() }   // baseline for the first interval
+            if gpuProcessWatchers == 0 { gpuProcessesLoaded = false }
+        }
+    }
+    @ObservationIgnored private let gpuProcessSampler = GPUProcessSampler()
+
     /// Called after every refresh (used to redraw the menu bar items).
     @ObservationIgnored var onUpdate: (() -> Void)?
 
@@ -190,6 +201,11 @@ final class SystemMonitor {
         if tick % 5 == 0 { battery = BatterySampler.read(); updateSaving() }
         if battery.present { push(&batteryHistory, battery.percent) }
         if processWatchers > 0 { processes = processSampler.sample() }
+        if gpuProcessWatchers > 0 {
+            let list = gpuProcessSampler.sample()
+            if list != gpuProcesses { gpuProcesses = list }
+            gpuProcessesLoaded = true
+        }
         hasFans = smcSampler.fanCount > 0
         if hasFans { fans = smcSampler.fans() }
         systemPower = smcSampler.systemPower()
@@ -199,6 +215,8 @@ final class SystemMonitor {
         recordHistory()
         if tick % 30 == 0 { publishWidget() }
         RemoteMacs.shared.tick(self)
+        BluetoothBatteries.shared.tick()
+        DockerContainers.shared.tick()
         tick += 1
         onUpdate?()
     }
@@ -527,6 +545,9 @@ extension SystemMonitor {
         battery = b
         batteryHistory = demoSeries(n, base: 0.83, amp: 0.005, seed: 9)
         let mb: UInt64 = 1 << 20
+        gpuProcesses = [.init(id: 99906, name: "WindowServer", share: 0.08), .init(id: demoPID("Safari", 99902), name: "Safari", share: 0.05),
+                        .init(id: demoPID("Xcode", 99901), name: "Xcode", share: 0.02)]
+        gpuProcessesLoaded = true
         processes = [
             ProcessStat(id: demoPID("Xcode", 99901), name: "Xcode", cpu: 0.42, memory: 1_480 * mb),
             ProcessStat(id: demoPID("Safari", 99902), name: "Safari", cpu: 0.18, memory: 920 * mb),

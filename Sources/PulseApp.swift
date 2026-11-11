@@ -257,7 +257,7 @@ final class StatusBarController: NSObject, NSPopoverDelegate {
             + "|\(d.bool(forKey: "showLabels"))|\(d.bool(forKey: "colorize"))|\(d.integer(forKey: "tempUnit"))"
             + "|" + OverviewItem.ordered.map { "\($0.rawValue)\($0.isOn ? 1 : 0)\($0.style?.rawValue ?? "")\($0.showsLabel ? 1 : 0)" }.joined(separator: ".")
             + "|\(d.bool(forKey: "hide.fullscreen"))\(d.bool(forKey: "hide.mirroring"))\(d.object(forKey: "autoCompact") as? Bool ?? true)|\(DiskDisplay.showsFree)\(DiskDisplay.showsAmount)\(d.string(forKey: DiskDisplay.volumeKey) ?? "")"
-            + "|\(d.object(forKey: "pulseAlerts") as? Bool ?? true)|\(d.bool(forKey: "overview.separators"))|\(d.object(forKey: "overview.net.split") as? Bool ?? true)"
+            + "|\(Self.iconOnly)|\(d.object(forKey: "pulseAlerts") as? Bool ?? true)|\(d.bool(forKey: "overview.separators"))|\(d.object(forKey: "overview.net.split") as? Bool ?? true)"
     }
 
     @objc private func defaultsChanged() {
@@ -267,12 +267,16 @@ final class StatusBarController: NSObject, NSPopoverDelegate {
         updatePresentation()
     }
 
+    /// Settings → Ogólne: one Pulse icon instead of all the values; a click opens the Overview.
+    static var iconOnly: Bool { UserDefaults.standard.bool(forKey: "menubar.iconOnly") }
+    private static func shows(_ module: Module) -> Bool { iconOnly ? module == .overview : module.isEnabled }
+
     private func syncItems() {
         lastSignature = signature()
         defer { scheduleCompactCheck(after: 1.0) }
         // New status items appear to the left of existing ones, so create them right-to-left.
         for module in Module.allCases.reversed() {
-            if module.isEnabled, items[module] == nil {
+            if Self.shows(module), items[module] == nil {
                 let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
                 item.autosaveName = "pulse.\(module.rawValue)"
                 item.behavior = .removalAllowed
@@ -284,10 +288,14 @@ final class StatusBarController: NSObject, NSPopoverDelegate {
                 visibilityObservers[module] = item.observe(\.isVisible, options: [.new]) { _, change in
                     // User ⌘-dragged the item out of the menu bar.
                     if change.newValue == false {
-                        Task { @MainActor in UserDefaults.standard.set(false, forKey: module.enabledKey) }
+                        Task { @MainActor in
+                            // Dragging away the only icon brings the separate values back instead of hiding Pulse.
+                            if StatusBarController.iconOnly { UserDefaults.standard.set(false, forKey: "menubar.iconOnly") }
+                            else { UserDefaults.standard.set(false, forKey: module.enabledKey) }
+                        }
                     }
                 }
-            } else if !module.isEnabled, let item = items[module] {
+            } else if !Self.shows(module), let item = items[module] {
                 visibilityObservers[module] = nil
                 popovers[module]?.performClose(nil)
                 NSStatusBar.system.removeStatusItem(item)
@@ -314,6 +322,16 @@ final class StatusBarController: NSObject, NSPopoverDelegate {
             if module == .overview, popovers[module]?.isShown == true { snapshot.highlight = dropdownStates[module]?.selected }
             if snapshot.pulseLevel >= 0.9 { anyCritical = true }
             snapshot.dimCritical = pulse && pulsePhase
+            if Self.iconOnly && module == .overview {
+                renderedOverview = nil
+                // Nothing else is visible, so any critical module lights the icon.
+                let level = ([Module.cpu, .gpu, .memory, .disk, .sensors, .battery].map { StatusSnapshot.make($0, monitor).pulseLevel } + [snapshot.pulseLevel]).max() ?? 0
+                if level >= 0.9 { anyCritical = true }
+                let image = StatusRenderer.pulseIcon(alert: level >= 0.9 && !(pulse && pulsePhase), darkBar: dark)
+                item.button?.image = image
+                item.length = ceil(image.size.width) + 8
+                continue
+            }
             let (snap, mode, showLabels) = compacted(module, snapshot, labels: labels)
             if module == .overview { renderedOverview = (snap, mode) }
             let image = StatusRenderer.image(module: module, mode: mode,

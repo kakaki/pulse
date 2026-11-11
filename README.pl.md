@@ -27,19 +27,21 @@
 - **Przegląd w jednym elemencie paska menu.** Wszystkie moduły mogą stać obok siebie albo każdy może mieć osobny element. Kliknięcie wartości w pasku otwiera szczegóły tego modułu.
 - **Cztery style wartości:** tekst, pierścień, słupki albo mini wykres. Styl, etykietę i kolejność ustawiasz osobno dla każdej wartości; kolejność zmieniasz przeciąganiem.
 - **Szczegółowe panele** dla każdego modułu:
-  - **CPU:** obciążenie, rdzenie, średnie obciążenie, najbardziej obciążające procesy
-  - **GPU:** historia użycia, obciążenie renderera i tilera, pamięć GPU, rdzenie, restarty
+  - **CPU:** obciążenie, rdzenie, średnie obciążenie, najbardziej obciążające procesy, kontenery Dockera
+  - **GPU:** historia użycia, obciążenie renderera i tilera, pamięć GPU, rdzenie, restarty, procesy używające GPU
   - **Pamięć:** ciśnienie, pamięć aplikacji / związana / skompresowana, swap, procesy
   - **Dysk:** miejsce zajęte lub wolne w procentach albo GB/TB, wiele dysków, odczyt i zapis, co zajmuje miejsce
   - **Sieć:** wysyłanie i pobieranie, ruch per aplikacja, opóźnienie, adres lokalny i publiczny
   - **Czujniki:** temperatury SoC, SSD i baterii, wentylatory, stan termiczny
-  - **Bateria:** wykres naładowania, kondycja, cykle, pobór mocy, moc zasilacza
+  - **Bateria:** wykres naładowania, kondycja, cykle, pobór mocy, moc zasilacza, baterie urządzeń Bluetooth (AirPods, klawiatura, mysz)
+  - **Inne Maki:** obciążenie, temperatury, wentylatory, procesy i kontenery Dockera innych Maców z Pulse w sieci lokalnej
+- **Limit ładowania** w MacBookach (50–95%), żeby bateria nie stała stale na 100%.
 - **Historia z 2 min, 1 h, 24 h, 7 dni i 30 dni**, z eksportem do CSV.
 - **Przydatne akcje:** zwalnianie pamięci (`purge`, pyta o hasło administratora), kończenie procesów prawym klikiem, kopiowanie adresu IP kliknięciem.
 - **Powiadomienia** o długotrwałym obciążeniu CPU, wysokiej temperaturze, spowolnieniu termicznym, braku pamięci, małej ilości miejsca na dysku i niskim poziomie baterii.
 - **Wartości krytyczne pulsują** w pasku menu, a przy wysokim obciążeniu wartości zmieniają kolor.
 - **Nie przeszkadza:** chowa się na pełnym ekranie i przy dublowaniu ekranu, a na baterii i w trybie niskiego zużycia energii odświeża dane rzadziej.
-- **Mieści się przy notchu:** gdy macOS chowa Pulse z braku miejsca, Pulse ukrywa etykiety i przechodzi na najwęższy styl.
+- **Mieści się przy notchu:** gdy macOS chowa Pulse z braku miejsca, Pulse ukrywa etykiety i przechodzi na najwęższy styl. Można też zostawić w pasku samą ikonę Pulse.
 - **Widżet na biurko** i uruchamianie przy logowaniu.
 - **Automatyczne aktualizacje** przez Sparkle. Każda wersja jest podpisana i notaryzowana przez Apple.
 

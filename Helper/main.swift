@@ -1,4 +1,5 @@
 import Foundation
+import IOKit.ps
 import Security
 
 // Privileged helper (launchd daemon): runs the fan curve while Pulse is connected.
@@ -121,18 +122,89 @@ final class FanController {
     }
 }
 
+/// Charge limit: stops charging at the limit and lets it charge again 5 points lower.
+/// Anything going wrong – Pulse quits or crashes, limit turned off, SIGTERM – charging is allowed again.
+final class ChargeController {
+    private let queue: DispatchQueue
+    private let smc = SMC()
+    private var limit = 0
+    private var timer: DispatchSourceTimer?
+    private var inhibited = false
+
+    init(queue: DispatchQueue) { self.queue = queue }
+
+    private static func batteryPercent() -> Int? {
+        guard let info = IOPSCopyPowerSourcesInfo()?.takeRetainedValue(),
+              let list = IOPSCopyPowerSourcesList(info)?.takeRetainedValue() as? [CFTypeRef] else { return nil }
+        for source in list {
+            guard let d = IOPSGetPowerSourceDescription(info, source)?.takeUnretainedValue() as? [String: Any],
+                  d[kIOPSTypeKey] as? String == kIOPSInternalBatteryType,
+                  let current = d[kIOPSCurrentCapacityKey] as? Int, let max = d[kIOPSMaxCapacityKey] as? Int, max > 0 else { continue }
+            return current * 100 / max
+        }
+        return nil
+    }
+
+    private func setCharging(allowed: Bool) -> Bool {
+        guard let smc, let keys = ChargeLimitRule.keys(smc) else { return false }
+        let ok: Bool
+        switch keys {
+        case .chte: ok = smc.write("CHTE", bytes: allowed ? [0, 0, 0, 0] : [1, 0, 0, 0])
+        case .ch0bc: ok = smc.write("CH0B", bytes: [allowed ? 0 : 2]) && smc.write("CH0C", bytes: [allowed ? 0 : 2])
+        }
+        if ok { inhibited = !allowed }
+        return ok
+    }
+
+    /// Limit off and charging allowed.
+    func stop() {
+        timer?.cancel(); timer = nil
+        limit = 0
+        if let smc, ChargeLimitRule.keys(smc) != nil { _ = setCharging(allowed: true) }
+    }
+
+    func apply(_ percent: Int) -> String? {
+        guard percent != 0 else { stop(); return nil }
+        guard let smc, ChargeLimitRule.keys(smc) != nil else { return FanHelperError.unsupported }
+        guard ChargeLimitRule.range.contains(percent) else { return FanHelperError.invalidCurve }
+        guard Self.batteryPercent() != nil else { return FanHelperError.noSensor }
+        limit = percent
+        guard tick() else { stop(); return FanHelperError.writeFailed }
+        if timer == nil {
+            let t = DispatchSource.makeTimerSource(queue: queue)
+            t.schedule(deadline: .now() + 20, repeating: 20)
+            t.setEventHandler { [weak self] in
+                guard let self, !self.tick() else { return }
+                self.stop()
+            }
+            t.resume()
+            timer = t
+        }
+        return nil
+    }
+
+    private func tick() -> Bool {
+        guard limit > 0 else { return true }
+        guard let percent = Self.batteryPercent() else { return inhibited ? setCharging(allowed: true) : true }
+        if percent >= limit { return setCharging(allowed: false) }
+        if percent <= limit - ChargeLimitRule.hysteresis { return setCharging(allowed: true) }
+        return true
+    }
+}
+
 final class HelperService: NSObject, FanHelperProtocol, NSXPCListenerDelegate {
     private let queue = DispatchQueue(label: "fan.control")
     private lazy var controller = FanController(queue: queue)
+    private lazy var charge = ChargeController(queue: queue)
     private var active: NSXPCConnection?
 
     func start() {
-        queue.sync { controller.stop() }   // also cleans up after a crash of an earlier run
+        queue.sync { controller.stop(); charge.stop() }   // also cleans up after a crash of an earlier run
         queue.asyncAfter(deadline: .now() + 30) { [self] in if active == nil { exit(0) } }
     }
 
     func shutdown() {
-        queue.sync { controller.stop() }
+        queue.sync { controller.stop(); charge.stop() }
         exit(0)
     }
 
@@ -144,6 +216,7 @@ final class HelperService: NSObject, FanHelperProtocol, NSXPCListenerDelegate {
             self.queue.async {
                 guard self.active == nil || self.active === connection else { return }
                 self.controller.stop()
+                self.charge.stop()
                 exit(0)
             }
         }
@@ -163,6 +236,10 @@ final class HelperService: NSObject, FanHelperProtocol, NSXPCListenerDelegate {
 
     func restoreAuto(reply: @escaping () -> Void) {
         queue.async { [self] in controller.stop(); reply() }
+    }
+
+    func setChargeLimit(_ percent: Int, reply: @escaping (String?) -> Void) {
+        queue.async { [self] in reply(charge.apply(percent)) }
     }
 }
 

@@ -43,10 +43,11 @@ final class FanControl {
                 MainActor.assumeIsolated { FanControl.shared.restoreAutoNow() }
             },
             center.addObserver(forName: NSWorkspace.didWakeNotification, object: nil, queue: .main) { _ in
-                MainActor.assumeIsolated { FanControl.shared.applyIfEnabled() }
+                MainActor.assumeIsolated { FanControl.shared.applyIfEnabled(); ChargeLimit.shared.apply() }
             }
         ]
         applyIfEnabled()
+        ChargeLimit.shared.apply()
     }
 
     func refreshState() {
@@ -57,7 +58,7 @@ final class FanControl {
         case .requiresApproval: helperState = .needsApproval
         default: helperState = .absent
         }
-        if helperState == .ready && !wasReady { applyIfEnabled() }
+        if helperState == .ready && !wasReady { applyIfEnabled(); ChargeLimit.shared.apply() }
     }
 
     func setEnabled(_ on: Bool) {
@@ -117,7 +118,7 @@ final class FanControl {
         (connection?.synchronousRemoteObjectProxyWithErrorHandler { _ in } as? FanHelperProtocol)?.restoreAuto {}
     }
 
-    private func connect() -> NSXPCConnection {
+    func connect() -> NSXPCConnection {
         if let connection { return connection }
         let c = NSXPCConnection(machServiceName: FanHelperInfo.label, options: .privileged)
         c.remoteObjectInterface = NSXPCInterface(with: FanHelperProtocol.self)
@@ -126,6 +127,7 @@ final class FanControl {
             Task { @MainActor in
                 try? await Task.sleep(for: .seconds(2))
                 FanControl.shared.applyIfEnabled()
+                ChargeLimit.shared.apply()
             }
         }
         c.invalidationHandler = {
@@ -167,20 +169,23 @@ struct FanSettings: View {
 
 /// Large, unmissable setup step shown until the privileged helper is allowed to run.
 struct FanHelperSetupCard: View {
+    /// What the helper is needed for, shown before it is added.
+    var reason: String = String(localized: "Zmiana obrotów wentylatora wymaga uprawnień systemowych, dlatego Pulse musi dodać małego pomocnika. Trzeba to zrobić tylko raz i można go później usunąć.")
+    var symbol = "fan.fill"
     private var fan: FanControl { .shared }
     private var waiting: Bool { fan.helperState == .needsApproval }
 
     var body: some View {
         Section {
             VStack(spacing: 12) {
-                Image(systemName: waiting ? "switch.2" : "fan.fill")
+                Image(systemName: waiting ? "switch.2" : symbol)
                     .font(.system(size: 36, weight: .semibold))
                     .foregroundStyle(waiting ? Color.orange : Color.cyan)
-                Text(waiting ? String(localized: "Włącz pomocnika Pulse") : String(localized: "Sterowanie wymaga pomocnika Pulse"))
+                Text(waiting ? String(localized: "Włącz pomocnika Pulse") : String(localized: "To wymaga pomocnika Pulse"))
                     .font(.title2.bold())
                 Text(waiting
                      ? String(localized: "W Ustawieniach systemowych przejdź do: Ogólne → Rzeczy otwierane po zalogowaniu i rozszerzenia, i włącz przełącznik przy Pulse. macOS poprosi o hasło lub Touch ID. Ta strona sama wykryje zmianę.")
-                     : String(localized: "Zmiana obrotów wentylatora wymaga uprawnień systemowych, dlatego Pulse musi dodać małego pomocnika. Trzeba to zrobić tylko raz i można go później usunąć."))
+                     : reason)
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
@@ -233,7 +238,7 @@ struct FanControlSection: View {
                 HStack {
                     Button("Przywróć domyślną krzywą") { fan.setCurve(.standard) }
                     Spacer()
-                    if !fan.enabled && fan.helperState == .ready {
+                    if !fan.enabled && !ChargeLimit.shared.enabled && fan.helperState == .ready {
                         Button("Usuń pomocnika") { fan.removeHelper() }
                     }
                 }

@@ -94,6 +94,28 @@
         }
       }
     },
+    "%@: %@ baterii." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: noch %2$@ Akku."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: %2$@ battery left."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@: %2$@ baterii."
+          }
+        }
+      }
+    },
     "%lld obr/min" : {
       "localizations" : {
         "de" : {
@@ -469,6 +491,22 @@
         }
       }
     },
+    "Bateria dłużej zachowa pojemność, jeśli nie stoi stale na 100%. Przydatne, gdy MacBook jest prawie zawsze podłączony do zasilacza." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Akku behält seine Kapazität länger, wenn er nicht ständig bei 100 % steht. Praktisch, wenn das MacBook fast immer am Netzteil hängt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The battery keeps its capacity longer if it doesn’t sit at 100% all the time. Useful when the MacBook is almost always plugged in."
+          }
+        }
+      }
+    },
     "Bateria: %@, zostało ok. %@." : {
       "localizations" : {
         "de" : {
@@ -503,6 +541,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Battery: %@."
+          }
+        }
+      }
+    },
+    "Bez limitu ładowania" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein Ladelimit"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No charge limit"
           }
         }
       }
@@ -603,6 +657,22 @@
         }
       }
     },
+    "Brak połączonych urządzeń z baterią." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine verbundenen Geräte mit Akku."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No connected devices with a battery."
+          }
+        }
+      }
+    },
     "Brak ruchu" : {
       "localizations" : {
         "de" : {
@@ -615,6 +685,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No traffic"
+          }
+        }
+      }
+    },
+    "Brak uruchomionych kontenerów." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine laufenden Container."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No running containers."
           }
         }
       }
@@ -663,6 +749,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "CPU %"
+          }
+        }
+      }
+    },
+    "CPU · pamięć" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CPU · Speicher"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CPU · memory"
           }
         }
       }
@@ -1099,6 +1201,38 @@
         }
       }
     },
+    "Docker nie działa." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Docker läuft nicht."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Docker isn’t running."
+          }
+        }
+      }
+    },
+    "Docker: %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Docker: %lld"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Docker: %lld"
+          }
+        }
+      }
+    },
     "Dodaj pomocnika" : {
       "localizations" : {
         "de" : {
@@ -1319,6 +1453,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pipeline stages"
+          }
+        }
+      }
+    },
+    "Etui" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Case"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Case"
           }
         }
       }
@@ -1755,6 +1905,22 @@
         }
       }
     },
+    "Kontenery Dockera" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Docker-Container"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Docker containers"
+          }
+        }
+      }
+    },
     "Kosz" : {
       "localizations" : {
         "de" : {
@@ -1799,6 +1965,86 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "A lightweight system monitor for the macOS menu bar."
+          }
+        }
+      }
+    },
+    "Lewa" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Links"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Left"
+          }
+        }
+      }
+    },
+    "Limit %lld%% · wymaga pomocnika" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Limit %lld%% · Helfer nötig"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Limit %lld%% · needs the helper"
+          }
+        }
+      }
+    },
+    "Limit %lld%% · ładowanie wstrzymane" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Limit %lld%% · Laden pausiert"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Limit %lld%% · charging paused"
+          }
+        }
+      }
+    },
+    "Limit ładowania" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ladelimit"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Charge limit"
+          }
+        }
+      }
+    },
+    "Limit ładowania: %lld%%" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ladelimit: %lld%%"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Charge limit: %lld%%"
           }
         }
       }
@@ -2503,6 +2749,38 @@
         }
       }
     },
+    "Ogranicz ładowanie" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laden begrenzen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Limit charging"
+          }
+        }
+      }
+    },
+    "Ogranicz ładowanie baterii" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Akkuladung begrenzen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Limit battery charging"
+          }
+        }
+      }
+    },
     "Ogólne" : {
       "localizations" : {
         "de" : {
@@ -2900,6 +3178,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ring"
+          }
+        }
+      }
+    },
+    "Po dojściu do limitu Mac pracuje z zasilacza, a bateria się nie ładuje; ładowanie wraca %lld punktów niżej. Limit działa, gdy Pulse jest uruchomiony – po wyjściu z aplikacji Mac ładuje się normalnie. Na czas uśpienia ładowanie zostaje w ostatnim stanie. Przed podróżą wyłącz limit, aby naładować baterię do pełna." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Am Limit läuft der Mac über das Netzteil und der Akku lädt nicht; das Laden setzt %lld Punkte tiefer wieder ein. Das Limit wirkt, solange Pulse läuft – nach dem Beenden lädt der Mac normal. Im Ruhezustand bleibt das Laden, wie es war. Schalte das Limit vor einer Reise aus, um den Akku voll zu laden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "At the limit the Mac runs from the power adapter and the battery stops charging; charging resumes %lld points lower. The limit works while Pulse is running – after you quit it, the Mac charges normally. During sleep charging stays as it was. Before a trip, turn the limit off to charge the battery fully."
           }
         }
       }
@@ -3304,6 +3598,22 @@
         }
       }
     },
+    "Pomocnik nie może odczytać poziomu baterii – ładowanie działa normalnie." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Helfer kann den Akkustand nicht lesen – das Laden funktioniert normal."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The helper can’t read the battery level – charging works normally."
+          }
+        }
+      }
+    },
     "Pomocnik nie może odczytać temperatury – wentylator pracuje automatycznie." : {
       "localizations" : {
         "de" : {
@@ -3480,6 +3790,22 @@
         }
       }
     },
+    "Prawa" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechts"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Right"
+          }
+        }
+      }
+    },
     "Prawy klik: przypnij" : {
       "localizations" : {
         "de" : {
@@ -3562,6 +3888,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Processes · CPU"
+          }
+        }
+      }
+    },
+    "Procesy · GPU" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prozesse · GPU"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Processes · GPU"
           }
         }
       }
@@ -4426,6 +4768,7 @@
       }
     },
     "Sterowanie wymaga pomocnika Pulse" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -4617,6 +4960,22 @@
         }
       }
     },
+    "System odrzucił zmianę – ładowanie działa normalnie." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das System hat die Änderung abgelehnt – das Laden funktioniert normal."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The system rejected the change – charging works normally."
+          }
+        }
+      }
+    },
     "Szczegóły" : {
       "localizations" : {
         "de" : {
@@ -4693,6 +5052,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Link speed"
+          }
+        }
+      }
+    },
+    "Słaba bateria urządzenia Bluetooth" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schwacher Akku eines Bluetooth-Geräts"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Low Bluetooth device battery"
           }
         }
       }
@@ -4857,6 +5232,22 @@
         }
       }
     },
+    "Ten Mac nie pozwala wstrzymać ładowania." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser Mac erlaubt kein Pausieren des Ladens."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This Mac doesn’t allow pausing charging."
+          }
+        }
+      }
+    },
     "Ten Mac nie udostępnia swoich odczytów." : {
       "localizations" : {
         "de" : {
@@ -4954,7 +5345,24 @@
         }
       }
     },
+    "To samo powiadomienie nie pojawi się częściej niż co 30 minut ani ponownie, zanim wartość nie wróci do normy. Progi ustawisz na stronach modułów: CPU, Pamięć, Dysk, Czujniki i Bateria (także dla urządzeń Bluetooth)." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieselbe Mitteilung erscheint höchstens alle 30 Minuten und erst wieder, wenn der Wert normal war. Schwellen legst du auf den Modulseiten fest: CPU, Speicher, Festplatte, Sensoren und Batterie (auch für Bluetooth-Geräte)."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The same notification appears at most every 30 minutes and not again until the value is back to normal. Set thresholds on the module pages: CPU, Memory, Disk, Sensors and Battery (including Bluetooth devices)."
+          }
+        }
+      }
+    },
     "To samo powiadomienie nie pojawi się częściej niż co 30 minut ani ponownie, zanim wartość nie wróci do normy. Progi ustawisz na stronach modułów: CPU, Pamięć, Dysk, Czujniki i Bateria." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -4966,6 +5374,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The same notification appears at most every 30 minutes and not again until the value is back to normal. Set thresholds on the module pages: CPU, Memory, Disk, Sensors and Battery."
+          }
+        }
+      }
+    },
+    "To wymaga pomocnika Pulse" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dafür ist der Pulse-Helfer nötig"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This needs the Pulse helper"
+          }
+        }
+      }
+    },
+    "Tylko ikona Pulse" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nur Pulse-Symbol"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pulse icon only"
           }
         }
       }
@@ -5110,6 +5550,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Open Pulse to see data"
+          }
+        }
+      }
+    },
+    "Urządzenia Bluetooth" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bluetooth-Geräte"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bluetooth devices"
           }
         }
       }
@@ -5488,6 +5944,22 @@
         }
       }
     },
+    "Wstrzymanie ładowania wymaga uprawnień systemowych, dlatego Pulse musi dodać małego pomocnika (tego samego co do wentylatora). Trzeba to zrobić tylko raz i można go później usunąć." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zum Pausieren des Ladens braucht Pulse Systemrechte und muss deshalb einen kleinen Helfer hinzufügen (denselben wie für den Lüfter). Das ist nur einmal nötig und lässt sich später entfernen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pausing charging needs system privileges, so Pulse has to add a small helper (the same one used for the fan). You only do this once and can remove it later."
+          }
+        }
+      }
+    },
     "Wszystkie" : {
       "localizations" : {
         "de" : {
@@ -5824,6 +6296,22 @@
         }
       }
     },
+    "Zamiast wartości jedna ikona, która otwiera Przegląd. Zajmuje najmniej miejsca przy wycięciu ekranu; czerwona kropka oznacza wartość krytyczną." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ein Symbol statt der Werte; es öffnet die Übersicht. Braucht neben der Notch am wenigsten Platz; ein roter Punkt zeigt einen kritischen Wert."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "One icon instead of the values; it opens the Overview. Takes the least space next to the notch; a red dot means a critical value."
+          }
+        }
+      }
+    },
     "Zapis" : {
       "localizations" : {
         "de" : {
@@ -5981,6 +6469,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Changing the fan speed requires system privileges, so Pulse has to add a small helper. You only need to do this once, and you can remove it later."
+          }
+        }
+      }
+    },
+    "Zmień limit" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Limit ändern"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change limit"
           }
         }
       }
@@ -6352,6 +6856,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Charging %@"
+          }
+        }
+      }
+    },
+    "Ładuj do" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laden bis"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Charge to"
           }
         }
       }

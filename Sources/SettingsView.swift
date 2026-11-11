@@ -152,7 +152,7 @@ struct ModuleSettings: View {
                     }
                 }
             }
-            if module == .battery { EnergySavingSection() }
+            if module == .battery { ChargeLimitSection(); EnergySavingSection() }
             if module == .macs { RemoteSharingSection() }
             ForEach(Alerts.Kind.kinds(for: module)) { AlertRow(kind: $0) }
         }
@@ -289,13 +289,18 @@ struct GeneralSettings: View {
     @AppStorage("hide.fullscreen") private var hideFullscreen = false
     @AppStorage("hide.mirroring") private var hideMirroring = false
     @AppStorage("autoCompact") private var autoCompact = true
+    @AppStorage("menubar.iconOnly") private var iconOnly = false
     @State private var launchAtLogin = SMAppService.mainApp.status == .enabled
     @State private var loginError: String?
 
     var body: some View {
         Form {
             Section("Pasek menu") {
-                Toggle("Pokazuj etykiety (CPU, MEM, …)", isOn: $showLabels)
+                Toggle(isOn: $iconOnly) {
+                    Text("Tylko ikona Pulse")
+                    Text("Zamiast wartości jedna ikona, która otwiera Przegląd. Zajmuje najmniej miejsca przy wycięciu ekranu; czerwona kropka oznacza wartość krytyczną.")
+                }
+                Toggle("Pokazuj etykiety (CPU, MEM, …)", isOn: $showLabels).disabled(iconOnly)
                 Toggle(isOn: $colorize) {
                     Text("Koloruj wartości przy wysokim obciążeniu")
                     Text("Pomarańczowy od ok. 70%, czerwony od 90% (CPU, GPU, dysk), temperatura od ok. 82°C / 90°C, ciśnienie pamięci, niski poziom baterii.")
