@@ -191,8 +191,34 @@ struct RemoteMacCard: View {
 
 // MARK: - Settings
 
+/// Which value of which Mac the menu bar item and the Overview tile show.
+struct RemoteValuePickers: View {
+    @AppStorage(RemoteMacs.metricKey) private var metric = RemoteMacs.Metric.temp.rawValue
+    @AppStorage(RemoteMacs.targetKey) private var target = ""
+    @AppStorage(RemoteMacs.targetNameKey) private var targetName = ""
+    private let remote = RemoteMacs.shared
+
+    var body: some View {
+        Picker("Pokazuj", selection: $metric) {
+            ForEach(RemoteMacs.Metric.allCases) { Text(verbatim: $0.title).tag($0.rawValue) }
+        }
+        Picker("Mac", selection: $target) {
+            Text("Najwyższa wartość ze wszystkich").tag("")
+            Divider()
+            ForEach(remote.peers) { Text(verbatim: $0.report.name).tag($0.id) }
+            if !target.isEmpty && !remote.peers.contains(where: { $0.id == target }) {
+                Text("\(targetName) (niedostępny)").tag(target)
+            }
+        }
+        .onChange(of: target) { _, id in
+            targetName = remote.peers.first { $0.id == id }?.report.name ?? ""
+        }
+    }
+}
+
 struct RemoteSharingSection: View {
     @AppStorage(RemoteMacs.shareKey) private var share = false
+    @AppStorage(RemoteMacs.nameKey) private var customName = ""
     private let remote = RemoteMacs.shared
 
     var body: some View {
@@ -201,7 +227,10 @@ struct RemoteSharingSection: View {
                 Text("Udostępniaj odczyty tego Maca w sieci lokalnej")
                 Text("Inne Maki z Pulse w tej samej sieci zobaczą obciążenie, temperatury, wentylatory i najbardziej obciążające procesy tego Maca. Nic nie wychodzi poza sieć lokalną i niczego nie da się zdalnie zmienić.")
             }
-            LabeledContent("Nazwa w sieci", value: RemoteMacs.computerName)
+            TextField(text: $customName, prompt: Text(verbatim: RemoteMacs.computerName)) {
+                Text("Nazwa w sieci")
+                Text("Pod tą nazwą inne Maki zobaczą ten Mac. Puste pole: nazwa komputera z Ustawień systemowych.")
+            }
             if let error = remote.listenerError {
                 Text(error).font(.callout).foregroundStyle(.orange)
             }

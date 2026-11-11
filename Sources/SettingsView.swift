@@ -536,6 +536,7 @@ struct OverviewModuleSection: View {
                 }
             }
             Toggle("Kafelek w okienku Przeglądu", isOn: $tile)
+            if item == .macs { RemoteValuePickers() }
         }
     }
 }

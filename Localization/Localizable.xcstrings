@@ -18,6 +18,22 @@
       }
     },
     "%" : {},
+    "%@ (niedostępny)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ (nicht verfügbar)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ (unavailable)"
+          }
+        }
+      }
+    },
     "%@ wolne z %@" : {
       "localizations" : {
         "de" : {
@@ -1803,6 +1819,22 @@
         }
       }
     },
+    "Mac" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac"
+          }
+        }
+      }
+    },
     "Mac się nagrzewa – wydajność jeszcze bez zmian." : {
       "localizations" : {
         "de" : {
@@ -2035,6 +2067,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "On each of them, install Pulse 1.11 or later and turn on Settings → Other Macs → “Share this Mac’s readings”."
+          }
+        }
+      }
+    },
+    "Najwyższa wartość ze wszystkich" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Höchster Wert aller Macs"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Highest of all"
           }
         }
       }
@@ -2980,6 +3028,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "System power draw"
+          }
+        }
+      }
+    },
+    "Pod tą nazwą inne Maki zobaczą ten Mac. Puste pole: nazwa komputera z Ustawień systemowych." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unter diesem Namen sehen andere Macs diesen Mac. Leer lassen, um den Computernamen aus den Systemeinstellungen zu verwenden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Other Macs see this Mac under this name. Leave it empty to use the computer name from System Settings."
           }
         }
       }

@@ -55,11 +55,17 @@ final class RemoteMacs {
     private(set) var browserError: String?
 
     /// Open Other Macs panels: while > 0, peers are asked for their top processes and polled more often.
+    /// Open Overview panels showing the Other Macs tile: peers are polled, without processes.
+    @ObservationIgnored var overviewWatchers = 0 {
+        didSet { if overviewWatchers > 0 && oldValue == 0 { lastPoll = .distantPast } }
+    }
+
     @ObservationIgnored var panelWatchers = 0 {
         didSet { if panelWatchers > 0 && oldValue == 0 { lastPoll = .distantPast } }
     }
 
     @ObservationIgnored private var listener: NWListener?
+    @ObservationIgnored private var advertisedName = ""
     @ObservationIgnored private var browser: NWBrowser?
     /// Found services: key (the peer's id, or its service name) → endpoint.
     @ObservationIgnored private var endpoints: [String: NWEndpoint] = [:]
@@ -77,8 +83,67 @@ final class RemoteMacs {
         return id
     }()
 
+    static let nameKey = "remote.name"
+
     static var computerName: String {
         (SCDynamicStoreCopyComputerName(nil, nil) as String?) ?? Host.current().localizedName ?? "Mac"
+    }
+
+    /// The name other Macs see: the one set in Settings, or the computer name.
+    static var sharedName: String {
+        let custom = (UserDefaults.standard.string(forKey: nameKey) ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !custom.isEmpty else { return computerName }
+        var name = custom
+        while name.utf8.count > 63 { name.removeLast() }   // Bonjour limit
+        return name
+    }
+
+    static let metricKey = "remote.metric"
+    static let targetKey = "remote.target"
+    static let targetNameKey = "remote.targetName"
+
+    enum Metric: String, CaseIterable, Identifiable {
+        case temp, cpu, mem, fan
+        var id: Self { self }
+        var title: String {
+            switch self {
+            case .temp: String(localized: "Temperatura")
+            case .cpu: "CPU"
+            case .mem: String(localized: "Pamięć")
+            case .fan: String(localized: "Wentylator")
+            }
+        }
+        static var current: Metric { Metric(rawValue: UserDefaults.standard.string(forKey: metricKey) ?? "") ?? .temp }
+    }
+
+    /// What the menu bar and the Overview tile show: the chosen value of the chosen Mac,
+    /// or the highest one among all of them (the Mac you are most likely to hear).
+    struct Summary { var text = "—"; var value = 0.0; var history: [Double] = []; var maxHistory: Double? = 100; var level: Double? }
+    var summary: Summary {
+        let target = UserDefaults.standard.string(forKey: Self.targetKey) ?? ""
+        let live = peers.filter { !$0.isStale && (target.isEmpty || $0.id == target) }
+        func fan(_ p: Peer) -> RemoteReport.Fan? { p.report.fans.max { $0.rpm < $1.rpm } }
+        func fanFraction(_ f: RemoteReport.Fan) -> Double { f.max > f.min ? min(max((f.rpm - f.min) / (f.max - f.min), 0), 1) : 0 }
+        var metric = Metric.current
+        if metric == .temp && !live.contains(where: { $0.report.temp != nil }) { metric = .cpu }
+        if metric == .fan && !live.contains(where: { fan($0) != nil }) { metric = .cpu }
+        switch metric {
+        case .temp:
+            guard let hot = live.max(by: { ($0.report.temp ?? -1) < ($1.report.temp ?? -1) }), let t = hot.report.temp else { break }
+            return Summary(text: Fmt.temp(t), value: t / 100, history: hot.report.tempHistory, maxHistory: 100, level: Severity.temp(t))
+        case .cpu:
+            guard let busy = live.max(by: { $0.report.cpu < $1.report.cpu }) else { break }
+            return Summary(text: Fmt.pct(busy.report.cpu), value: busy.report.cpu, history: busy.report.cpuHistory, maxHistory: 1, level: busy.report.cpu)
+        case .mem:
+            guard let full = live.max(by: { $0.report.mem < $1.report.mem }) else { break }
+            let level: Double = full.report.memPressure == 2 ? 1 : (full.report.memPressure == 1 ? 0.75 : 0)
+            return Summary(text: Fmt.pct(full.report.mem), value: full.report.mem, history: [], maxHistory: 1, level: level)
+        case .fan:
+            guard let loud = live.max(by: { (fan($0).map(fanFraction) ?? -1) < (fan($1).map(fanFraction) ?? -1) }), let f = fan(loud) else { break }
+            let rpm = f.rpm >= 1000 ? String(format: "%.1fk", f.rpm / 1000) : "\(Int(f.rpm))"
+            return Summary(text: rpm, value: fanFraction(f), history: [], maxHistory: 1, level: nil)
+        }
+        return Summary()
     }
 
     /// "Mac mini (2024)" on Apple Silicon; derived from the model identifier on Intel ("Macmini8,1" → "Mac mini").
@@ -117,6 +182,8 @@ final class RemoteMacs {
 
     func tick(_ m: SystemMonitor) {
         let share = UserDefaults.standard.bool(forKey: Self.shareKey)
+        // A new name in Settings: advertise again under it.
+        if share, listener != nil, advertisedName != Self.sharedName { stopListener() }
         if share && listener == nil { startListener() }
         if !share && listener != nil { stopListener() }
 
@@ -129,15 +196,17 @@ final class RemoteMacs {
 
         let defaults = UserDefaults.standard
         let shown = defaults.object(forKey: Module.macs.enabledKey) == nil ? Module.macs.defaultEnabled : defaults.bool(forKey: Module.macs.enabledKey)
-        let browse = shown || panelWatchers > 0
+        let overview = defaults.object(forKey: Module.overview.enabledKey) == nil ? Module.overview.defaultEnabled : defaults.bool(forKey: Module.overview.enabledKey)
+        let browse = shown || (overview && OverviewItem.macs.isOn) || panelWatchers > 0
+            || (overviewWatchers > 0 && OverviewItem.macs.showsTile)
         if browse && browser == nil { startBrowser() }
         if !browse && browser != nil { stopBrowser() }
         if browse {
-            let every: TimeInterval = panelWatchers > 0 ? 1.5 : 6
+            let every: TimeInterval = panelWatchers > 0 ? 1.5 : (overviewWatchers > 0 ? 3 : 6)
             if Date().timeIntervalSince(lastPoll) >= every { lastPoll = Date(); poll() }
         }
         if UserDefaults.standard.bool(forKey: "remote.debug") {
-            print("remote port=\(listener?.port?.rawValue ?? 0) share=\(listener != nil) browse=\(browser != nil) endpoints=\(endpoints.count) peers=\(peers.map { "\($0.report.name) cpu=\(Int($0.report.cpu * 100))% temp=\($0.report.temp.map { Int($0) } ?? -1) procs=\($0.report.processes?.count ?? -1)" }) err=\(browserError ?? listenerError ?? "-")")
+            print("remote port=\(listener?.port?.rawValue ?? 0) share=\(listener != nil) browse=\(browser != nil) endpoints=\(endpoints.count) peers=\(peers.map { "\($0.report.name) cpu=\(Int($0.report.cpu * 100))% temp=\($0.report.temp.map { Int($0) } ?? -1) procs=\($0.report.processes?.count ?? -1)" }) summary=\(summary.text) err=\(browserError ?? listenerError ?? "-")")
         }
     }
 
@@ -147,7 +216,7 @@ final class RemoteMacs {
         let m = SystemMonitor.shared
         let pressure = m.memPressure == .critical ? 2 : (m.memPressure == .warning ? 1 : 0)
         return RemoteReport(
-            id: Self.installID, name: Self.computerName, model: Self.modelName, chip: m.chipName,
+            id: Self.installID, name: Self.sharedName, model: Self.modelName, chip: m.chipName,
             version: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "",
             cpu: m.cpu, cpuHistory: m.cpuHistory.map { $0.isFinite ? $0 : 0 }, gpu: m.gpu,
             mem: m.memFraction, memTotal: m.memTotal, memPressure: pressure,
@@ -169,7 +238,8 @@ final class RemoteMacs {
             let l = try NWListener(using: params)
             var txt = NWTXTRecord()
             txt["id"] = Self.installID
-            l.service = NWListener.Service(name: Self.computerName, type: Self.serviceType, domain: nil, txtRecord: txt)
+            advertisedName = Self.sharedName
+            l.service = NWListener.Service(name: advertisedName, type: Self.serviceType, domain: nil, txtRecord: txt)
             let queue = queue
             l.newConnectionHandler = { connection in RemoteMacs.serve(connection, on: queue) }
             l.stateUpdateHandler = { state in

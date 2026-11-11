@@ -135,12 +135,13 @@ struct DropdownFooter: View {
 
 /// Which values the overview shows in the menu bar (user-selectable in Settings).
 enum OverviewItem: String, CaseIterable, Identifiable {
-    case cpu, gpu, mem, disk, temp, net, bat
+    case cpu, gpu, mem, disk, temp, net, bat, macs
     var id: String { rawValue }
     var title: String {
         switch self {
         case .cpu: "CPU"; case .gpu: "GPU"; case .mem: String(localized: "Pamięć"); case .disk: String(localized: "Dysk")
         case .temp: String(localized: "Temperatura"); case .net: String(localized: "Sieć"); case .bat: String(localized: "Bateria")
+        case .macs: String(localized: "Inne Maki")
         }
     }
     var key: String { "overview.show.\(rawValue)" }
@@ -151,7 +152,7 @@ enum OverviewItem: String, CaseIterable, Identifiable {
     var module: Module {
         switch self {
         case .cpu: .cpu; case .gpu: .gpu; case .mem: .memory; case .disk: .disk
-        case .temp: .sensors; case .net: .network; case .bat: .battery
+        case .temp: .sensors; case .net: .network; case .bat: .battery; case .macs: .macs
         }
     }
 
@@ -202,6 +203,9 @@ struct OverviewContent: View {
                 .transition(.asymmetric(insertion: .opacity.animation(.easeOut(duration: 0.22).delay(0.06)),
                                         removal: .identity))
         }
+        // The Other Macs tile works without its menu bar value: look for Macs while this panel is open.
+        .onAppear { RemoteMacs.shared.overviewWatchers += 1 }
+        .onDisappear { RemoteMacs.shared.overviewWatchers = max(0, RemoteMacs.shared.overviewWatchers - 1) }
     }
 
     /// One-line status: load average, memory pressure, network and battery at a glance.
@@ -235,7 +239,9 @@ struct OverviewContent: View {
         case .sensors: ((m.socMax ?? 0) / 105, Fmt.temp(m.socMax ?? m.socAvg), String(localized: "Temp."))
         case .network: (netLevel, Fmt.rate(m.netIn, compact: true), String(localized: "Sieć"))
         case .battery: (m.battery.percent, Fmt.pct(m.battery.percent), String(localized: "Bateria"))
-        case .overview, .macs: (0, "", "")
+        case .macs:
+            { let s = RemoteMacs.shared.summary; return (s.value, s.text, String(localized: "Inne Maki")) }()
+        case .overview: (0, "", "")
         }
     }
 
@@ -297,7 +303,8 @@ struct OverviewContent: View {
         case .sensors: m.tempHistory
         case .network: m.netInHistory
         case .battery: m.batteryHistory
-        case .overview, .macs: []
+        case .macs: RemoteMacs.shared.summary.history
+        case .overview: []
         }
     }
 
@@ -305,6 +312,7 @@ struct OverviewContent: View {
         switch module {
         case .cpu, .gpu, .memory, .battery: 1
         case .sensors: 105
+        case .macs: RemoteMacs.shared.summary.maxHistory
         default: nil
         }
     }

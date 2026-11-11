@@ -18,6 +18,23 @@ struct OverviewCell {
     var history2: [Double]? = nil
 }
 
+/// Room reserved for a menu bar value: the value itself with at least two digits, so 9% → 10% doesn't shift
+/// the menu bar, but without spare room after "65°" (a fixed minimum left a gap after every short value).
+enum ValueWidth {
+    @MainActor private static var cache: [String: CGFloat] = [:]
+    @MainActor static func min(_ text: String, size: CGFloat = 11.5) -> CGFloat {
+        var template = String(text.map { $0.isNumber ? "0" : $0 })
+        if text.filter(\.isNumber).count == 1, let i = template.firstIndex(of: "0") { template.insert("0", at: i) }
+        let key = "\(size)|\(template)"
+        if let w = cache[key] { return w }
+        let font = NSFont.monospacedDigitSystemFont(ofSize: size, weight: .semibold)
+        let w = ceil((template as NSString).size(withAttributes: [.font: font]).width)
+        if cache.count > 200 { cache.removeAll() }
+        cache[key] = w
+        return w
+    }
+}
+
 /// Severity 0…1 used to tint values when "colorize" is on (≥0.7 warning, ≥0.9 critical).
 enum Severity {
     static func temp(_ t: Double?) -> Double? { t.map { max(0, ($0 - 50) / 45) } }
@@ -91,6 +108,9 @@ struct StatusSnapshot {
                     } else {
                         cell = .init(module: .network, label: "↓NET", text: Fmt.rate(m.netIn, compact: true), value: min(m.netIn / netTop, 1), history: m.netInHistory, maxHistory: nil, level: nil)
                     }
+                case .macs:
+                    let sum = RemoteMacs.shared.summary
+                    cell = .init(module: .macs, label: "MACS", text: sum.text, value: sum.value, history: sum.history, maxHistory: sum.maxHistory, level: sum.level)
                 case .bat:
                     guard m.battery.present else { continue }
                     cell = .init(module: .battery, label: "BAT", text: Fmt.pct(m.battery.percent), value: m.battery.percent, history: m.batteryHistory, maxHistory: 1, level: Severity.battery(m.battery))
@@ -128,18 +148,9 @@ struct StatusSnapshot {
             s.symbol = m.battery.isCharging ? "bolt.fill" : (m.battery.onAC ? "powerplug.fill" : nil)
             s.level = Severity.battery(m.battery)
         case .macs:
-            // The hottest of the other Macs: the one you are most likely to hear.
-            let live = RemoteMacs.shared.peers.filter { !$0.isStale }
+            let sum = RemoteMacs.shared.summary
             s.symbol = "desktopcomputer.and.macbook"
-            if let hot = live.max(by: { ($0.report.temp ?? -1) < ($1.report.temp ?? -1) }), let t = hot.report.temp {
-                s.text = Fmt.temp(t); s.value = t / 100
-                s.history = hot.report.tempHistory; s.maxHistory = 100
-                s.level = Severity.temp(t)
-            } else if let busy = live.max(by: { $0.report.cpu < $1.report.cpu }) {
-                s.text = Fmt.pct(busy.report.cpu); s.value = busy.report.cpu; s.level = busy.report.cpu
-            } else {
-                s.text = "—"
-            }
+            s.text = sum.text; s.value = sum.value; s.history = sum.history; s.maxHistory = sum.maxHistory; s.level = sum.level
         }
         return s
     }
@@ -232,9 +243,9 @@ struct StatusContent: View {
                             Text(module.short).font(tinyFont).opacity(0.7)
                             Text(s.text).font(.system(size: 11, weight: .semibold).monospacedDigit()).foregroundStyle(valueColor)
                         }
-                        .frame(minWidth: 27, alignment: .leading)
+                        .frame(minWidth: ValueWidth.min(s.text, size: 11), alignment: .leading)
                     } else {
-                        Text(s.text).font(valueFont).frame(minWidth: 27, alignment: .leading)
+                        Text(s.text).font(valueFont).frame(minWidth: ValueWidth.min(s.text), alignment: .leading)
                     }
                 }
             }
@@ -257,7 +268,7 @@ struct StatusContent: View {
                 .font(.system(size: 8.5, weight: .semibold).monospacedDigit())
                 .frame(minWidth: 44, alignment: .trailing)
             } else if [.cpu, .gpu, .memory].contains(module) {
-                Text(s.text).font(valueFont).frame(minWidth: 27, alignment: .leading)
+                Text(s.text).font(valueFont).frame(minWidth: ValueWidth.min(s.text), alignment: .leading)
             }
         case .bars:
             HStack(alignment: .bottom, spacing: s.bars.count > 4 ? 1 : 1.5) {
@@ -269,7 +280,7 @@ struct StatusContent: View {
                     .frame(width: s.bars.count > 4 ? 2 : 4, height: 16)
                 }
             }
-            Text(s.text).font(valueFont).frame(minWidth: 27, alignment: .leading)
+            Text(s.text).font(valueFont).frame(minWidth: ValueWidth.min(s.text), alignment: .leading)
         case .ring:
             ZStack {
                 Circle().stroke(color.opacity(0.22), lineWidth: 2.6)
@@ -278,7 +289,7 @@ struct StatusContent: View {
                     .rotationEffect(.degrees(-90))
             }
             .frame(width: 13, height: 13)
-            Text(s.text).font(valueFont).frame(minWidth: 27, alignment: .leading)
+            Text(s.text).font(valueFont).frame(minWidth: ValueWidth.min(s.text), alignment: .leading)
         }
     }
 
@@ -377,11 +388,11 @@ struct OverviewCellView: View {
                             Text(cell.text).font(.system(size: 11, weight: .semibold).monospacedDigit())
                                 .foregroundStyle(tint(cell.level))
                         }
-                        .frame(minWidth: 26, alignment: .leading)
+                        .frame(minWidth: ValueWidth.min(cell.text, size: 11), alignment: .leading)
                     } else {
                         Text(cell.text).font(.system(size: 11.5, weight: .semibold).monospacedDigit())
                             .foregroundStyle(tint(cell.level))
-                            .frame(minWidth: 24, alignment: .leading)
+                            .frame(minWidth: ValueWidth.min(cell.text), alignment: .leading)
                     }
                 }
     }
