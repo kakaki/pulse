@@ -113,9 +113,15 @@ final class FanControl {
         (connection?.remoteObjectProxyWithErrorHandler { _ in } as? FanHelperProtocol)?.restoreAuto {}
     }
 
-    /// Blocks until done: the Mac may go to sleep right after.
+    /// Waits for the helper (the Mac may go to sleep right after), but at most 2 s: a reply that never comes,
+    /// e.g. when the Mac falls asleep mid-call, must not freeze Pulse.
     private func restoreAutoNow() {
-        (connection?.synchronousRemoteObjectProxyWithErrorHandler { _ in } as? FanHelperProtocol)?.restoreAuto {}
+        guard enabled, let connection else { return }   // the fans are automatic already when the curve is off
+        let done = DispatchSemaphore(value: 0)
+        let proxy = connection.remoteObjectProxyWithErrorHandler { _ in done.signal() } as? FanHelperProtocol
+        guard let proxy else { return }
+        proxy.restoreAuto { done.signal() }
+        _ = done.wait(timeout: .now() + 2)
     }
 
     func connect() -> NSXPCConnection {
