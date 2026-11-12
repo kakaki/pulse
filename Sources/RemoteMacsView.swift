@@ -296,7 +296,7 @@ struct RemoteValuePickers: View {
         Picker("Pokazuj", selection: $metric) {
             ForEach(RemoteMacs.Metric.allCases) { Text(verbatim: $0.title).tag($0.rawValue) }
         }
-        Picker("Mac", selection: $target) {
+        Picker("Komputer", selection: $target) {
             Text("Najwyższa wartość ze wszystkich").tag("")
             Divider()
             ForEach(remote.peers) { Text(verbatim: $0.report.name).tag($0.id) }
