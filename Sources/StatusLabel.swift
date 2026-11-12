@@ -110,7 +110,7 @@ struct StatusSnapshot {
                     }
                 case .macs:
                     let sum = RemoteMacs.shared.summary
-                    cell = .init(module: .macs, label: "MACS", text: sum.text, value: sum.value, history: sum.history, maxHistory: sum.maxHistory, level: sum.level)
+                    cell = .init(module: .macs, label: "LAN", text: sum.text, value: sum.value, history: sum.history, maxHistory: sum.maxHistory, level: sum.level)
                 case .bat:
                     guard m.battery.present else { continue }
                     cell = .init(module: .battery, label: "BAT", text: Fmt.pct(m.battery.percent), value: m.battery.percent, history: m.batteryHistory, maxHistory: 1, level: Severity.battery(m.battery))

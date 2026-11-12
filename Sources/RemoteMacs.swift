@@ -171,7 +171,8 @@ final class RemoteMacs {
 
     /// What the menu bar and the Overview tile show: the chosen value of the chosen Mac,
     /// or the highest one among all of them (the Mac you are most likely to hear).
-    struct Summary { var text = "—"; var value = 0.0; var history: [Double] = []; var maxHistory: Double? = 100; var level: Double? }
+    /// `name`: the computer the value comes from, when there is a choice (several computers, or one picked in Settings).
+    struct Summary { var text = "—"; var value = 0.0; var history: [Double] = []; var maxHistory: Double? = 100; var level: Double?; var name: String? }
     var summary: Summary {
         let target = UserDefaults.standard.string(forKey: Self.targetKey) ?? ""
         let live = peers.filter { !$0.isStale && (target.isEmpty || $0.id == target) }
@@ -180,23 +181,31 @@ final class RemoteMacs {
         var metric = Metric.current
         if metric == .temp && !live.contains(where: { $0.report.temp != nil }) { metric = .cpu }
         if metric == .fan && !live.contains(where: { fan($0) != nil }) { metric = .cpu }
+        let named = !target.isEmpty || live.count > 1
+        var sum = summary(of: live, metric: metric, fan: fan, fanFraction: fanFraction)
+        if named, let id = sum.peer { sum.summary.name = peers.first { $0.id == id }?.report.name }
+        return sum.summary
+    }
+
+    private func summary(of live: [Peer], metric: Metric, fan: (Peer) -> RemoteReport.Fan?,
+                         fanFraction: (RemoteReport.Fan) -> Double) -> (summary: Summary, peer: String?) {
         switch metric {
         case .temp:
             guard let hot = live.max(by: { ($0.report.temp ?? -1) < ($1.report.temp ?? -1) }), let t = hot.report.temp else { break }
-            return Summary(text: Fmt.temp(t), value: t / 100, history: hot.report.tempHistory, maxHistory: 100, level: Severity.temp(t))
+            return (Summary(text: Fmt.temp(t), value: t / 100, history: hot.report.tempHistory, maxHistory: 100, level: Severity.temp(t)), hot.id)
         case .cpu:
             guard let busy = live.max(by: { $0.report.cpu < $1.report.cpu }) else { break }
-            return Summary(text: Fmt.pct(busy.report.cpu), value: busy.report.cpu, history: busy.report.cpuHistory, maxHistory: 1, level: busy.report.cpu)
+            return (Summary(text: Fmt.pct(busy.report.cpu), value: busy.report.cpu, history: busy.report.cpuHistory, maxHistory: 1, level: busy.report.cpu), busy.id)
         case .mem:
             guard let full = live.max(by: { $0.report.mem < $1.report.mem }) else { break }
             let level: Double = full.report.memPressure == 2 ? 1 : (full.report.memPressure == 1 ? 0.75 : 0)
-            return Summary(text: Fmt.pct(full.report.mem), value: full.report.mem, history: [], maxHistory: 1, level: level)
+            return (Summary(text: Fmt.pct(full.report.mem), value: full.report.mem, history: [], maxHistory: 1, level: level), full.id)
         case .fan:
             guard let loud = live.max(by: { (fan($0).map(fanFraction) ?? -1) < (fan($1).map(fanFraction) ?? -1) }), let f = fan(loud) else { break }
             let rpm = f.rpm >= 1000 ? String(format: "%.1fk", f.rpm / 1000) : "\(Int(f.rpm))"
-            return Summary(text: rpm, value: fanFraction(f), history: [], maxHistory: 1, level: nil)
+            return (Summary(text: rpm, value: fanFraction(f), history: [], maxHistory: 1, level: nil), loud.id)
         }
-        return Summary()
+        return (Summary(), nil)
     }
 
     /// "Mac mini (2024)" on Apple Silicon; derived from the model identifier on Intel ("Macmini8,1" → "Mac mini").

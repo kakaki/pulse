@@ -240,7 +240,7 @@ struct OverviewContent: View {
         case .network: (netLevel, Fmt.rate(m.netIn, compact: true), String(localized: "Sieć"))
         case .battery: (m.battery.percent, Fmt.pct(m.battery.percent), String(localized: "Bateria"))
         case .macs:
-            { let s = RemoteMacs.shared.summary; return (s.value, s.text, String(localized: "Inne komputery")) }()
+            { let s = RemoteMacs.shared.summary; return (s.value, s.text, s.name ?? String(localized: "Inne komputery")) }()
         case .overview: (0, "", "")
         }
     }
@@ -249,7 +249,9 @@ struct OverviewContent: View {
         let (v, text, title) = value(module)
         let isOn = selected == module
         let isPinned = pinned == module.rawValue
-        let colors = module.accentColors
+        // A warm or hot computer recolours the Other Computers ring, like its menu bar value.
+        let warning = module == .macs ? Severity.color(RemoteMacs.shared.summary.level) : nil
+        let colors = warning.map { [$0.opacity(0.7), $0] } ?? module.accentColors
         return Button { state.selected = module } label: {
             VStack(spacing: 4) {
                 ZStack {
@@ -267,6 +269,8 @@ struct OverviewContent: View {
                     .opacity(trend(module).count > 1 ? 1 : 0)
                 Text(title)
                     .font(.system(size: 10, weight: .semibold))
+                    .lineLimit(1).truncationMode(.middle)
+                    .padding(.horizontal, 4)
                     .foregroundStyle(isOn ? .primary : .secondary)
             }
             .frame(maxWidth: .infinity)
