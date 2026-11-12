@@ -368,13 +368,15 @@ final class RemoteMacs {
 
     private func startBrowser() {
         let b = NWBrowser(for: .bonjourWithTXTRecord(type: Self.serviceType, domain: nil), using: .tcp)
+        let ownID = Self.installID, ownName = Self.sharedName
         b.browseResultsChangedHandler = { results, _ in
             var found: [String: NWEndpoint] = [:]
             for result in results {
                 guard case .service(let name, _, _, _) = result.endpoint else { continue }
                 var id: String?
                 if case .bonjour(let txt) = result.metadata { id = txt["id"] }
-                if id == RemoteMacs.installID { continue }   // this Mac
+                // This Mac. Its own service is also found over loopback, where the result may come without the TXT id.
+                if id == ownID || result.interfaces.contains(where: { $0.type == .loopback }) || (id == nil && name == ownName) { continue }
                 found[id ?? name] = result.endpoint
             }
             DispatchQueue.main.async {
