@@ -46,3 +46,39 @@ for path, lang, toc in [("mac/pulse/index.html", "PL", '<li><a href="#zmiany">Co
         s = s.replace(last, toc + last, 1)
     open(f, "w", encoding="utf8").write(s)
     print("updated", path, "with", len(releases), "releases")
+
+# The download buttons serve the DMG from kakaki.pl itself (mac/pulse/Pulse-X.dmg): copy the newest build there,
+# drop the old file and update every link, version and file size on the site (the changelog block is left alone).
+import glob, shutil
+version = releases[0][0] if releases else None
+dmg = os.path.join(repo, "dist", f"Pulse-{version}.dmg") if version else None
+if dmg and os.path.exists(dmg):
+    target_dir = os.path.join(site, "mac", "pulse")
+    for old in glob.glob(os.path.join(target_dir, "Pulse-*.dmg")):
+        if os.path.basename(old) != os.path.basename(dmg):
+            os.remove(old)
+    shutil.copy2(dmg, target_dir)
+    mb = os.path.getsize(dmg) / 1e6
+    changed = []
+    for f in glob.glob(os.path.join(site, "**", "*.html"), recursive=True):
+        if "/node_modules/" in f or "/.git/" in f:
+            continue
+        s = open(f, encoding="utf8").read()
+        size = f"{mb:.1f}" if "/en/" in f.replace(site, "") else f"{mb:.1f}".replace(".", ",")
+        parts = re.split(r"(<!-- ZMIANY:START -->.*?<!-- ZMIANY:END -->)", s, flags=re.S)
+        for i in range(0, len(parts), 2):   # odd parts are the changelog block
+            p = parts[i]
+            p = re.sub(r"Pulse-\d+(?:\.\d+)+\.dmg", f"Pulse-{version}.dmg", p)
+            p = re.sub(r"\b(Pobierz Pulse|Download Pulse) \d+(?:\.\d+)+\b", rf"\1 {version}", p)
+            # "wersja 1.13 · plik .dmg" / "version 1.13 · .dmg file": only the Mac download, not PulseWin.
+            p = re.sub(r"\b(wersja|version) \d+(?:\.\d+)+( · (?:plik )?\.dmg)", rf"\1 {version}\2", p)
+            p = re.sub(r"(\.dmg(?:</strong>)?[^<\n]{0,40}?)\d+[,.]\d(&nbsp;MB)", rf"\g<1>{size}\2", p)
+            parts[i] = p
+        new = "".join(parts)
+        if new != s:
+            open(f, "w", encoding="utf8").write(new)
+            changed.append(os.path.relpath(f, site))
+    print(f"copied Pulse-{version}.dmg ({mb:.1f} MB); links updated in", ", ".join(changed) or "nothing")
+    builder = os.path.join(site, "_zrodla", "llms.mjs")
+    if os.path.exists(builder):
+        subprocess.run(["node", builder], cwd=site, check=False)
