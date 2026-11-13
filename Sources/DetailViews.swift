@@ -278,12 +278,12 @@ struct NetworkDetail: View {
             Card {
                 SectionTitle(text: "Przepustowość", trailing: m.netInterface)
                 HStack(spacing: 8) {
-                    MiniStat(title: "Pobieranie", value: Fmt.rate(m.netIn), color: inColor, symbol: "arrow.down")
-                    MiniStat(title: "Wysyłanie", value: Fmt.rate(m.netOut), color: outColor, symbol: "arrow.up")
+                    MiniStat(title: "Pobieranie", value: Fmt.net(m.netIn), color: inColor, symbol: "arrow.down")
+                    MiniStat(title: "Wysyłanie", value: Fmt.net(m.netOut), color: outColor, symbol: "arrow.up")
                 }
                 HistoryChart(metric: .netIn, live: m.netInHistory, color: inColor,
                              metric2: .netOut, live2: m.netOutHistory, color2: outColor, height: 64, mirrored: true)
-                PeakRow(down: m.peakIn, up: m.peakOut, downColor: inColor, upColor: outColor)
+                PeakRow(down: m.peakIn, up: m.peakOut, downColor: inColor, upColor: outColor, format: { Fmt.net($0) })
             }
             Card {
                 SectionTitle(text: "Aplikacje", trailing: "↓ / ↑")
@@ -302,8 +302,8 @@ struct NetworkDetail: View {
                             }
                             Spacer(minLength: 6)
                             VStack(alignment: .trailing, spacing: 0) {
-                                Text("↓ " + Fmt.rate(app.inRate)).foregroundStyle(inColor)
-                                Text("↑ " + Fmt.rate(app.outRate)).foregroundStyle(outColor)
+                                Text("↓ " + Fmt.net(app.inRate)).foregroundStyle(inColor)
+                                Text("↑ " + Fmt.net(app.outRate)).foregroundStyle(outColor)
                             }
                             .font(.system(size: 10.5, weight: .medium)).monospacedDigit()
                             .frame(width: 84, alignment: .trailing)
@@ -328,6 +328,7 @@ struct NetworkDetail: View {
                 if x.pingHistory.count > 1 {
                     Sparkline(values: x.pingHistory, color: .mint, length: 40, format: { "\(Int($0.rounded())) ms" }).frame(height: 34)
                 }
+                NetworkTestSection()
             }
             if let w = x.wifi {
                 Card {
@@ -581,6 +582,8 @@ struct BatteryDetail: View {
                 }
                 healthCard(b)
                 if ChargeLimit.shared.isSupported { ChargeLimitShortcut(battery: b) }
+                BatteryLogCard()
+                if Self.measuresEnergy { ProcessList(metric: .energy) }
                 BluetoothBatteriesCard()
             } else {
                 Card {
@@ -588,9 +591,19 @@ struct BatteryDetail: View {
                     Label("Ten Mac jest zasilany z sieci.", systemImage: "powerplug.fill")
                         .font(.callout).foregroundStyle(.secondary)
                 }
+                if Self.measuresEnergy { ProcessList(metric: .energy) }
                 BluetoothBatteriesCard(showEmpty: true)
             }
         }
+    }
+
+    /// macOS reports energy per process only on Apple Silicon.
+    static var measuresEnergy: Bool {
+        #if arch(arm64)
+        true
+        #else
+        false
+        #endif
     }
 
     private func healthCard(_ b: BatteryInfo) -> some View {
@@ -633,16 +646,34 @@ struct BatteryDetail: View {
 // MARK: - Processes
 
 struct ProcessList: View {
-    enum Metric { case cpu, memory, disk }
+    enum Metric { case cpu, memory, disk, energy }
     let metric: Metric
     @Environment(SystemMonitor.self) private var m
 
+    private var title: String {
+        switch metric {
+        case .cpu: String(localized: "Procesy · CPU")
+        case .memory: String(localized: "Procesy · pamięć")
+        case .disk: String(localized: "Procesy · dysk")
+        case .energy: String(localized: "Zużycie energii")
+        }
+    }
+
+    private var list: [ProcessStat] {
+        switch metric {
+        case .cpu: m.topByCPU
+        case .memory: m.topByMemory
+        case .disk: m.topByDisk
+        case .energy: m.topByEnergy
+        }
+    }
+
     var body: some View {
-        let list = metric == .cpu ? m.topByCPU : (metric == .memory ? m.topByMemory : m.topByDisk)
+        let list = list
         Card {
-            SectionTitle(text: metric == .cpu ? String(localized: "Procesy · CPU") : (metric == .memory ? String(localized: "Procesy · pamięć") : String(localized: "Procesy · dysk")), trailing: String(localized: "prawy klik: opcje"))
+            SectionTitle(text: title, trailing: String(localized: "prawy klik: opcje"))
             if list.isEmpty {
-                Text(metric == .disk ? String(localized: "Brak aktywności") : String(localized: "Zbieranie danych…"))
+                Text(metric == .disk || (metric == .energy && !m.processes.isEmpty) ? String(localized: "Brak aktywności") : String(localized: "Zbieranie danych…"))
                     .font(.system(size: 11.5)).foregroundStyle(.secondary)
             }
             VStack(spacing: 7) {
@@ -650,13 +681,17 @@ struct ProcessList: View {
                     HStack(spacing: 8) {
                         ProcessIcon(pid: p.id).frame(width: 16, height: 16)
                         Text(p.name).font(.system(size: 12)).lineLimit(1)
+                        if p.count > 1 {
+                            Text(verbatim: "×\(p.count)").font(.system(size: 10.5, weight: .medium)).foregroundStyle(.tertiary)
+                                .fixedSize()
+                        }
                         Spacer()
                         Text(value(p))
                             .font(.system(size: 11.5, weight: .medium)).monospacedDigit()
                             .foregroundStyle(.secondary)
                     }
                     .contentShape(Rectangle())
-                    .processMenu(pid: p.id, name: p.name)
+                    .processMenu(pid: p.id, name: p.name, group: p.pids)
                 }
             }
         }
@@ -669,6 +704,7 @@ struct ProcessList: View {
         case .cpu: String(format: "%.1f%%", p.cpu * 100)
         case .memory: Fmt.memory(p.memory)
         case .disk: "↓ \(Fmt.rate(p.diskRead)) ↑ \(Fmt.rate(p.diskWrite))"
+        case .energy: Fmt.watts(p.power)
         }
     }
 }
@@ -679,12 +715,13 @@ struct PeakRow: View {
     let up: Double
     let downColor: Color
     let upColor: Color
+    var format: (Double) -> String = { Fmt.rate($0) }
     var body: some View {
         HStack(spacing: 10) {
             Text("Szczyt").foregroundStyle(.secondary)
             Spacer()
-            Text(verbatim: "↓ " + Fmt.rate(down)).foregroundStyle(downColor)
-            Text(verbatim: "↑ " + Fmt.rate(up)).foregroundStyle(upColor)
+            Text(verbatim: "↓ " + format(down)).foregroundStyle(downColor)
+            Text(verbatim: "↑ " + format(up)).foregroundStyle(upColor)
         }
         .font(.system(size: 11, weight: .medium))
         .monospacedDigit()

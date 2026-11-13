@@ -212,7 +212,7 @@ struct RemoteMacCard: View {
                 }
             }
             Divider().padding(.vertical, 2)
-            InfoRow(title: "Pobieranie / wysyłanie", value: "↓ \(Fmt.rate(r.netIn)) · ↑ \(Fmt.rate(r.netOut))")
+            InfoRow(title: "Pobieranie / wysyłanie", value: "↓ \(Fmt.net(r.netIn)) · ↑ \(Fmt.net(r.netOut))")
             if let power = r.power { InfoRow(title: "Pobór mocy", value: String(format: "%.1f W", power)) }
             InfoRow(title: "Pamięć RAM", value: Fmt.memory(r.memTotal))
             InfoRow(title: "Czas pracy", value: Fmt.duration(r.uptime))

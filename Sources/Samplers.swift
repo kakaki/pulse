@@ -169,12 +169,43 @@ struct ProcessStat: Identifiable, Equatable {
     let memory: UInt64   // physical footprint in bytes
     var diskRead: Double = 0    // bytes per second
     var diskWrite: Double = 0
+    /// Energy use in watts (Apple Silicon; 0 where macOS does not measure it).
+    var power: Double = 0
+    /// All processes of a group (same name); empty for a single process.
+    var pids: [pid_t] = []
+    var count: Int { max(pids.count, 1) }
+    var allPIDs: [pid_t] { pids.isEmpty ? [id] : pids }
+}
+
+/// Processes with the same name shown as one row ("Google Chrome Helper ×23"), summed.
+enum ProcessGroups {
+    static let key = "processes.group"
+    static var enabled: Bool { UserDefaults.standard.object(forKey: key) as? Bool ?? true }
+
+    static func group(_ list: [ProcessStat]) -> [ProcessStat] {
+        guard enabled else { return list }
+        var byName: [String: [ProcessStat]] = [:]
+        for p in list { byName[p.name, default: []].append(p) }
+        return byName.values.map { members in
+            guard members.count > 1 else { return members[0] }
+            // The busiest member gives the row its icon and id.
+            let lead = members.max { $0.cpu + $0.power < $1.cpu + $1.power } ?? members[0]
+            var g = ProcessStat(id: lead.id, name: lead.name, cpu: members.reduce(0) { $0 + $1.cpu },
+                                memory: members.reduce(0) { $0 + $1.memory })
+            g.diskRead = members.reduce(0) { $0 + $1.diskRead }
+            g.diskWrite = members.reduce(0) { $0 + $1.diskWrite }
+            g.power = members.reduce(0) { $0 + $1.power }
+            g.pids = members.map(\.id)
+            return g
+        }
+    }
 }
 
 final class ProcessSampler {
     private var previous: [pid_t: UInt64] = [:]
     private var previousTime: Date?
     private var previousIO: [pid_t: (read: UInt64, write: UInt64)] = [:]
+    private var previousEnergy: [pid_t: UInt64] = [:]
     private let timebase: Double = {
         var info = mach_timebase_info_data_t()
         mach_timebase_info(&info)
@@ -192,14 +223,15 @@ final class ProcessSampler {
         let dt = previousTime.map { now.timeIntervalSince($0) } ?? 0
         var current: [pid_t: UInt64] = [:]
         var currentIO: [pid_t: (read: UInt64, write: UInt64)] = [:]
+        var currentEnergy: [pid_t: UInt64] = [:]
         var result: [ProcessStat] = []
         result.reserveCapacity(Int(count))
 
         for pid in pids.prefix(Int(count)) where pid > 0 {
-            var usage = rusage_info_v4()
+            var usage = rusage_info_v6()
             let ok = withUnsafeMutablePointer(to: &usage) {
                 $0.withMemoryRebound(to: rusage_info_t?.self, capacity: 1) {
-                    proc_pid_rusage(pid, RUSAGE_INFO_V4, $0)
+                    proc_pid_rusage(pid, RUSAGE_INFO_V6, $0)
                 }
             }
             guard ok == 0 else { continue }
@@ -215,11 +247,17 @@ final class ProcessSampler {
                 if usage.ri_diskio_bytesread >= prev.read { diskRead = Double(usage.ri_diskio_bytesread - prev.read) / dt }
                 if usage.ri_diskio_byteswritten >= prev.write { diskWrite = Double(usage.ri_diskio_byteswritten - prev.write) / dt }
             }
+            currentEnergy[pid] = usage.ri_energy_nj
+            var power = 0.0
+            if dt > 0, let prev = previousEnergy[pid], usage.ri_energy_nj >= prev {
+                power = Double(usage.ri_energy_nj - prev) / 1e9 / dt
+            }
             result.append(ProcessStat(id: pid, name: Self.name(for: pid), cpu: cpu, memory: usage.ri_phys_footprint,
-                                      diskRead: diskRead, diskWrite: diskWrite))
+                                      diskRead: diskRead, diskWrite: diskWrite, power: power))
         }
         previous = current
         previousIO = currentIO
+        previousEnergy = currentEnergy
         previousTime = now
         return result
     }

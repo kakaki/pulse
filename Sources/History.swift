@@ -8,6 +8,8 @@ enum HistoryMetric: String, CaseIterable, Codable {
 enum HistoryRange: Int, CaseIterable, Identifiable {
     case live, hour, day, week, month
     var id: Int { rawValue }
+    /// Ranges that fit in the kept history (Settings → General).
+    static var available: [HistoryRange] { allCases.filter { $0.span <= HistoryStore.keptDays * 1440 || $0.span <= HistoryStore.minutes } }
     var title: String {
         switch self {
         case .live: "2 min"
@@ -51,7 +53,8 @@ extension HistoryMetric {
         switch self {
         case .cpu, .gpu, .mem, .battery: Fmt.pct(value)
         case .temp: Fmt.temp(value)
-        case .diskRead, .diskWrite, .netIn, .netOut: Fmt.rate(value)
+        case .diskRead, .diskWrite: Fmt.rate(value)
+        case .netIn, .netOut: Fmt.net(value)
         case .batteryPower: String(format: "%.1f W", value)
         }
     }
@@ -60,8 +63,14 @@ extension HistoryMetric {
 /// Per-minute averages for the last 24 h plus 10-minute averages for the last 30 days, persisted to Application Support so they survive restarts.
 @MainActor
 final class HistoryStore {
-    static let minutes = 1440
-    static let coarseMinutes = 30 * 1440
+    nonisolated static let minutes = 1440
+    nonisolated static let daysKey = "history.days"
+    /// 7, 14 or 30 days of 10-minute averages.
+    nonisolated static var keptDays: Int {
+        let d = UserDefaults.standard.integer(forKey: daysKey)
+        return [7, 14, 30].contains(d) ? d : 30
+    }
+    nonisolated static var coarseMinutes: Int { keptDays * 1440 }
 
     private struct Bucket: Codable { var minute: Int; var values: [String: Double] }
     private struct File: Codable { var buckets: [Bucket]; var coarse: [Bucket]? }
@@ -135,6 +144,25 @@ final class HistoryStore {
     }
 
     /// On quit: also keep the unfinished 10-minute slot.
+    /// Deletes all saved history (Settings → General).
+    func clear() {
+        buckets = []; coarse = []; sums = [:]; coarseSums = [:]; seriesCache = [:]
+        currentMinute = Self.minuteNow(); coarseSlot = currentMinute / 10
+        try? FileManager.default.removeItem(at: Self.url)
+    }
+
+    /// Drops 10-minute averages older than the kept period (after it was shortened).
+    func trim() {
+        let oldest = Self.minuteNow() - Self.coarseMinutes
+        coarse.removeAll { $0.minute <= oldest }
+        seriesCache = [:]
+        save()
+    }
+
+    static var fileSize: Int64 {
+        ((try? FileManager.default.attributesOfItem(atPath: url.path))?[.size] as? NSNumber)?.int64Value ?? 0
+    }
+
     func saveFinal() {
         flush()
         flushCoarse()
@@ -236,7 +264,10 @@ struct HistoryChart: View {
     /// Draws the second series downwards from the zero line.
     var mirrored = false
 
-    private var range: HistoryRange { HistoryRange(rawValue: rangeRaw) ?? .live }
+    private var range: HistoryRange {
+        let r = HistoryRange(rawValue: rangeRaw) ?? .live
+        return HistoryRange.available.contains(r) ? r : (HistoryRange.available.last ?? .live)
+    }
 
     var body: some View {
         VStack(spacing: 6) {
@@ -253,7 +284,7 @@ struct HistoryChart: View {
                     }
                 }
             HStack(spacing: 2) {
-                ForEach(HistoryRange.allCases) { r in
+                ForEach(HistoryRange.available) { r in
                     Button { rangeRaw = r.rawValue } label: {
                         Text(r.title)
                             .font(.system(size: 10, weight: .semibold))

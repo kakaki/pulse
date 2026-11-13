@@ -109,15 +109,18 @@ final class SystemMonitor {
     @ObservationIgnored private var powerSource: CFRunLoopSource?
 
     // MARK: Processes
+    /// Grouped by name when that is switched on (Settings → CPU / Memory).
     private(set) var processes: [ProcessStat] = []
+    private func sampleProcesses() { processes = ProcessGroups.group(processSampler.sample()) }
     var topByCPU: [ProcessStat] { Array(processes.sorted { $0.cpu > $1.cpu }.prefix(5)) }
+    var topByEnergy: [ProcessStat] { Array(processes.filter { $0.power >= 0.005 }.sorted { $0.power > $1.power }.prefix(6)) }
     var topByMemory: [ProcessStat] { Array(processes.sorted { $0.memory > $1.memory }.prefix(5)) }
     var topByDisk: [ProcessStat] {
         Array(processes.filter { $0.diskRead + $0.diskWrite > 0 }.sorted { $0.diskRead + $0.diskWrite > $1.diskRead + $1.diskWrite }.prefix(5))
     }
     /// Number of open dropdowns that need the (costlier) per-process sample.
     @ObservationIgnored var processWatchers = 0 {
-        didSet { if processWatchers > 0 && oldValue == 0 { processes = processSampler.sample() } }
+        didSet { if processWatchers > 0 && oldValue == 0 { sampleProcesses() } }
     }
 
     /// GPU time per process (Graphics panel only).
@@ -178,6 +181,7 @@ final class SystemMonitor {
 
     private func powerSourceChanged() {
         battery = BatterySampler.read()
+        BatteryLog.shared.record(battery)
         updateSaving()
         onUpdate?()
     }
@@ -198,9 +202,9 @@ final class SystemMonitor {
         sampleTemperatures()
         sampleGPU()
         sampleNetwork()
-        if tick % 5 == 0 { battery = BatterySampler.read(); updateSaving() }
+        if tick % 5 == 0 { battery = BatterySampler.read(); updateSaving(); BatteryLog.shared.record(battery) }
         if battery.present { push(&batteryHistory, battery.percent) }
-        if processWatchers > 0 { processes = processSampler.sample() }
+        if processWatchers > 0 { sampleProcesses() }
         if gpuProcessWatchers > 0 {
             let list = gpuProcessSampler.sample()
             if list != gpuProcesses { gpuProcesses = list }
@@ -549,13 +553,14 @@ extension SystemMonitor {
                         .init(id: demoPID("Xcode", 99901), name: "Xcode", share: 0.02)]
         gpuProcessesLoaded = true
         processes = [
-            ProcessStat(id: demoPID("Xcode", 99901), name: "Xcode", cpu: 0.42, memory: 1_480 * mb),
-            ProcessStat(id: demoPID("Safari", 99902), name: "Safari", cpu: 0.18, memory: 920 * mb),
-            ProcessStat(id: demoPID("Music", 99903), name: "Music", cpu: 0.06, memory: 310 * mb),
-            ProcessStat(id: demoPID("Mail", 99904), name: "Mail", cpu: 0.04, memory: 420 * mb),
-            ProcessStat(id: demoPID("Finder", 99905), name: "Finder", cpu: 0.02, memory: 260 * mb),
-            ProcessStat(id: 99906, name: "WindowServer", cpu: 0.15, memory: 640 * mb),
-            ProcessStat(id: 99907, name: "kernel_task", cpu: 0.09, memory: 180 * mb),
+            ProcessStat(id: demoPID("Xcode", 99901), name: "Xcode", cpu: 0.42, memory: 1_480 * mb, power: 2.4),
+            ProcessStat(id: demoPID("Safari", 99902), name: "Safari", cpu: 0.18, memory: 920 * mb, power: 0.9),
+            ProcessStat(id: 99908, name: "Safari Web Content", cpu: 0.11, memory: 1_210 * mb, power: 0.7, pids: Array(99908...99913)),
+            ProcessStat(id: demoPID("Music", 99903), name: "Music", cpu: 0.06, memory: 310 * mb, power: 0.3),
+            ProcessStat(id: demoPID("Mail", 99904), name: "Mail", cpu: 0.04, memory: 420 * mb, power: 0.1),
+            ProcessStat(id: demoPID("Finder", 99905), name: "Finder", cpu: 0.02, memory: 260 * mb, power: 0.05),
+            ProcessStat(id: 99906, name: "WindowServer", cpu: 0.15, memory: 640 * mb, power: 1.1),
+            ProcessStat(id: 99907, name: "kernel_task", cpu: 0.09, memory: 180 * mb, power: 0.4),
         ]
     }
 }

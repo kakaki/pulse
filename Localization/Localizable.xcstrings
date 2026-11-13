@@ -172,6 +172,28 @@
         }
       }
     },
+    "%lld · ostatni %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld · zuletzt %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld · latest %2$@"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld · ostatni %2$@"
+          }
+        }
+      }
+    },
     "(licencja MIT)" : {
       "localizations" : {
         "de" : {
@@ -203,6 +225,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "1 s"
+          }
+        }
+      }
+    },
+    "14 dni" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "14 Tage"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "14 days"
           }
         }
       }
@@ -255,6 +293,22 @@
         }
       }
     },
+    "30 dni" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 Tage"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 days"
+          }
+        }
+      }
+    },
     "5 min" : {
       "localizations" : {
         "de" : {
@@ -283,6 +337,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "5 s"
+          }
+        }
+      }
+    },
+    "7 dni" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "7 Tage"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "7 days"
           }
         }
       }
@@ -475,6 +545,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Apps"
+          }
+        }
+      }
+    },
+    "Aplikacje mogą zapytać o zapisanie dokumentów." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apps fragen eventuell, ob Dokumente gesichert werden sollen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apps may ask to save documents."
           }
         }
       }
@@ -677,6 +763,22 @@
         }
       }
     },
+    "Brak odpowiedzi routera – sprawdź Wi‑Fi lub kabel." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Router antwortet nicht – prüfe WLAN oder Kabel."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The router does not answer – check Wi‑Fi or the cable."
+          }
+        }
+      }
+    },
     "Brak odpowiedzi." : {
       "localizations" : {
         "de" : {
@@ -769,6 +871,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No running containers."
+          }
+        }
+      }
+    },
+    "Brak zapisanej historii" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein gespeicherter Verlauf"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No saved history"
+          }
+        }
+      }
+    },
+    "Brak – Pulse ani razu nie przestał odpowiadać." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine – Pulse hat noch nie aufgehört zu reagieren."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "None – Pulse has never stopped responding."
           }
         }
       }
@@ -1077,6 +1211,22 @@
         }
       }
     },
+    "Cykle w tym czasie" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zyklen in diesem Zeitraum"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cycles in that time"
+          }
+        }
+      }
+    },
     "Cykle ładowania" : {
       "localizations" : {
         "de" : {
@@ -1217,6 +1367,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Developer data (Xcode)"
+          }
+        }
+      }
+    },
+    "Diagnostyka" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diagnose"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diagnostics"
           }
         }
       }
@@ -1509,6 +1675,22 @@
         }
       }
     },
+    "Energia oddana do baterii w ostatnich 30 dniach, bez prądu zasilającego samego Maca." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In den letzten 30 Tagen in die Batterie geladene Energie, ohne den Strom, der den Mac selbst versorgt hat."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Energy put into the battery in the last 30 days, not counting power that ran the Mac itself."
+          }
+        }
+      }
+    },
     "Etapy pracy" : {
       "localizations" : {
         "de" : {
@@ -1617,6 +1799,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "GPU %"
+          }
+        }
+      }
+    },
+    "Gdy Pulse przestanie odpowiadać na dłużej niż 6 sekund, zapisuje raport w ~/Library/Logs/Pulse. Raport zostaje na tym Macu – możesz go przesłać, aby pomóc znaleźć przyczynę." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reagiert Pulse länger als 6 Sekunden nicht, wird ein Bericht in ~/Library/Logs/Pulse gespeichert. Er bleibt auf diesem Mac – du kannst ihn senden, um bei der Ursachensuche zu helfen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If Pulse stops responding for more than 6 seconds, it saves a report in ~/Library/Logs/Pulse. The report stays on this Mac – you can send it to help find the cause."
           }
         }
       }
@@ -1745,6 +1943,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "History"
+          }
+        }
+      }
+    },
+    "Historia wykresów" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diagrammverlauf"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chart history"
           }
         }
       }
@@ -1929,6 +2143,38 @@
         }
       }
     },
+    "Internet (1.1.1.1)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Internet (1.1.1.1)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Internet (1.1.1.1)"
+          }
+        }
+      }
+    },
+    "Jednostka prędkości" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einheit der Geschwindigkeit"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speed unit"
+          }
+        }
+      }
+    },
     "Jednostka temperatury" : {
       "localizations" : {
         "de" : {
@@ -2105,6 +2351,22 @@
         }
       }
     },
+    "Kondycja od %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zustand seit %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Health since %@"
+          }
+        }
+      }
+    },
     "Kontenery Dockera" : {
       "localizations" : {
         "de" : {
@@ -2249,6 +2511,22 @@
         }
       }
     },
+    "Lista procesów" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prozessliste"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Process list"
+          }
+        }
+      }
+    },
     "Load %@" : {
       "localizations" : {
         "de" : {
@@ -2327,6 +2605,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Low disk space"
+          }
+        }
+      }
+    },
+    "Megabity na sekundę (Mb/s) to jednostka, w której operatorzy podają prędkość łącza. 1 MB/s = 8 Mb/s." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Megabit pro Sekunde (Mb/s) ist die Einheit, in der Anbieter die Geschwindigkeit des Anschlusses angeben. 1 MB/s = 8 Mb/s."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Megabits per second (Mb/s) is the unit internet providers use for connection speed. 1 MB/s = 8 Mb/s."
           }
         }
       }
@@ -2820,6 +3114,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "E.g. when a projector or TV is connected in mirroring mode (AirPlay)."
+          }
+        }
+      }
+    },
+    "Np. „Google Chrome Helper ×23” z sumą CPU i pamięci. „Zakończ” kończy wtedy wszystkie procesy w grupie, po potwierdzeniu." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Z. B. „Google Chrome Helper ×23“ mit summierter CPU und Speicher. „Beenden“ beendet dann nach Rückfrage alle Prozesse der Gruppe."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E.g. “Google Chrome Helper ×23” with CPU and memory added up. “Quit” then ends all processes in the group, after asking."
           }
         }
       }
@@ -3414,6 +3724,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ring"
+          }
+        }
+      }
+    },
+    "Plik: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datei: %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File: %@"
           }
         }
       }
@@ -4124,6 +4450,22 @@
         }
       }
     },
+    "Problem w sieci domowej: router odpowiada wolno lub gubi pakiety (często słabe Wi‑Fi)." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problem im Heimnetz: Der Router antwortet langsam oder verliert Pakete (oft schwaches WLAN)."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problem in the home network: the router answers slowly or loses packets (often weak Wi‑Fi)."
+          }
+        }
+      }
+    },
     "Procenty" : {
       "localizations" : {
         "de" : {
@@ -4238,6 +4580,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Processes · memory"
+          }
+        }
+      }
+    },
+    "Przechowuj historię" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verlauf aufbewahren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep history for"
           }
         }
       }
@@ -4635,6 +4993,22 @@
         }
       }
     },
+    "Raporty zawieszeń" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hänger-Berichte"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hang reports"
+          }
+        }
+      }
+    },
     "Rdzenie" : {
       "localizations" : {
         "de" : {
@@ -4731,6 +5105,38 @@
         }
       }
     },
+    "Router" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Router"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Router"
+          }
+        }
+      }
+    },
+    "Router działa, ale internet nie odpowiada – problem u operatora lub z modemem." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Router funktioniert, aber das Internet antwortet nicht – ein Problem beim Anbieter oder mit dem Modem."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The router works, but the internet does not answer – a problem with the provider or the modem."
+          }
+        }
+      }
+    },
     "Rozdzielczość (min)" : {
       "localizations" : {
         "de" : {
@@ -4823,6 +5229,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Wi‑Fi network"
+          }
+        }
+      }
+    },
+    "Sieć domowa działa dobrze, ale internet jest wolny lub gubi pakiety – to po stronie operatora." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Heimnetz funktioniert gut, aber das Internet ist langsam oder verliert Pakete – das liegt beim Anbieter."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The home network works well, but the internet is slow or loses packets – that is on the provider’s side."
           }
         }
       }
@@ -5029,6 +5451,22 @@
         }
       }
     },
+    "Sprawdź" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prüfen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check"
+          }
+        }
+      }
+    },
     "Sprawdź aktualizacje…" : {
       "localizations" : {
         "de" : {
@@ -5057,6 +5495,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Check for update"
+          }
+        }
+      }
+    },
+    "Sprawdź ponownie" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erneut prüfen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check again"
           }
         }
       }
@@ -5748,6 +6202,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "This Mac shares its readings too."
+          }
+        }
+      }
+    },
+    "Test połączenia" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbindungstest"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connection test"
           }
         }
       }
@@ -6496,6 +6966,70 @@
         }
       }
     },
+    "Wszystko działa dobrze." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alles funktioniert gut."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Everything works well."
+          }
+        }
+      }
+    },
+    "Wyczyścić historię wykresów?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diagrammverlauf löschen?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear chart history?"
+          }
+        }
+      }
+    },
+    "Wyczyść historię" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verlauf löschen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear history"
+          }
+        }
+      }
+    },
+    "Wyczyść…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Löschen…"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear…"
+          }
+        }
+      }
+    },
     "Wygląd" : {
       "localizations" : {
         "de" : {
@@ -6560,6 +7094,44 @@
         }
       }
     },
+    "Wykresy 1 h, 24 h, 7 d i 30 d zaczną się od nowa. Plik historii (%@) zostanie usunięty. Nie da się tego cofnąć." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Diagramme 1 h, 24 h, 7 T und 30 T beginnen von vorn. Die Verlaufsdatei (%@) wird gelöscht. Das lässt sich nicht rückgängig machen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The 1 h, 24 h, 7 d and 30 d charts start over. The history file (%@) is deleted. This cannot be undone."
+          }
+        }
+      }
+    },
+    "Wymusić zakończenie wszystkich procesów „%@” (%lld)?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Prozesse „%1$@“ (%2$lld) sofort beenden?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Force quit all “%1$@” processes (%2$lld)?"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Wymusić zakończenie wszystkich procesów „%1$@” (%2$lld)?"
+          }
+        }
+      }
+    },
     "Wymusić zakończenie „%@”?" : {
       "localizations" : {
         "de" : {
@@ -6592,6 +7164,22 @@
         }
       }
     },
+    "Wymuś zakończenie wszystkich…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle sofort beenden…"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Force Quit All…"
+          }
+        }
+      }
+    },
     "Wymuś zakończenie…" : {
       "localizations" : {
         "de" : {
@@ -6620,6 +7208,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "High temperature"
+          }
+        }
+      }
+    },
+    "Wysyła 20 pakietów ping do routera i do 1.1.1.1 (Cloudflare)." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sendet 20 Ping-Pakete an den Router und an 1.1.1.1 (Cloudflare)."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sends 20 ping packets to the router and to 1.1.1.1 (Cloudflare)."
           }
         }
       }
@@ -6797,6 +7401,60 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Quit Pulse"
+          }
+        }
+      }
+    },
+    "Zakończ wszystkie" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle beenden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quit All"
+          }
+        }
+      }
+    },
+    "Zakończ wszystkie (%lld)…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle beenden (%lld)…"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quit All (%lld)…"
+          }
+        }
+      }
+    },
+    "Zakończyć wszystkie procesy „%@” (%lld)?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Prozesse „%1$@“ (%2$lld) beenden?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quit all “%1$@” processes (%2$lld)?"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Zakończyć wszystkie procesy „%1$@” (%2$lld)?"
           }
         }
       }
@@ -7026,6 +7684,22 @@
         }
       }
     },
+    "Zużycie energii" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Energieverbrauch"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Energy use"
+          }
+        }
+      }
+    },
     "Związana" : {
       "localizations" : {
         "de" : {
@@ -7106,7 +7780,24 @@
         }
       }
     },
+    "brak odpowiedzi" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "keine Antwort"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "no answer"
+          }
+        }
+      }
+    },
     "do 30 dni" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -7218,6 +7909,22 @@
         }
       }
     },
+    "ok. 5 s" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ca. 5 s"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "about 5 s"
+          }
+        }
+      }
+    },
     "pojemności fabrycznej" : {
       "localizations" : {
         "de" : {
@@ -7230,6 +7937,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "of original capacity"
+          }
+        }
+      }
+    },
+    "poprzedni miesiąc: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vormonat: %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "last month: %@"
           }
         }
       }
@@ -7256,8 +7979,40 @@
     "t" : {
 
     },
+    "utrata %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ Verlust"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ lost"
+          }
+        }
+      }
+    },
     "v" : {
 
+    },
+    "w tym miesiącu" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "diesen Monat"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "this month"
+          }
+        }
+      }
     },
     "wolne" : {
       "localizations" : {
@@ -7399,6 +8154,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Charge to"
+          }
+        }
+      }
+    },
+    "Łącz procesy o tej samej nazwie" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prozesse mit gleichem Namen zusammenfassen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Combine processes with the same name"
           }
         }
       }

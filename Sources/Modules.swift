@@ -145,6 +145,23 @@ enum Fmt {
         return compact ? "\(number) \(units[i])" : "\(number) \(units[i])/s"
     }
 
+    /// Network speeds in bits per second (Mb/s, as internet plans are sold) instead of bytes.
+    static let netBitsKey = "netBits"
+    static var netBits: Bool { UserDefaults.standard.bool(forKey: netBitsKey) }
+
+    /// Network speed in the unit chosen in Settings; disk speeds stay in bytes (`rate`).
+    static func net(_ r: Double, compact: Bool = false) -> String {
+        guard netBits else { return rate(r, compact: compact) }
+        let units: [String] = ["b", "Kb", "Mb", "Gb"]
+        var value = max(0, r) * 8, i = 0
+        while value >= 1000 && i < units.count - 1 { value /= 1000; i += 1 }
+        let number = value < 10 && i > 0 ? String(format: "%.1f", value) : String(format: "%.0f", value)
+        return compact ? "\(number) \(units[i])" : "\(number) \(units[i])/s"
+    }
+
+    /// "2.4 W", "0.35 W", "0.04 W".
+    static func watts(_ w: Double) -> String { String(format: w >= 1 ? "%.1f W" : "%.2f W", w) }
+
     static var fahrenheit: Bool { UserDefaults.standard.integer(forKey: "tempUnit") == 1 }
 
     static func temp(_ t: Double?) -> String {

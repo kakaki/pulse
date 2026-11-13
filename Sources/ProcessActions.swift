@@ -14,6 +14,30 @@ enum ProcessActions {
         }
     }
 
+    /// Several processes with one name: asks first, then quits (or force quits) all of them.
+    static func quitGroup(_ pids: [pid_t], name: String, force: Bool) {
+        AppActions.closePopovers()
+        let alert = NSAlert()
+        alert.messageText = force ? String(localized: "Wymusić zakończenie wszystkich procesów „\(name)” (\(pids.count))?")
+                                  : String(localized: "Zakończyć wszystkie procesy „\(name)” (\(pids.count))?")
+        alert.informativeText = force ? String(localized: "Niezapisane zmiany w tej aplikacji zostaną utracone.")
+                                      : String(localized: "Aplikacje mogą zapytać o zapisanie dokumentów.")
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: force ? String(localized: "Wymuś zakończenie") : String(localized: "Zakończ wszystkie"))
+        alert.addButton(withTitle: String(localized: "Anuluj"))
+        NSApp.activate()
+        guard alert.runModal() == .alertFirstButtonReturn else { return }
+        var failures = 0
+        for pid in pids where canEnd(pid) {
+            if let app = NSRunningApplication(processIdentifier: pid) {
+                if !(force ? app.forceTerminate() : app.terminate()) && kill(pid, force ? SIGKILL : SIGTERM) != 0 { failures += 1 }
+            } else if kill(pid, force ? SIGKILL : SIGTERM) != 0 {
+                failures += 1
+            }
+        }
+        if failures == pids.count { failed(name) }
+    }
+
     static func forceQuit(_ pid: pid_t, name: String) {
         AppActions.closePopovers()
         let alert = NSAlert()
@@ -46,11 +70,18 @@ enum ProcessActions {
 
 extension View {
     /// Context menu with process actions; no-op in snapshot mode.
-    func processMenu(pid: pid_t, name: String) -> some View {
+    /// `group`: all processes of a grouped row; the actions then apply to all of them.
+    func processMenu(pid: pid_t, name: String, group: [pid_t] = []) -> some View {
         contextMenu {
-            let ok = ProcessActions.canEnd(pid)
-            Button("Zakończ") { ProcessActions.quit(pid, name: name) }.disabled(!ok)
-            Button("Wymuś zakończenie…") { ProcessActions.forceQuit(pid, name: name) }.disabled(!ok)
+            if group.count > 1 {
+                let ok = group.contains(where: ProcessActions.canEnd)
+                Button("Zakończ wszystkie (\(group.count))…") { ProcessActions.quitGroup(group, name: name, force: false) }.disabled(!ok)
+                Button("Wymuś zakończenie wszystkich…") { ProcessActions.quitGroup(group, name: name, force: true) }.disabled(!ok)
+            } else {
+                let ok = ProcessActions.canEnd(pid)
+                Button("Zakończ") { ProcessActions.quit(pid, name: name) }.disabled(!ok)
+                Button("Wymuś zakończenie…") { ProcessActions.forceQuit(pid, name: name) }.disabled(!ok)
+            }
             Divider()
             Button("Pokaż w Monitorze aktywności") { ProcessActions.openActivityMonitor() }
         }

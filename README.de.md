@@ -31,13 +31,13 @@
   - **GPU:** Auslastungsverlauf, Last von Renderer und Tiler, GPU-Speicher, Kerne, Neustarts, Prozesse mit GPU-Nutzung
   - **Speicher:** Speicherdruck, App-, gebundener und komprimierter Speicher, Swap, Prozesse
   - **Festplatte:** belegter oder freier Speicher in Prozent oder GB/TB, mehrere Laufwerke, Lese- und Schreibrate, was den Platz belegt
-  - **Netzwerk:** Upload und Download, Datenverkehr pro App, Latenz, lokale und öffentliche IP
+  - **Netzwerk:** Upload und Download in MB/s oder Mb/s, Datenverkehr pro App, Latenz, Verbindungstest (Router oder Internet), lokale und öffentliche IP
   - **Sensoren:** Temperaturen von SoC, SSD und Batterie, Lüfter, thermischer Zustand
-  - **Batterie:** Ladeverlauf, Zustand, Ladezyklen, Leistungsaufnahme, Netzteilleistung, Akkus von Bluetooth-Geräten (AirPods, Tastatur, Maus)
+  - **Batterie:** Ladeverlauf, Zustand, Ladezyklen, Leistungsaufnahme, Netzteilleistung, Energieverbrauch pro App, geladene Energie pro Monat, Zustand im Zeitverlauf, Akkus von Bluetooth-Geräten (AirPods, Tastatur, Maus)
   - **Andere Computer:** Auslastung, Temperaturen, Lüfter, Prozesse und Docker-Container anderer Macs mit Pulse und Windows-PCs mit PulseWin im lokalen Netzwerk; Pulse auf diesen Macs aus der Ferne aktualisieren (wenn der Mac es erlaubt)
 - **Ladelimit** bei MacBooks (50–95 %), damit der Akku nicht ständig bei 100 % steht.
-- **Verlauf über 2 Min., 1 h, 24 h, 7 Tage und 30 Tage**, mit CSV-Export.
-- **Praktische Aktionen:** Speicher freigeben (`purge`, fragt nach dem Administratorpasswort), Prozesse per Rechtsklick beenden, IP-Adresse per Klick kopieren.
+- **Verlauf über 2 Min., 1 h, 24 h, 7 Tage und 30 Tage**, 7, 14 oder 30 Tage aufbewahrt, mit CSV-Export.
+- **Praktische Aktionen:** Speicher freigeben (`purge`, fragt nach dem Administratorpasswort), Prozesse per Rechtsklick beenden (Prozesse mit gleichem Namen lassen sich zusammenfassen), IP-Adresse per Klick kopieren.
 - **Mitteilungen** bei anhaltender CPU-Last, hoher Temperatur, thermischer Drosselung, Speicherdruck, wenig Speicherplatz und niedrigem Akkustand.
 - **Kritische Werte blinken** in der Menüleiste, und bei hoher Last werden Werte eingefärbt.
 - **Stört nicht:** blendet sich im Vollbild und bei Bildschirmspiegelung aus und aktualisiert im Batteriebetrieb und im Stromsparmodus seltener.

@@ -101,12 +101,12 @@ struct StatusSnapshot {
                 case .net:
                     if UserDefaults.standard.object(forKey: "overview.net.split") as? Bool ?? true {
                         let top = max((m.netInHistory + m.netOutHistory).suffix(36).max() ?? 1, 1)
-                        cell = .init(module: .network, label: "NET", text: "↑ " + Fmt.rate(m.netOut, compact: true),
+                        cell = .init(module: .network, label: "NET", text: "↑ " + Fmt.net(m.netOut, compact: true),
                                      value: min((m.netIn + m.netOut) / top, 1), history: m.netInHistory, maxHistory: top, level: nil)
-                        cell.text2 = "↓ " + Fmt.rate(m.netIn, compact: true)
+                        cell.text2 = "↓ " + Fmt.net(m.netIn, compact: true)
                         cell.history2 = m.netOutHistory
                     } else {
-                        cell = .init(module: .network, label: "↓NET", text: Fmt.rate(m.netIn, compact: true), value: min(m.netIn / netTop, 1), history: m.netInHistory, maxHistory: nil, level: nil)
+                        cell = .init(module: .network, label: "↓NET", text: Fmt.net(m.netIn, compact: true), value: min(m.netIn / netTop, 1), history: m.netInHistory, maxHistory: nil, level: nil)
                     }
                 case .macs:
                     let sum = RemoteMacs.shared.summary
@@ -133,8 +133,8 @@ struct StatusSnapshot {
             s.history = m.readHistory; s.history2 = m.writeHistory; s.maxHistory = nil
             s.bars = [DiskDisplay.fraction(v)]; s.level = v.usedFraction
         case .network:
-            s.text = "↑ " + Fmt.rate(m.netOut, compact: true)
-            s.text2 = "↓ " + Fmt.rate(m.netIn, compact: true)
+            s.text = "↑ " + Fmt.net(m.netOut, compact: true)
+            s.text2 = "↓ " + Fmt.net(m.netIn, compact: true)
             s.history = m.netInHistory; s.history2 = m.netOutHistory; s.maxHistory = nil
         case .sensors:
             let t = m.socMax ?? m.socAvg

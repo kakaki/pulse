@@ -152,6 +152,8 @@ struct ModuleSettings: View {
                     }
                 }
             }
+            if module == .network { NetworkUnitSection() }
+            if module == .cpu || module == .memory { ProcessListSection() }
             if module == .battery { ChargeLimitSection(); EnergySavingSection() }
             if module == .macs { RemoteSharingSection() }
             ForEach(Alerts.Kind.kinds(for: module)) { AlertRow(kind: $0) }
@@ -184,6 +186,35 @@ struct TemperatureUnitSection: View {
                 Text("°F").tag(1)
             }
             .pickerStyle(.segmented)
+        }
+    }
+}
+
+struct ProcessListSection: View {
+    @AppStorage(ProcessGroups.key) private var grouped = true
+    var body: some View {
+        Section {
+            Toggle(isOn: $grouped) {
+                Text("Łącz procesy o tej samej nazwie")
+                Text("Np. „Google Chrome Helper ×23” z sumą CPU i pamięci. „Zakończ” kończy wtedy wszystkie procesy w grupie, po potwierdzeniu.")
+            }
+        } header: {
+            Text("Lista procesów")
+        }
+    }
+}
+
+struct NetworkUnitSection: View {
+    @AppStorage(Fmt.netBitsKey) private var bits = false
+    var body: some View {
+        Section {
+            Picker("Jednostka prędkości", selection: $bits) {
+                Text(verbatim: "MB/s").tag(false)
+                Text(verbatim: "Mb/s").tag(true)
+            }
+            .pickerStyle(.segmented)
+        } footer: {
+            Text("Megabity na sekundę (Mb/s) to jednostka, w której operatorzy podają prędkość łącza. 1 MB/s = 8 Mb/s.")
         }
     }
 }
@@ -292,6 +323,9 @@ struct GeneralSettings: View {
     @AppStorage("menubar.iconOnly") private var iconOnly = false
     @State private var launchAtLogin = SMAppService.mainApp.status == .enabled
     @State private var loginError: String?
+    @AppStorage(HistoryStore.daysKey) private var historyDays = 30
+    @State private var historySize: Int64 = 0
+    @State private var confirmClear = false
 
     var body: some View {
         Form {
@@ -356,11 +390,29 @@ struct GeneralSettings: View {
                     Text("3 s").tag(3.0)
                     Text("5 s").tag(5.0)
                 }
-                LabeledContent("Historia") {
+                Picker("Przechowuj historię", selection: $historyDays) {
+                    Text("7 dni").tag(7)
+                    Text("14 dni").tag(14)
+                    Text("30 dni").tag(30)
+                }
+                .onChange(of: historyDays) { _, _ in monitor.history.trim(); historySize = HistoryStore.fileSize }
+                LabeledContent {
                     HStack {
-                        Text("do 30 dni").foregroundStyle(.secondary)
                         Button("Eksportuj CSV…") { exportHistory() }
+                        Button("Wyczyść…", role: .destructive) { historySize = HistoryStore.fileSize; confirmClear = true }
                     }
+                } label: {
+                    Text("Historia wykresów")
+                    Text(historySize > 0 ? String(localized: "Plik: \(Fmt.file(historySize))") : String(localized: "Brak zapisanej historii"))
+                }
+                .onAppear { historySize = HistoryStore.fileSize }
+                .confirmationDialog("Wyczyścić historię wykresów?", isPresented: $confirmClear) {
+                    Button("Wyczyść historię", role: .destructive) {
+                        monitor.history.clear()
+                        historySize = 0
+                    }
+                } message: {
+                    Text("Wykresy 1 h, 24 h, 7 d i 30 d zaczną się od nowa. Plik historii (\(Fmt.file(historySize))) zostanie usunięty. Nie da się tego cofnąć.")
                 }
             }
             Section {
@@ -377,6 +429,7 @@ struct GeneralSettings: View {
                 if let loginError { Text(loginError).foregroundStyle(.red) }
             }
             UpdateSettingsSection()
+            HangReportsSection()
             Section("Ten Mac") {
                 LabeledContent("Procesor", value: monitor.chipName)
                 LabeledContent("Rdzenie", value: "\(monitor.coreCount)")

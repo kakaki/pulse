@@ -214,7 +214,7 @@ struct OverviewContent: View {
             Pill(text: "Load \(String(format: "%.2f", m.loadAverage.first ?? 0))", color: Heat.load(min((m.loadAverage.first ?? 0) / Double(max(m.coreCount, 1)), 1)))
             Pill(text: m.memPressure == .normal ? String(localized: "Pamięć OK") : (m.memPressure == .warning ? String(localized: "Pamięć ⚠︎") : String(localized: "Pamięć ‼︎")),
                  color: m.memPressure == .normal ? .green : (m.memPressure == .warning ? .orange : .red))
-            Pill(text: "↓\(Fmt.rate(m.netIn, compact: true)) ↑\(Fmt.rate(m.netOut, compact: true))", color: .cyan)
+            Pill(text: "↓\(Fmt.net(m.netIn, compact: true)) ↑\(Fmt.net(m.netOut, compact: true))", color: .cyan)
             if m.thermalState != .nominal {
                 Pill(text: "🔥 \(m.thermalState.title)", color: m.thermalState.color)
                     .help(m.thermalState.detail)
@@ -237,7 +237,7 @@ struct OverviewContent: View {
         case .disk: (DiskDisplay.fraction(m.displayVolume), DiskDisplay.text(m.displayVolume),
                      m.displayVolume.isSystem ? String(localized: "Dysk") : m.displayVolume.name)
         case .sensors: ((m.socMax ?? 0) / 105, Fmt.temp(m.socMax ?? m.socAvg), String(localized: "Temp."))
-        case .network: (netLevel, Fmt.rate(m.netIn, compact: true), String(localized: "Sieć"))
+        case .network: (netLevel, Fmt.net(m.netIn, compact: true), String(localized: "Sieć"))
         case .battery: (m.battery.percent, Fmt.pct(m.battery.percent), String(localized: "Bateria"))
         case .macs:
             { let s = RemoteMacs.shared.summary; return (s.value, s.text, s.name ?? String(localized: "Inne komputery")) }()

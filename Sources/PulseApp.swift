@@ -23,11 +23,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         statusBar = StatusBarController(monitor: SystemMonitor.shared)
         _ = Updater.shared  // starts Sparkle (background checks) when a feed is configured
-        if !CommandLine.arguments.contains("--snapshot") { Alerts.shared.requestAuthorization(); FanControl.shared.start() }
+        if !CommandLine.arguments.contains("--snapshot") { Alerts.shared.requestAuthorization(); FanControl.shared.start(); HangWatchdog.shared.start() }
         // Save history on SIGTERM too (pkill, logout), not only on a regular quit.
         signal(SIGTERM, SIG_IGN)
         let term = DispatchSource.makeSignalSource(signal: SIGTERM, queue: .main)
-        term.setEventHandler { MainActor.assumeIsolated { SystemMonitor.shared.history.saveFinal() }; exit(0) }
+        term.setEventHandler { MainActor.assumeIsolated { SystemMonitor.shared.history.saveFinal(); BatteryLog.shared.save() }; exit(0) }
         term.resume()
         sigterm = term
         Snapshot.runIfRequested(monitor: SystemMonitor.shared)
@@ -35,6 +35,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationWillTerminate(_ notification: Notification) {
         SystemMonitor.shared.history.saveFinal()
+        BatteryLog.shared.save()
     }
 }
 
@@ -254,7 +255,7 @@ final class StatusBarController: NSObject, NSPopoverDelegate {
     private func signature() -> String {
         let d = UserDefaults.standard
         return Module.allCases.map { "\($0.rawValue):\($0.isEnabled):\($0.currentMode.rawValue)" }.joined(separator: ",")
-            + "|\(d.bool(forKey: "showLabels"))|\(d.bool(forKey: "colorize"))|\(d.integer(forKey: "tempUnit"))"
+            + "|\(d.bool(forKey: "showLabels"))|\(d.bool(forKey: "colorize"))|\(d.integer(forKey: "tempUnit"))\(d.bool(forKey: Fmt.netBitsKey))"
             + "|" + OverviewItem.ordered.map { "\($0.rawValue)\($0.isOn ? 1 : 0)\($0.style?.rawValue ?? "")\($0.showsLabel ? 1 : 0)" }.joined(separator: ".")
             + "|\(d.bool(forKey: "hide.fullscreen"))\(d.bool(forKey: "hide.mirroring"))\(d.object(forKey: "autoCompact") as? Bool ?? true)|\(DiskDisplay.showsFree)\(DiskDisplay.showsAmount)\(d.string(forKey: DiskDisplay.volumeKey) ?? "")"
             + "|\(Self.iconOnly)|\(d.object(forKey: "pulseAlerts") as? Bool ?? true)|\(d.bool(forKey: "overview.separators"))|\(d.object(forKey: "overview.net.split") as? Bool ?? true)"

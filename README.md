@@ -31,13 +31,13 @@
   - **GPU:** usage history, renderer and tiler load, GPU memory, cores, restarts, processes using the GPU
   - **Memory:** pressure, app / wired / compressed memory, swap, top processes
   - **Disk:** used or free space as percent or GB/TB, multiple drives, read/write speed, and what takes up the space
-  - **Network:** upload/download, traffic per app, latency, local and public IP
+  - **Network:** upload/download in MB/s or Mb/s, traffic per app, latency, a connection test (router vs. internet), local and public IP
   - **Sensors:** SoC, SSD and battery temperatures, fans, thermal state
-  - **Battery:** charge chart, health, cycle count, power draw, adapter wattage, Bluetooth device batteries (AirPods, keyboard, mouse)
+  - **Battery:** charge chart, health, cycle count, power draw, adapter wattage, energy use per app, energy charged per month, health over time, Bluetooth device batteries (AirPods, keyboard, mouse)
   - **Other Computers:** load, temperatures, fans, processes and Docker containers of other Macs running Pulse and Windows PCs running PulseWin on the local network; update Pulse on those Macs remotely (if allowed on that Mac)
 - **Charge limit** on MacBooks (50–95%), so the battery doesn't sit at 100% all the time.
-- **History of 2 min, 1 h, 24 h, 7 d and 30 d**, with CSV export.
-- **Handy actions:** free up memory (`purge`, asks for your admin password), quit or force quit processes with a right-click, click an IP address to copy it.
+- **History of 2 min, 1 h, 24 h, 7 d and 30 d**, kept for 7, 14 or 30 days, with CSV export.
+- **Handy actions:** free up memory (`purge`, asks for your admin password), quit or force quit processes with a right-click (processes with the same name can be combined), click an IP address to copy it.
 - **Notifications** for sustained CPU load, high temperature, thermal throttling, memory pressure, low disk space and low battery.
 - **Critical values pulse** in the menu bar, and values are colored under high load.
 - **Stays out of the way:** hides in full screen apps and while mirroring a display, and refreshes less often on battery and in Low Power Mode.

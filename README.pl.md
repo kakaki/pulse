@@ -31,13 +31,13 @@
   - **GPU:** historia użycia, obciążenie renderera i tilera, pamięć GPU, rdzenie, restarty, procesy używające GPU
   - **Pamięć:** ciśnienie, pamięć aplikacji / związana / skompresowana, swap, procesy
   - **Dysk:** miejsce zajęte lub wolne w procentach albo GB/TB, wiele dysków, odczyt i zapis, co zajmuje miejsce
-  - **Sieć:** wysyłanie i pobieranie, ruch per aplikacja, opóźnienie, adres lokalny i publiczny
+  - **Sieć:** wysyłanie i pobieranie w MB/s lub Mb/s, ruch per aplikacja, opóźnienie, test połączenia (router czy internet), adres lokalny i publiczny
   - **Czujniki:** temperatury SoC, SSD i baterii, wentylatory, stan termiczny
-  - **Bateria:** wykres naładowania, kondycja, cykle, pobór mocy, moc zasilacza, baterie urządzeń Bluetooth (AirPods, klawiatura, mysz)
+  - **Bateria:** wykres naładowania, kondycja, cykle, pobór mocy, moc zasilacza, zużycie energii przez aplikacje, energia ładowania w miesiącu, kondycja w czasie, baterie urządzeń Bluetooth (AirPods, klawiatura, mysz)
   - **Inne komputery:** obciążenie, temperatury, wentylatory, procesy i kontenery Dockera innych Maców z Pulse oraz komputerów z Windowsem i PulseWin w sieci lokalnej; zdalna aktualizacja Pulse na Makach (jeśli dany Mac na to pozwala)
 - **Limit ładowania** w MacBookach (50–95%), żeby bateria nie stała stale na 100%.
-- **Historia z 2 min, 1 h, 24 h, 7 dni i 30 dni**, z eksportem do CSV.
-- **Przydatne akcje:** zwalnianie pamięci (`purge`, pyta o hasło administratora), kończenie procesów prawym klikiem, kopiowanie adresu IP kliknięciem.
+- **Historia z 2 min, 1 h, 24 h, 7 dni i 30 dni**, przechowywana 7, 14 lub 30 dni, z eksportem do CSV.
+- **Przydatne akcje:** zwalnianie pamięci (`purge`, pyta o hasło administratora), kończenie procesów prawym klikiem (procesy o tej samej nazwie można łączyć w jeden wiersz), kopiowanie adresu IP kliknięciem.
 - **Powiadomienia** o długotrwałym obciążeniu CPU, wysokiej temperaturze, spowolnieniu termicznym, braku pamięci, małej ilości miejsca na dysku i niskim poziomie baterii.
 - **Wartości krytyczne pulsują** w pasku menu, a przy wysokim obciążeniu wartości zmieniają kolor.
 - **Nie przeszkadza:** chowa się na pełnym ekranie i przy dublowaniu ekranu, a na baterii i w trybie niskiego zużycia energii odświeża dane rzadziej.
