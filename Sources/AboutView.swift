@@ -1,7 +1,11 @@
 import SwiftUI
 
 enum ProjectLinks {
-    static let home = URL(string: "https://github.com/kakaki/pulse")!
+    /// Product page on kakaki.pl: Polish for a Polish interface, English otherwise.
+    /// (Polish has no .lproj folder – it is the source language – so the bundle's own choice can't be used.)
+    static let home: URL = Locale.preferredLanguages.first { ["pl", "en", "de"].contains(String($0.prefix(2))) }?.hasPrefix("pl") ?? false
+        ? URL(string: "https://kakaki.pl/mac/pulse/")!
+        : URL(string: "https://kakaki.pl/en/mac/pulse/")!
     static let releases = URL(string: "https://github.com/kakaki/pulse/releases")!
     static let issues = URL(string: "https://github.com/kakaki/pulse/issues")!
     static let sparkle = URL(string: "https://sparkle-project.org")!
