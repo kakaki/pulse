@@ -163,8 +163,16 @@ enum StatusRenderer {
         let config = NSImage.SymbolConfiguration(pointSize: 14, weight: .semibold)
         guard let symbol = NSImage(systemSymbolName: "waveform.path.ecg", accessibilityDescription: "Pulse")?
             .withSymbolConfiguration(config) else { return NSImage() }
-        guard alert else { symbol.isTemplate = true; return symbol }
+        // Same size with and without the dot: blinking must not change the item's width and shift the menu bar.
         let size = NSSize(width: symbol.size.width + 3, height: max(symbol.size.height, 16))
+        guard alert else {
+            let plain = NSImage(size: size, flipped: false) { rect in
+                symbol.draw(in: NSRect(x: 0, y: (rect.height - symbol.size.height) / 2, width: symbol.size.width, height: symbol.size.height))
+                return true
+            }
+            plain.isTemplate = true
+            return plain
+        }
         let image = NSImage(size: size, flipped: false) { rect in
             let tint: NSColor = darkBar ? .white : .black
             let y = (rect.height - symbol.size.height) / 2
