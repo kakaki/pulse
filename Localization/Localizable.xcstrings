@@ -229,6 +229,9 @@
         }
       }
     },
+    "10%" : {
+      "shouldTranslate" : false
+    },
     "14 dni" : {
       "localizations" : {
         "de" : {
@@ -277,6 +280,9 @@
         }
       }
     },
+    "20%" : {
+      "shouldTranslate" : false
+    },
     "3 s" : {
       "localizations" : {
         "de" : {
@@ -309,6 +315,9 @@
         }
       }
     },
+    "30%" : {
+      "shouldTranslate" : false
+    },
     "5 min" : {
       "localizations" : {
         "de" : {
@@ -340,6 +349,9 @@
           }
         }
       }
+    },
+    "5%" : {
+      "shouldTranslate" : false
     },
     "7 dni" : {
       "localizations" : {
@@ -2271,6 +2283,22 @@
         }
       }
     },
+    "Kolor ostrzeżenia" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Warnfarbe"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Warning colour"
+          }
+        }
+      }
+    },
     "Koloruj wartości przy wysokim obciążeniu" : {
       "localizations" : {
         "de" : {
@@ -3050,6 +3078,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unknown"
+          }
+        }
+      }
+    },
+    "Nigdy" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Never"
           }
         }
       }
@@ -4157,6 +4201,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Orange from about 70%, red from 90% (CPU, GPU, disk), temperature from about 82°C / 90°C, memory pressure, low battery."
+          }
+        }
+      }
+    },
+    "Pomarańczowy, gdy wolnego miejsca jest mniej niż %lld%%, czerwony poniżej %@%%." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Orange, wenn weniger als %1$lld %% frei sind, rot unter %2$@ %%."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Orange when less than %1$lld%% is free, red below %2$@%%."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Pomarańczowy, gdy wolnego miejsca jest mniej niż %1$lld%%, czerwony poniżej %2$@%%."
           }
         }
       }
@@ -6668,6 +6734,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Values in the menu bar"
+          }
+        }
+      }
+    },
+    "Wartość dysku w pasku menu nie zmienia koloru." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Festplattenwert in der Menüleiste ändert nie die Farbe."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The disk value in the menu bar never changes colour."
           }
         }
       }

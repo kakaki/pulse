@@ -94,7 +94,7 @@ struct StatusSnapshot {
                 case .disk:
                     let v = m.displayVolume
                     cell = .init(module: .disk, label: v.isSystem ? "SSD" : "EXT", text: DiskDisplay.text(v), value: DiskDisplay.fraction(v),
-                                 history: m.readHistory, maxHistory: nil, level: v.usedFraction)
+                                 history: m.readHistory, maxHistory: nil, level: DiskDisplay.level(v))
                 case .temp:
                     let t = m.socMax ?? m.socAvg
                     cell = .init(module: .sensors, label: "TEMP", text: Fmt.temp(t), value: (t ?? 0) / 100, history: m.tempHistory, maxHistory: 100, level: Severity.temp(t))
@@ -131,7 +131,7 @@ struct StatusSnapshot {
             let v = m.displayVolume
             s.value = DiskDisplay.fraction(v); s.text = DiskDisplay.text(v)
             s.history = m.readHistory; s.history2 = m.writeHistory; s.maxHistory = nil
-            s.bars = [DiskDisplay.fraction(v)]; s.level = v.usedFraction
+            s.bars = [DiskDisplay.fraction(v)]; s.level = DiskDisplay.level(v)
         case .network:
             s.text = "↑ " + Fmt.net(m.netOut, compact: true)
             s.text2 = "↓ " + Fmt.net(m.netIn, compact: true)

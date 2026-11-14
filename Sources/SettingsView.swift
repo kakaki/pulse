@@ -242,6 +242,7 @@ struct DiskDisplaySection: View {
     @AppStorage(DiskDisplay.quantityKey) private var quantity = "used"
     @AppStorage(DiskDisplay.unitKey) private var unit = "percent"
     @AppStorage(DiskDisplay.volumeKey) private var volume = ""
+    @AppStorage(DiskDisplay.warnKey) private var warnFree = 20
 
     var body: some View {
         Section {
@@ -255,6 +256,17 @@ struct DiskDisplaySection: View {
                 Text("GB / TB").tag("amount")
             }
             .pickerStyle(.segmented)
+            Picker(selection: $warnFree) {
+                Text("30%").tag(30)
+                Text("20%").tag(20)
+                Text("10%").tag(10)
+                Text("5%").tag(5)
+                Text("Nigdy").tag(0)
+            } label: {
+                Text("Kolor ostrzeżenia")
+                Text(warnFree == 0 ? String(localized: "Wartość dysku w pasku menu nie zmienia koloru.")
+                     : String(localized: "Pomarańczowy, gdy wolnego miejsca jest mniej niż \(warnFree)%, czerwony poniżej \((Double(warnFree) / 2).formatted())%."))
+            }
             if monitor.volumes.count > 1 || !volume.isEmpty {
                 Picker("Dysk", selection: $volume) {
                     Text("Dysk systemowy").tag("")

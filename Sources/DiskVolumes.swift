@@ -59,6 +59,21 @@ enum DiskDisplay {
     static var showsFree: Bool { UserDefaults.standard.string(forKey: quantityKey) == "free" }
     static var showsAmount: Bool { UserDefaults.standard.string(forKey: unitKey) == "amount" }
 
+    /// Free space (percent) below which the menu bar value turns orange; red below half of it. 0 = never.
+    static let warnKey = "disk.warnFree"
+    static var warnFree: Int {
+        let saved = UserDefaults.standard.object(forKey: warnKey) as? Int ?? 20
+        return [0, 5, 10, 20, 30].contains(saved) ? saved : 20
+    }
+
+    /// Severity for the menu bar colour (see `Severity.color`).
+    static func level(_ v: DiskVolume) -> Double {
+        let limit = Double(warnFree) / 100
+        guard limit > 0, v.total > 0 else { return 0 }
+        let free = 1 - v.usedFraction
+        return free < limit / 2 ? 1 : (free < limit ? 0.75 : 0)
+    }
+
     /// Fill of rings and bars: follows the number shown.
     static func fraction(_ v: DiskVolume) -> Double { showsFree ? 1 - v.usedFraction : v.usedFraction }
 
