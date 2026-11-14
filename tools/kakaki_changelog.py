@@ -54,30 +54,40 @@ version = releases[0][0] if releases else None
 dmg = os.path.join(repo, "dist", f"Pulse-{version}.dmg") if version else None
 if dmg and os.path.exists(dmg):
     target_dir = os.path.join(site, "mac", "pulse")
+    olds = [os.path.basename(f)[len("Pulse-"):-len(".dmg")] for f in glob.glob(os.path.join(target_dir, "Pulse-*.dmg"))]
     for old in glob.glob(os.path.join(target_dir, "Pulse-*.dmg")):
         if os.path.basename(old) != os.path.basename(dmg):
             os.remove(old)
     shutil.copy2(dmg, target_dir)
     mb = os.path.getsize(dmg) / 1e6
+    old_versions = [v for v in olds if v != version]
     changed = []
     for f in glob.glob(os.path.join(site, "**", "*.html"), recursive=True):
         if "/node_modules/" in f or "/.git/" in f:
             continue
+        rel = os.path.relpath(f, site)
+        on_pulse_page = rel in ("mac/pulse/index.html", "en/mac/pulse/index.html")
         s = open(f, encoding="utf8").read()
-        size = f"{mb:.1f}" if "/en/" in f.replace(site, "") else f"{mb:.1f}".replace(".", ",")
+        size = f"{mb:.1f}" if rel.startswith("en/") else f"{mb:.1f}".replace(".", ",")
         parts = re.split(r"(<!-- ZMIANY:START -->.*?<!-- ZMIANY:END -->)", s, flags=re.S)
         for i in range(0, len(parts), 2):   # odd parts are the changelog block
-            p = parts[i]
-            p = re.sub(r"Pulse-\d+(?:\.\d+)+\.dmg", f"Pulse-{version}.dmg", p)
-            p = re.sub(r"\b(Pobierz Pulse|Download Pulse) \d+(?:\.\d+)+\b", rf"\1 {version}", p)
-            # "wersja 1.13 · plik .dmg" / "version 1.13 · .dmg file": only the Mac download, not PulseWin.
-            p = re.sub(r"\b(wersja|version) \d+(?:\.\d+)+( · (?:plik )?\.dmg)", rf"\1 {version}\2", p)
-            p = re.sub(r"(\.dmg(?:</strong>)?[^<\n]{0,40}?)\d+[,.]\d(&nbsp;MB)", rf"\g<1>{size}\2", p)
-            parts[i] = p
+            lines = parts[i].split("\n")
+            for n, line in enumerate(lines):
+                # Only lines about Pulse: they name the old Pulse version or file (other apps also offer .dmg files).
+                about_pulse = any(f"Pulse-{v}.dmg" in line or re.search(rf"\b(?:wersja|version|Pulse) {re.escape(v)}\b", line)
+                                  for v in old_versions)
+                if not (about_pulse or (on_pulse_page and ".dmg" in line)):
+                    continue
+                line = re.sub(r"Pulse-\d+(?:\.\d+)+\.dmg", f"Pulse-{version}.dmg", line)
+                for v in old_versions:
+                    line = re.sub(rf"\b(Pobierz Pulse|Download Pulse|wersja|version) {re.escape(v)}\b", rf"\1 {version}", line)
+                line = re.sub(r"(\.dmg(?:</strong>)?[^<\n]{0,40}?)\d+[,.]\d(&nbsp;MB)", rf"\g<1>{size}\2", line)
+                lines[n] = line
+            parts[i] = "\n".join(lines)
         new = "".join(parts)
         if new != s:
             open(f, "w", encoding="utf8").write(new)
-            changed.append(os.path.relpath(f, site))
+            changed.append(rel)
     print(f"copied Pulse-{version}.dmg ({mb:.1f} MB); links updated in", ", ".join(changed) or "nothing")
     builder = os.path.join(site, "_zrodla", "llms.mjs")
     if os.path.exists(builder):
