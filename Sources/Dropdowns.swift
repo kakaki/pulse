@@ -109,10 +109,17 @@ struct DropdownFooter: View {
 
     var body: some View {
         HStack(spacing: 8) {
-            Label("Czas pracy \(Fmt.duration(m.uptime))", systemImage: "clock")
-                .font(.system(size: 10.5))
-                .foregroundStyle(.secondary)
+            if KeepAwake.shared.isOn {
+                Label(KeepAwake.shared.statusText, systemImage: "cup.and.saucer.fill")
+                    .font(.system(size: 10.5))
+                    .foregroundStyle(.orange)
+            } else {
+                Label("Czas pracy \(Fmt.duration(m.uptime))", systemImage: "clock")
+                    .font(.system(size: 10.5))
+                    .foregroundStyle(.secondary)
+            }
             Spacer()
+            KeepAwakeMenu()
             Button {
                 AppActions.openSettings(module)
             } label: {

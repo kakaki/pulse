@@ -59,6 +59,17 @@ final class HangWatchdog: @unchecked Sendable {
         for url in old { try? FileManager.default.removeItem(at: url) }
     }
 
+    /// At launch: a report saved since the last announcement (Pulse hung, maybe was force-quit) gets one notification.
+    @MainActor static func announceNewReport() {
+        guard let newest = reports().first else { return }
+        let key = "hang.announced"
+        guard UserDefaults.standard.string(forKey: key) != newest.lastPathComponent else { return }
+        UserDefaults.standard.set(newest.lastPathComponent, forKey: key)
+        Alerts.shared.send(title: String(localized: "Pulse przestał wcześniej odpowiadać"),
+                           body: String(localized: "Zapisano raport, który pomoże znaleźć przyczynę. Kliknij, aby pokazać go w Finderze – możesz go przesłać w zgłoszeniu problemu."),
+                           id: "hang", file: newest)
+    }
+
     /// Saved reports, newest first.
     static func reports() -> [URL] {
         let files = (try? FileManager.default.contentsOfDirectory(at: folder, includingPropertiesForKeys: [.contentModificationDateKey])) ?? []

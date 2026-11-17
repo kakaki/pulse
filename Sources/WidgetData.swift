@@ -17,6 +17,12 @@ struct WidgetData: Codable {
     var cpuHour: [Double]
     var memHour: [Double]
     var tempHour: [Double]
+    /// Energy charged into the battery this month (Wh); nil without a battery.
+    var chargedMonth: Double? = nil
+    /// The hottest of the other computers on the network (when Pulse finds any).
+    var hotName: String? = nil
+    var hotTemp: Double? = nil
+    var computers: Int? = nil
 
     /// Real home directory (inside the widget sandbox NSHomeDirectory() points at the container).
     static var url: URL {

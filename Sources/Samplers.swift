@@ -135,13 +135,15 @@ enum BatterySampler {
         func prop(_ key: String) -> Any? {
             IORegistryEntryCreateCFProperty(service, key as CFString, kCFAllocatorDefault, 0)?.takeRetainedValue()
         }
-        func int(_ key: String) -> Int? { (prop(key) as? NSNumber)?.intValue }
+        // macOS 27 moved the capacity values into the "BatteryData" dictionary; older systems have them at the top level.
+        let batteryData = prop("BatteryData") as? [String: Any] ?? [:]
+        func int(_ key: String) -> Int? { ((prop(key) ?? batteryData[key]) as? NSNumber)?.intValue }
         info.cycleCount = int("CycleCount")
         info.designCycles = int("DesignCycleCount9C")
         info.designCapacity = int("DesignCapacity")
         info.maxCapacity = int("AppleRawMaxCapacity") ?? int("NominalChargeCapacity")
         info.currentCharge = int("AppleRawCurrentCapacity")
-        info.fullyCharged = (prop("FullyCharged") as? Bool) ?? false
+        info.fullyCharged = (prop("FullyCharged") as? Bool) ?? ((batteryData["FullyCharged"] as? NSNumber)?.boolValue ?? false)
         if let raw = info.maxCapacity, let design = info.designCapacity, design > 0 {
             info.health = min(1, Double(raw) / Double(design))
         }

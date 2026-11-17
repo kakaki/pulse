@@ -36,6 +36,38 @@
         }
       }
     },
+    "%@ jest znowu dostępny w sieci." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ ist wieder im Netzwerk erreichbar."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ is reachable on the network again."
+          }
+        }
+      }
+    },
+    "%@ nie odpowiada od 2 minut." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ antwortet seit 2 Minuten nicht."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ has not responded for 2 minutes."
+          }
+        }
+      }
+    },
     "%@ wolne z %@" : {
       "localizations" : {
         "de" : {
@@ -213,6 +245,22 @@
     "0" : {
 
     },
+    "1 godzinę" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 Stunde"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 hour"
+          }
+        }
+      }
+    },
     "1 s" : {
       "localizations" : {
         "de" : {
@@ -283,6 +331,22 @@
     "20%" : {
       "shouldTranslate" : false
     },
+    "3 godziny" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3 Stunden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3 hours"
+          }
+        }
+      }
+    },
     "3 s" : {
       "localizations" : {
         "de" : {
@@ -311,6 +375,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "30 days"
+          }
+        }
+      }
+    },
+    "30 minut" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 Minuten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 minutes"
           }
         }
       }
@@ -759,6 +839,22 @@
         }
       }
     },
+    "Brak baterii i innych komputerów z Pulse w sieci" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Batterie und keine anderen Computer mit Pulse im Netzwerk"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No battery and no other computers with Pulse on the network"
+          }
+        }
+      }
+    },
     "Brak odpowiedzi" : {
       "localizations" : {
         "de" : {
@@ -931,6 +1027,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "None – passive cooling"
+          }
+        }
+      }
+    },
+    "Błędy nośnika" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Medienfehler"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Media errors"
           }
         }
       }
@@ -1415,6 +1527,22 @@
         }
       }
     },
+    "Do wyłączenia" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bis zum Ausschalten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Until turned off"
+          }
+        }
+      }
+    },
     "Dobry" : {
       "localizations" : {
         "de" : {
@@ -1639,6 +1767,22 @@
         }
       }
     },
+    "Działa, gdy włączona jest opcja „Koloruj wartości przy wysokim obciążeniu”." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Funktioniert, wenn „Werte bei hoher Last einfärben“ aktiviert ist."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Works when “Color values under high load” is on."
+          }
+        }
+      }
+    },
     "Długotrwałe obciążenie CPU" : {
       "localizations" : {
         "de" : {
@@ -1699,6 +1843,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Energy put into the battery in the last 30 days, not counting power that ran the Mac itself."
+          }
+        }
+      }
+    },
+    "Energia oddana do baterii w tym miesiącu i najcieplejszy komputer w sieci." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In diesem Monat in die Batterie geladene Energie und der wärmste Computer im Netzwerk."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Energy charged into the battery this month and the hottest computer on the network."
           }
         }
       }
@@ -1831,6 +1991,22 @@
         }
       }
     },
+    "Gdy komputer z listy nie odpowiada od 2 minut, i drugie, gdy znów odpowiada. Uśpiony laptop też przestaje odpowiadać. Działa, gdy Pulse szuka innych komputerów (moduł albo kafelek Inne komputery jest włączony)." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wenn ein Computer aus der Liste seit 2 Minuten nicht antwortet, und eine weitere, wenn er wieder antwortet. Auch ein Laptop im Ruhezustand antwortet nicht. Funktioniert, solange Pulse nach anderen Computern sucht (Modul oder Kachel „Andere Computer“ ist aktiv)."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "When a computer in the list has not responded for 2 minutes, and another when it responds again. A sleeping laptop stops responding too. Works while Pulse looks for other computers (the Other Computers module or tile is on)."
+          }
+        }
+      }
+    },
     "Gdy macOS chowa Pulse za wycięciem ekranu lub długim menu aplikacji, Pulse ukrywa etykiety i przechodzi na najwęższy styl." : {
       "localizations" : {
         "de" : {
@@ -1891,6 +2067,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "When free < %lld GB"
+          }
+        }
+      }
+    },
+    "Godziny pracy" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Betriebsstunden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Power-on hours"
           }
         }
       }
@@ -2103,6 +2295,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Another Mac can ask this Mac to install the latest version of Pulse. Only the official, signed update is installed – nothing else can be changed or run remotely."
+          }
+        }
+      }
+    },
+    "Inny komputer przestał odpowiadać" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ein anderer Computer antwortet nicht mehr"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Another computer stopped responding"
           }
         }
       }
@@ -2347,6 +2555,22 @@
         }
       }
     },
+    "Komputer znów odpowiada" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Computer antwortet wieder"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Computer is responding again"
+          }
+        }
+      }
+    },
     "Komputerów w sieci: %lld" : {
       "localizations" : {
         "de" : {
@@ -2523,6 +2747,22 @@
         }
       }
     },
+    "Limit ładowania ustawia macOS" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS legt das Ladelimit fest"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS sets the charge limit"
+          }
+        }
+      }
+    },
     "Limit ładowania: %lld%%" : {
       "localizations" : {
         "de" : {
@@ -2681,6 +2921,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Measuring…"
+          }
+        }
+      }
+    },
+    "Minuty" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minuten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minutes"
           }
         }
       }
@@ -2858,6 +3114,38 @@
         }
       }
     },
+    "Nagłe wyłączenia" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unerwartete Abschaltungen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unsafe shutdowns"
+          }
+        }
+      }
+    },
+    "Najcieplejszy" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Am wärmsten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hottest"
+          }
+        }
+      }
+    },
     "Najwyższa wartość ze wszystkich" : {
       "localizations" : {
         "de" : {
@@ -2922,6 +3210,22 @@
         }
       }
     },
+    "Naładuj raz do pełna" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einmal voll laden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Charge to full once"
+          }
+        }
+      }
+    },
     "Nie było czego zwolnić." : {
       "localizations" : {
         "de" : {
@@ -2954,6 +3258,22 @@
         }
       }
     },
+    "Nie pozwala Macowi zasnąć przez podany czas. 0 minut wyłącza." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verhindert für die angegebene Zeit, dass der Mac in den Ruhezustand wechselt. 0 Minuten schaltet es aus."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keeps the Mac from sleeping for the given time. 0 minutes turns it off."
+          }
+        }
+      }
+    },
     "Nie udało się odczytać czujników temperatury." : {
       "localizations" : {
         "de" : {
@@ -2970,6 +3290,22 @@
         }
       }
     },
+    "Nie udało się wykonać polecenia dla „%@”." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Befehl für „%@“ konnte nicht ausgeführt werden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Could not run the command for “%@”."
+          }
+        }
+      }
+    },
     "Nie udało się: %@" : {
       "localizations" : {
         "de" : {
@@ -2982,6 +3318,70 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Failed: %@"
+          }
+        }
+      }
+    },
+    "Nie usypia" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bleibt wach"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Staying awake"
+          }
+        }
+      }
+    },
+    "Nie usypia do %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bleibt wach bis %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Staying awake until %@"
+          }
+        }
+      }
+    },
+    "Nie usypiaj Maca" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac wach halten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep Mac Awake"
+          }
+        }
+      }
+    },
+    "Nie wygaszaj ekranu" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildschirm eingeschaltet lassen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep the display on"
           }
         }
       }
@@ -3146,6 +3546,22 @@
         }
       }
     },
+    "Np. przed podróżą. Po naładowaniu do 100%% limit %lld%% wróci sam." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Z. B. vor einer Reise. Nach dem Laden auf 100 %% gilt das Limit von %lld %% wieder von selbst."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E.g. before a trip. After charging to 100%% the %lld%% limit comes back on its own."
+          }
+        }
+      }
+    },
     "Np. przy podłączeniu projektora lub telewizora w trybie dublowania (AirPlay)." : {
       "localizations" : {
         "de" : {
@@ -3206,6 +3622,70 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Load 1 min"
+          }
+        }
+      }
+    },
+    "Obciążenie CPU (%)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CPU-Last (%)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CPU load (%)"
+          }
+        }
+      }
+    },
+    "Obciążenie CPU i GPU, temperatura, wolne miejsce na dysku, ciśnienie pamięci i niski poziom baterii. Progi CPU, temperatury i dysku ustawisz w ich modułach." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CPU- und GPU-Last, Temperatur, freier Speicherplatz, Speicherdruck und niedriger Akkustand. Die Schwellen für CPU, Temperatur und Festplatte legst du in den jeweiligen Modulen fest."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CPU and GPU load, temperature, free disk space, memory pressure and low battery. Set the CPU, temperature and disk thresholds in their modules."
+          }
+        }
+      }
+    },
+    "Obciążenie GPU (%)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GPU-Last (%)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GPU load (%)"
+          }
+        }
+      }
+    },
+    "Obciążenie w pasku menu nie zmienia koloru." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Last in der Menüleiste ändert ihre Farbe nicht."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The load in the menu bar does not change color."
           }
         }
       }
@@ -3291,12 +3771,44 @@
         }
       }
     },
+    "Od macOS 27 limit ładowania ustawia sam system. Apple zablokował innym aplikacjom wstrzymywanie ładowania, więc Pulse nie może już tego robić." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seit macOS 27 legt das System das Ladelimit selbst fest. Apple hat anderen Apps das Pausieren des Ladens gesperrt, daher kann Pulse das nicht mehr."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since macOS 27 the system sets the charge limit itself. Apple blocked other apps from pausing charging, so Pulse can no longer do it."
+          }
+        }
+      }
+    },
     "Odczyt" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Lesen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read"
+          }
+        }
+      }
+    },
+    "Odczytano" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gelesen"
           }
         },
         "en" : {
@@ -3419,6 +3931,22 @@
         }
       }
     },
+    "Ostrzeżenie SMART" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SMART-Warnung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SMART warning"
+          }
+        }
+      }
+    },
     "Oszczędzaj energię na baterii" : {
       "localizations" : {
         "de" : {
@@ -3495,6 +4023,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Open System Settings"
+          }
+        }
+      }
+    },
+    "Otwórz ustawienia baterii…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Batterieeinstellungen öffnen …"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Battery Settings…"
           }
         }
       }
@@ -3836,6 +4380,22 @@
         }
       }
     },
+    "Pobieranie (Mb/s)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Download (Mbit/s)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Download (Mb/s)"
+          }
+        }
+      }
+    },
     "Pobieranie / wysyłanie" : {
       "localizations" : {
         "de" : {
@@ -3848,6 +4408,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Download / upload"
+          }
+        }
+      }
+    },
+    "Pobierz wartość z Pulse" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wert aus Pulse abrufen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Get Value from Pulse"
           }
         }
       }
@@ -3977,6 +4553,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cached"
+          }
+        }
+      }
+    },
+    "Podsumowanie" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Übersicht"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Summary"
+          }
+        }
+      }
+    },
+    "Podsumowanie z Pulse" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Übersicht aus Pulse"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Summary from Pulse"
           }
         }
       }
@@ -4189,7 +4797,52 @@
         }
       }
     },
+    "Pomarańczowy od %@, czerwony od %@." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Orange ab %1$@, rot ab %2$@."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Orange from %1$@, red from %2$@."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pomarańczowy od %1$@, czerwony od %2$@."
+          }
+        }
+      }
+    },
+    "Pomarańczowy od %lld%% obciążenia, czerwony od %lld%%." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Orange ab %1$lld %% Last, rot ab %2$lld %%."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Orange from %1$lld%% load, red from %2$lld%%."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pomarańczowy od %1$lld%% obciążenia, czerwony od %2$lld%%."
+          }
+        }
+      }
+    },
     "Pomarańczowy od ok. 70%, czerwony od 90% (CPU, GPU, dysk), temperatura od ok. 82°C / 90°C, ciśnienie pamięci, niski poziom baterii." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -4367,6 +5020,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Notifications enabled"
+          }
+        }
+      }
+    },
+    "Poziom baterii (%)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Akkustand (%)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Battery level (%)"
           }
         }
       }
@@ -4995,6 +5664,38 @@
         }
       }
     },
+    "Pulse przestał wcześniej odpowiadać" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pulse hat zuvor nicht mehr reagiert"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pulse stopped responding earlier"
+          }
+        }
+      }
+    },
+    "Pulse – energia i sieć" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pulse – Energie und Netzwerk"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pulse – Energy and Network"
+          }
+        }
+      }
+    },
     "Pulse — Ustawienia" : {
       "localizations" : {
         "de" : {
@@ -5171,6 +5872,22 @@
         }
       }
     },
+    "Rezerwa bloków" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verfügbare Reserve"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Available spare"
+          }
+        }
+      }
+    },
     "Router" : {
       "localizations" : {
         "de" : {
@@ -5215,6 +5932,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Resolution (min)"
+          }
+        }
+      }
+    },
+    "Różnica między sygnałem a szumem. Powyżej 25 dB połączenie jest stabilne, poniżej 15 dB mogą być przerwy i spowolnienia." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Abstand zwischen Signal und Rauschen. Über 25 dB ist die Verbindung stabil, unter 15 dB drohen Aussetzer und Verlangsamungen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The difference between signal and noise. Above 25 dB the connection is stable; below 15 dB expect dropouts and slowdowns."
           }
         }
       }
@@ -5629,6 +6362,22 @@
         }
       }
     },
+    "Standard" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standard"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standard"
+          }
+        }
+      }
+    },
     "Statystyki GPU są niedostępne na tym Macu." : {
       "localizations" : {
         "de" : {
@@ -5802,6 +6551,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Swap"
+          }
+        }
+      }
+    },
+    "Sygnał/szum (SNR)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signal/Rauschen (SNR)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signal/noise (SNR)"
           }
         }
       }
@@ -6047,6 +6812,22 @@
         }
       }
     },
+    "Ta wartość nie jest dostępna na tym Macu." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser Wert ist auf diesem Mac nicht verfügbar."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This value is not available on this Mac."
+          }
+        }
+      }
+    },
     "Tekst" : {
       "localizations" : {
         "de" : {
@@ -6107,6 +6888,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "SoC temperature"
+          }
+        }
+      }
+    },
+    "Temperatura SoC (°C)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SoC-Temperatur (°C)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SoC temperature (°C)"
+          }
+        }
+      }
+    },
+    "Temperatura w pasku menu nie zmienia koloru." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Temperatur in der Menüleiste ändert ihre Farbe nicht."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The temperature in the menu bar does not change color."
           }
         }
       }
@@ -6354,6 +7167,7 @@
       }
     },
     "To samo powiadomienie nie pojawi się częściej niż co 30 minut ani ponownie, zanim wartość nie wróci do normy. Progi ustawisz na stronach modułów: CPU, Pamięć, Dysk, Czujniki i Bateria (także dla urządzeń Bluetooth)." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -6365,6 +7179,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The same notification appears at most every 30 minutes and not again until the value is back to normal. Set thresholds on the module pages: CPU, Memory, Disk, Sensors and Battery (including Bluetooth devices)."
+          }
+        }
+      }
+    },
+    "To samo powiadomienie nie pojawi się częściej niż co 30 minut ani ponownie, zanim wartość nie wróci do normy. Progi ustawisz na stronach modułów: CPU, Pamięć, Dysk, Czujniki i Bateria (także dla urządzeń Bluetooth). Na stronie Inne komputery włączysz powiadomienie, gdy komputer z sieci przestanie odpowiadać." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieselbe Mitteilung erscheint höchstens alle 30 Minuten und erst wieder, wenn sich der Wert normalisiert hat. Schwellen legst du auf den Modulseiten fest: CPU, Speicher, Festplatte, Sensoren und Batterie (auch für Bluetooth-Geräte). Auf der Seite „Andere Computer“ aktivierst du eine Mitteilung, wenn ein Computer im Netzwerk nicht mehr antwortet."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The same notification appears at most every 30 minutes, and not again until the value returns to normal. Set thresholds on the module pages: CPU, Memory, Disk, Sensors and Battery (also for Bluetooth devices). On the Other Computers page you can turn on a notification when a computer on the network stops responding."
           }
         }
       }
@@ -6546,6 +7376,22 @@
         }
       }
     },
+    "Uruchom" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Starten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start"
+          }
+        }
+      }
+    },
     "Uruchom Pulse, aby zobaczyć dane" : {
       "localizations" : {
         "de" : {
@@ -6558,6 +7404,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Open Pulse to see data"
+          }
+        }
+      }
+    },
+    "Uruchom ponownie" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neu starten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restart"
+          }
+        }
+      }
+    },
+    "Uruchom, zatrzymaj lub uruchom ponownie kontener" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Container starten, stoppen oder neu starten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start, stop or restart the container"
           }
         }
       }
@@ -6590,6 +7468,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Settings"
+          }
+        }
+      }
+    },
+    "Ustawienia baterii" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Batterieeinstellungen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Battery Settings"
           }
         }
       }
@@ -6638,6 +7532,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "GPU usage"
+          }
+        }
+      }
+    },
+    "Użycie pamięci (%)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speichernutzung (%)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memory usage (%)"
           }
         }
       }
@@ -6706,6 +7616,22 @@
         }
       }
     },
+    "W Ustawieniach systemowych → Bateria wybierz „Limit ładowania”. Pulse dalej pokazuje stan i kondycję baterii." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wähle in Systemeinstellungen → Batterie „Ladelimit“. Pulse zeigt weiterhin Zustand und Kapazität der Batterie."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In System Settings → Battery choose “Charge Limit”. Pulse still shows the battery’s state and health."
+          }
+        }
+      }
+    },
     "W normie" : {
       "localizations" : {
         "de" : {
@@ -6734,6 +7660,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Values in the menu bar"
+          }
+        }
+      }
+    },
+    "Wartość" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wert"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Value"
+          }
+        }
+      }
+    },
+    "Wartość Pulse" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pulse-Wert"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pulse Value"
           }
         }
       }
@@ -6948,6 +7906,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Free space"
+          }
+        }
+      }
+    },
+    "Wolne miejsce na dysku (GB)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Freier Speicherplatz (GB)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Free disk space (GB)"
           }
         }
       }
@@ -7342,6 +8316,22 @@
         }
       }
     },
+    "Wysyłanie (Mb/s)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upload (Mbit/s)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upload (Mb/s)"
+          }
+        }
+      }
+    },
     "Wysyłanie i pobieranie (dwie linie)" : {
       "localizations" : {
         "de" : {
@@ -7370,6 +8360,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sent (session)"
+          }
+        }
+      }
+    },
+    "Wyłącz" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausschalten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn Off"
           }
         }
       }
@@ -7435,6 +8441,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Turn on sharing on every computer you want to see. The first time, macOS asks for access to the local network: choose Allow. The Other Computers panel shows every computer running Pulse on the same network."
+          }
+        }
+      }
+    },
+    "Włączenia" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einschaltvorgänge"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Power cycles"
           }
         }
       }
@@ -7589,6 +8611,54 @@
         }
       }
     },
+    "Zapisano" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geschrieben"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Written"
+          }
+        }
+      }
+    },
+    "Zapisano raport, który pomoże znaleźć przyczynę. Kliknij, aby pokazać go w Finderze – możesz go przesłać w zgłoszeniu problemu." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ein Bericht zur Ursachensuche wurde gespeichert. Klicke, um ihn im Finder zu zeigen – du kannst ihn einer Fehlermeldung beifügen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A report was saved to help find the cause. Click to show it in Finder – you can attach it to a problem report."
+          }
+        }
+      }
+    },
+    "Zapisz cały dziennik baterii jako CSV w folderze Pobrane" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gesamtes Batterieprotokoll als CSV in „Downloads“ sichern"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save the whole battery log as CSV in Downloads"
+          }
+        }
+      }
+    },
     "Zasilacz" : {
       "localizations" : {
         "de" : {
@@ -7617,6 +8687,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Adapter %lld W"
+          }
+        }
+      }
+    },
+    "Zatrzymaj" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stoppen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop"
           }
         }
       }
@@ -7782,6 +8868,22 @@
         }
       }
     },
+    "Zużycie podaje sam dysk na podstawie liczby zapisów. Dyski Apple wytrzymują zwykle setki TB zapisu." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Verschleiß wird vom Laufwerk selbst anhand der Schreibmenge gemeldet. Apple-SSDs halten meist Hunderte TB an Schreibvorgängen aus."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The drive reports its own wear based on how much has been written. Apple SSDs usually last for hundreds of TB written."
+          }
+        }
+      }
+    },
     "Związana" : {
       "localizations" : {
         "de" : {
@@ -7846,6 +8948,70 @@
         }
       }
     },
+    "Zwraca bieżącą wartość jako liczbę: procenty 0–100, temperaturę w °C, wolne miejsce w GB, sieć w Mb/s." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gibt den aktuellen Wert als Zahl zurück: Prozent 0–100, Temperatur in °C, freier Speicher in GB, Netzwerk in Mbit/s."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Returns the current value as a number: percent 0–100, temperature in °C, free space in GB, network in Mb/s."
+          }
+        }
+      }
+    },
+    "Zwraca krótki tekst z obciążeniem CPU, pamięcią, temperaturą i baterią." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gibt einen kurzen Text mit CPU-Last, Speicher, Temperatur und Akku zurück."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Returns a short text with CPU load, memory, temperature and battery."
+          }
+        }
+      }
+    },
+    "bardzo słaby" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "sehr schwach"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "very poor"
+          }
+        }
+      }
+    },
+    "bateria %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Akku %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "battery %@"
+          }
+        }
+      }
+    },
     "brak dostępu" : {
       "localizations" : {
         "de" : {
@@ -7891,6 +9057,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "up to 30 days"
+          }
+        }
+      }
+    },
+    "dobry" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "gut"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "good"
+          }
+        }
+      }
+    },
+    "doskonały" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ausgezeichnet"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "excellent"
           }
         }
       }
@@ -8039,6 +9237,22 @@
         }
       }
     },
+    "pozostało" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "verbleibend"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "left"
+          }
+        }
+      }
+    },
     "prawy klik: opcje" : {
       "localizations" : {
         "de" : {
@@ -8057,6 +9271,22 @@
     },
     "s" : {
 
+    },
+    "słaby" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "schwach"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "poor"
+          }
+        }
+      }
     },
     "t" : {
 
@@ -8112,6 +9342,22 @@
         }
       }
     },
+    "wstrzymany" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pausiert"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "paused"
+          }
+        }
+      }
+    },
     "wszystkie dyski" : {
       "localizations" : {
         "de" : {
@@ -8140,6 +9386,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "of %@"
+          }
+        }
+      }
+    },
+    "zatrzymany" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "gestoppt"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "stopped"
           }
         }
       }
@@ -8240,6 +9502,22 @@
         }
       }
     },
+    "Ładuję do pełna, potem limit %lld%%" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lade voll, danach Limit %lld %%"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Charging to full, then limit %lld%%"
+          }
+        }
+      }
+    },
     "Łącz procesy o tej samej nazwie" : {
       "localizations" : {
         "de" : {
@@ -8288,6 +9566,22 @@
         }
       }
     },
+    "Średnio dziennie (%lld dni)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tagesdurchschnitt (%lld Tage)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daily average (%lld days)"
+          }
+        }
+      }
+    },
     "Świetnie" : {
       "localizations" : {
         "de" : {
@@ -8317,6 +9611,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "average"
+          }
+        }
+      }
+    },
+    "Żywotność SSD" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SSD-Lebensdauer"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SSD Life"
           }
         }
       }

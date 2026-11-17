@@ -151,7 +151,7 @@ final class RemoteMacs {
         return name
     }
 
-    static let metricKey = "remote.metric"
+    nonisolated static let metricKey = "remote.metric"
     static let targetKey = "remote.target"
     static let targetNameKey = "remote.targetName"
 
@@ -195,7 +195,7 @@ final class RemoteMacs {
             return (Summary(text: Fmt.temp(t), value: t / 100, history: hot.report.tempHistory, maxHistory: 100, level: Severity.temp(t)), hot.id)
         case .cpu:
             guard let busy = live.max(by: { $0.report.cpu < $1.report.cpu }) else { break }
-            return (Summary(text: Fmt.pct(busy.report.cpu), value: busy.report.cpu, history: busy.report.cpuHistory, maxHistory: 1, level: busy.report.cpu), busy.id)
+            return (Summary(text: Fmt.pct(busy.report.cpu), value: busy.report.cpu, history: busy.report.cpuHistory, maxHistory: 1, level: Severity.cpu(busy.report.cpu)), busy.id)
         case .mem:
             guard let full = live.max(by: { $0.report.mem < $1.report.mem }) else { break }
             let level: Double = full.report.memPressure == 2 ? 1 : (full.report.memPressure == 1 ? 0.75 : 0)
@@ -270,6 +270,7 @@ final class RemoteMacs {
         for i in peers.indices where !peers[i].isStale && now.timeIntervalSince(lastSeen[peers[i].id] ?? .distantPast) > 20 {
             peers[i].isStale = true
         }
+        watchSilence(browsing: browse, now: now)
         if browse {
             // Other Macs refresh every 2–5 s themselves; asking more often only redraws the same numbers.
             let every: TimeInterval = panelWatchers > 0 ? 3 : (overviewWatchers > 0 ? 4 : 6)
@@ -277,6 +278,36 @@ final class RemoteMacs {
         }
         if UserDefaults.standard.bool(forKey: "remote.debug") {
             print("remote port=\(listener?.port?.rawValue ?? 0) share=\(listener != nil) browse=\(browser != nil) endpoints=\(endpoints.count) peers=\(peers.map { "\($0.report.name) cpu=\(Int($0.report.cpu * 100))% temp=\($0.report.temp.map { Int($0) } ?? -1) procs=\($0.report.processes?.count ?? -1)" }) summary=\(summary.text) err=\(browserError ?? listenerError ?? "-")")
+        }
+    }
+
+    // MARK: - "Stopped responding" notifications
+
+    @ObservationIgnored private var knownNames: [String: String] = [:]
+    @ObservationIgnored private var silentSince: [String: Date] = [:]
+    @ObservationIgnored private var reportedSilent: Set<String> = []
+
+    /// A computer seen earlier that has not answered for 2 minutes (or left the network) gets one notification,
+    /// and another when it answers again.
+    private func watchSilence(browsing: Bool, now: Date) {
+        guard browsing else { knownNames = [:]; silentSince = [:]; reportedSilent = []; return }
+        let kind = Alerts.Kind.remote
+        for peer in peers where !peer.isStale { knownNames[peer.id] = peer.report.name }
+        for (id, name) in knownNames {
+            let live = peers.contains { $0.id == id && !$0.isStale }
+            if live {
+                silentSince[id] = nil
+                if reportedSilent.remove(id) != nil, kind.isEnabled {
+                    Alerts.shared.send(title: String(localized: "Komputer znów odpowiada"),
+                                       body: String(localized: "\(name) jest znowu dostępny w sieci."), id: "remote.\(id)")
+                }
+                continue
+            }
+            let since = silentSince[id] ?? now
+            silentSince[id] = since
+            guard kind.isEnabled, !reportedSilent.contains(id), now.timeIntervalSince(since) >= 120 else { continue }
+            reportedSilent.insert(id)
+            Alerts.shared.send(title: kind.title, body: String(localized: "\(name) nie odpowiada od 2 minut."), id: "remote.\(id)")
         }
     }
 
@@ -294,7 +325,7 @@ final class RemoteMacs {
             fans: m.fans.map { .init(rpm: $0.rpm, min: $0.min, max: $0.max) }, power: m.systemPower,
             thermal: m.thermalState.rawValue, netIn: m.netIn, netOut: m.netOut, uptime: m.uptime,
             processes: full ? m.topByCPU.map { .init(name: $0.name, cpu: $0.cpu) } : nil,
-            containers: full && DockerContainers.shared.available ? DockerContainers.shared.containers : nil,
+            containers: full && DockerContainers.shared.available ? DockerContainers.shared.runningContainers : nil,
             update: Updater.shared.recentRemoteState?.rawValue, platform: "macos")
     }
 

@@ -130,6 +130,7 @@ struct ModuleSettings: View {
             }
 
             if module == .disk { DiskDisplaySection() }
+            if module == .cpu || module == .sensors { WarnColorSection(module: module) }
             if let item = OverviewItem.allCases.first(where: { $0.module == module }) { OverviewModuleSection(item: item) }
             if module == .overview {
                 OverviewItemsSection(defaultMode: DisplayMode(rawValue: modeRaw) ?? .text)
@@ -173,6 +174,43 @@ struct ModuleSettings: View {
         case .sensors: String(localized: "Temperatury SoC, SSD i baterii.")
         case .battery: String(localized: "Poziom naładowania, kondycja, cykle i moc.")
         case .macs: String(localized: "Obciążenie, temperatury i wentylatory pozostałych komputerów w sieci lokalnej.")
+        }
+    }
+}
+
+/// When the CPU load or temperature in the menu bar turns orange and red.
+struct WarnColorSection: View {
+    let module: Module
+    @AppStorage(Severity.cpuKey) private var cpu = 70
+    @AppStorage(Severity.tempKey) private var temp = 80
+    @AppStorage("tempUnit") private var tempUnit = 0
+
+    var body: some View {
+        Section {
+            if module == .cpu {
+                Picker(selection: $cpu) {
+                    ForEach(Severity.cpuChoices, id: \.self) { v in
+                        if v == 0 { Text("Nigdy").tag(0) } else { Text(verbatim: "\(v)%").tag(v) }
+                    }
+                } label: {
+                    Text("Kolor ostrzeżenia")
+                    Text(cpu == 0 ? String(localized: "Obciążenie w pasku menu nie zmienia koloru.")
+                         : String(localized: "Pomarańczowy od \(cpu)% obciążenia, czerwony od \(Severity.cpuRed(cpu))%."))
+                }
+            } else {
+                Picker(selection: $temp) {
+                    ForEach(Severity.tempChoices, id: \.self) { v in
+                        if v == 0 { Text("Nigdy").tag(0) } else { Text(verbatim: Fmt.temp(Double(v))).tag(v) }
+                    }
+                } label: {
+                    Text("Kolor ostrzeżenia")
+                    Text(temp == 0 ? String(localized: "Temperatura w pasku menu nie zmienia koloru.")
+                         : String(localized: "Pomarańczowy od \(Fmt.temp(Double(temp))), czerwony od \(Fmt.temp(Double(temp + 10)))."))
+                }
+                .id(tempUnit)
+            }
+        } footer: {
+            Text("Działa, gdy włączona jest opcja „Koloruj wartości przy wysokim obciążeniu”.")
         }
     }
 }
@@ -349,7 +387,7 @@ struct GeneralSettings: View {
                 Toggle("Pokazuj etykiety (CPU, MEM, …)", isOn: $showLabels).disabled(iconOnly)
                 Toggle(isOn: $colorize) {
                     Text("Koloruj wartości przy wysokim obciążeniu")
-                    Text("Pomarańczowy od ok. 70%, czerwony od 90% (CPU, GPU, dysk), temperatura od ok. 82°C / 90°C, ciśnienie pamięci, niski poziom baterii.")
+                    Text("Obciążenie CPU i GPU, temperatura, wolne miejsce na dysku, ciśnienie pamięci i niski poziom baterii. Progi CPU, temperatury i dysku ustawisz w ich modułach.")
                 }
                 Toggle(isOn: $pulseAlerts) {
                     Text("Pulsuj wartościami krytycznymi")

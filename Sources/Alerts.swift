@@ -8,7 +8,7 @@ final class Alerts: NSObject, UNUserNotificationCenterDelegate {
     static let shared = Alerts()
 
     enum Kind: String, CaseIterable, Identifiable {
-        case temp, thermal, cpu, memory, battery, bluetooth, disk
+        case temp, thermal, cpu, memory, battery, bluetooth, disk, remote
         var id: String { rawValue }
         var title: String {
             switch self {
@@ -19,6 +19,7 @@ final class Alerts: NSObject, UNUserNotificationCenterDelegate {
             case .battery: String(localized: "Niski poziom baterii")
             case .bluetooth: String(localized: "Słaba bateria urządzenia Bluetooth")
             case .disk: String(localized: "Mało miejsca na dysku")
+            case .remote: String(localized: "Inny komputer przestał odpowiadać")
             }
         }
         var symbol: String {
@@ -30,6 +31,7 @@ final class Alerts: NSObject, UNUserNotificationCenterDelegate {
             case .battery: "battery.25percent"
             case .bluetooth: "keyboard.badge.ellipsis"
             case .disk: "internaldrive"
+            case .remote: "desktopcomputer.trianglebadge.exclamationmark"
             }
         }
         /// Shown on this module's Settings page.
@@ -40,18 +42,20 @@ final class Alerts: NSObject, UNUserNotificationCenterDelegate {
             case .disk: [.disk]
             case .battery: [.battery, .bluetooth]
             case .sensors: [.temp, .thermal]
-            case .overview, .gpu, .network, .macs: []
+            case .macs: [.remote]
+            case .overview, .gpu, .network: []
             }
         }
         var enabledKey: String { "alerts.\(rawValue)" }
         var limitKey: String { "alerts.\(rawValue).limit" }
-        var defaultEnabled: Bool { self != .cpu }
+        /// Sustained CPU is noisy; laptops in the list go silent whenever they sleep.
+        var defaultEnabled: Bool { self != .cpu && self != .remote }
         /// temp °C, cpu fraction, battery fraction, disk free GB (memory has no limit).
         var defaultLimit: Double {
             switch self {
             case .temp: 95
             case .cpu: 0.9
-            case .memory, .thermal: 0
+            case .memory, .thermal, .remote: 0
             case .battery: 0.15
             case .bluetooth: 0.15
             case .disk: 10
@@ -120,10 +124,11 @@ final class Alerts: NSObject, UNUserNotificationCenterDelegate {
         send(title: kind.title, body: body, id: kind.rawValue)
     }
 
-    func send(title: String, body: String, id: String) {
+    func send(title: String, body: String, id: String, file: URL? = nil) {
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = body
+        if let file { content.userInfo = ["file": file.path] }
         content.sound = .default
         let request = UNNotificationRequest(identifier: "pulse.\(id)", content: content, trigger: nil)
         UNUserNotificationCenter.current().add(request)
@@ -132,6 +137,18 @@ final class Alerts: NSObject, UNUserNotificationCenterDelegate {
     nonisolated func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification,
                                             withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         completionHandler([.banner, .sound])
+    }
+
+    /// Clicking a notification that points to a file (a hang report) shows it in Finder.
+    nonisolated func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse,
+                                            withCompletionHandler completionHandler: @escaping () -> Void) {
+        let path = response.notification.request.content.userInfo["file"] as? String
+        DispatchQueue.main.async {
+            if let path, FileManager.default.fileExists(atPath: path) {
+                NSWorkspace.shared.activateFileViewerSelecting([URL(fileURLWithPath: path)])
+            }
+        }
+        completionHandler()
     }
 }
 
@@ -157,7 +174,7 @@ struct AlertSettings: View {
                     }
                 }
             } footer: {
-                Text("To samo powiadomienie nie pojawi się częściej niż co 30 minut ani ponownie, zanim wartość nie wróci do normy. Progi ustawisz na stronach modułów: CPU, Pamięć, Dysk, Czujniki i Bateria (także dla urządzeń Bluetooth).")
+                Text("To samo powiadomienie nie pojawi się częściej niż co 30 minut ani ponownie, zanim wartość nie wróci do normy. Progi ustawisz na stronach modułów: CPU, Pamięć, Dysk, Czujniki i Bateria (także dla urządzeń Bluetooth). Na stronie Inne komputery włączysz powiadomienie, gdy komputer z sieci przestanie odpowiadać.")
             }
         }
         .formStyle(.grouped)
@@ -210,6 +227,8 @@ struct AlertRow: View {
                     Text("Gdy macOS zgłosi krytyczne ciśnienie pamięci.").foregroundStyle(.secondary)
                 case .thermal:
                     Text("Gdy macOS zacznie ograniczać wydajność z powodu temperatury (stan „poważny” lub „krytyczny”).").foregroundStyle(.secondary)
+                case .remote:
+                    Text("Gdy komputer z listy nie odpowiada od 2 minut, i drugie, gdy znów odpowiada. Uśpiony laptop też przestaje odpowiadać. Działa, gdy Pulse szuka innych komputerów (moduł albo kafelek Inne komputery jest włączony).").foregroundStyle(.secondary)
                 }
             }
         }

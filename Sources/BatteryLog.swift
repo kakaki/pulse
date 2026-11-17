@@ -1,3 +1,4 @@
+import AppKit
 import Foundation
 import SwiftUI
 
@@ -99,6 +100,23 @@ final class BatteryLog {
         }
     }
 
+    /// The whole log as CSV (one row per day) saved to Downloads and shown in Finder.
+    func exportCSV() {
+        var csv = "date,charged_wh,health_percent,max_capacity_mah,cycles\n"
+        for d in days {
+            csv += [d.day, String(format: "%.1f", d.chargedWh), d.health.map { String(format: "%.1f", $0 * 100) } ?? "",
+                    d.maxCapacity.map(String.init) ?? "", d.cycles.map(String.init) ?? ""].joined(separator: ",") + "\n"
+        }
+        let folder = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask)[0]
+        let url = folder.appendingPathComponent("Pulse-battery-\(Self.dayFormat.string(from: Date())).csv")
+        do {
+            try csv.write(to: url, atomically: true, encoding: .utf8)
+            NSWorkspace.shared.activateFileViewerSelecting([url])
+        } catch {
+            NSSound.beep()
+        }
+    }
+
     /// README screenshots (`--snapshot <dir> --demo`).
     func applyDemo() {
         demo = true
@@ -143,8 +161,17 @@ struct BatteryLogCard: View {
                 }
             }
             .frame(height: 34, alignment: .bottom)
-            Text("Energia oddana do baterii w ostatnich 30 dniach, bez prądu zasilającego samego Maca.")
-                .font(.system(size: 10)).foregroundStyle(.secondary)
+            HStack(alignment: .top) {
+                Text("Energia oddana do baterii w ostatnich 30 dniach, bez prądu zasilającego samego Maca.")
+                    .font(.system(size: 10)).foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                Spacer(minLength: 6)
+                if !log.days.isEmpty {
+                    Button { log.exportCSV() } label: { Image(systemName: "square.and.arrow.up") }
+                        .buttonStyle(.borderless).font(.system(size: 11))
+                        .help("Zapisz cały dziennik baterii jako CSV w folderze Pobrane")
+                }
+            }
             health
         }
     }

@@ -5,7 +5,7 @@ import SwiftUI
 @Observable
 final class ChargeLimit {
     static let shared = ChargeLimit()
-    static let enabledKey = "charge.enabled", limitKey = "charge.limit"
+    static let enabledKey = "charge.enabled", limitKey = "charge.limit", fullOnceKey = "charge.fullOnce"
 
     private(set) var enabled = UserDefaults.standard.bool(forKey: enabledKey)
     private(set) var limit: Int = {
@@ -13,6 +13,8 @@ final class ChargeLimit {
         return ChargeLimitRule.range.contains(saved) ? saved : 80
     }()
     private(set) var errorText: String?
+    /// "Charge to full once": the limit is off until the battery is full, then it comes back by itself.
+    private(set) var fullOnce = UserDefaults.standard.bool(forKey: fullOnceKey)
 
     /// This Mac has a battery and SMC keys that can stop charging (read without root).
     let isSupported: Bool = {
@@ -20,12 +22,41 @@ final class ChargeLimit {
         return ChargeLimitRule.keys(smc) != nil
     }()
 
+    /// macOS 27 locks the SMC charging keys to Apple's own software: the limit is set in System Settings → Battery.
+    let isSystemManaged: Bool = {
+        guard BatterySampler.read().present else { return false }
+        if let smc = SMC(), ChargeLimitRule.keys(smc) != nil { return false }
+        return ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 27
+    }()
+
+    static func openSystemBatterySettings() {
+        let urls = ["x-apple.systempreferences:com.apple.Battery-Settings.extension",
+                    "x-apple.systempreferences:com.apple.preference.battery"]
+        for text in urls {
+            if let url = URL(string: text), NSWorkspace.shared.open(url) { return }
+        }
+    }
+
+    func setFullOnce(_ on: Bool) {
+        guard on != fullOnce else { return }
+        fullOnce = on
+        UserDefaults.standard.set(on, forKey: Self.fullOnceKey)
+        apply(force: true)
+    }
+
+    /// Every battery reading: once full, the limit comes back.
+    func batteryRead(_ b: BatteryInfo) {
+        guard fullOnce, b.present, b.fullyCharged || b.percent >= 0.995 else { return }
+        setFullOnce(false)
+    }
+
     func setEnabled(_ on: Bool) {
         FanControl.shared.refreshState()
         enabled = on
         UserDefaults.standard.set(on, forKey: Self.enabledKey)
         errorText = nil
-        send(on ? limit : 0)
+        if !on && fullOnce { fullOnce = false; UserDefaults.standard.set(false, forKey: Self.fullOnceKey) }
+        send(on && !fullOnce ? limit : 0)
     }
 
     func setLimit(_ value: Int) {
@@ -33,13 +64,13 @@ final class ChargeLimit {
         guard clamped != limit else { return }
         limit = clamped
         UserDefaults.standard.set(clamped, forKey: Self.limitKey)
-        if enabled { send(clamped) }
+        if enabled && !fullOnce { send(clamped) }
     }
 
     /// (Re)sends the limit: at launch, after wake, after the helper restarted or was just approved.
-    func apply() {
+    func apply(force: Bool = false) {
         guard enabled else { return }
-        send(limit)
+        send(fullOnce ? 0 : limit)
     }
 
     private func send(_ percent: Int) {
@@ -65,6 +96,7 @@ final class ChargeLimit {
     func status(_ b: BatteryInfo) -> String? {
         guard enabled, isSupported else { return nil }
         guard FanControl.shared.helperState == .ready else { return String(localized: "Limit \(limit)% · wymaga pomocnika") }
+        if fullOnce { return String(localized: "Ładuję do pełna, potem limit \(limit)%") }
         if b.onAC && !b.isCharging && Int((b.percent * 100).rounded()) >= limit - ChargeLimitRule.hysteresis {
             return String(localized: "Limit \(limit)% · ładowanie wstrzymane")
         }
@@ -78,7 +110,17 @@ struct ChargeLimitSection: View {
     @State private var draft = Double(ChargeLimit.shared.limit)
 
     var body: some View {
-        if charge.isSupported {
+        if charge.isSystemManaged {
+            Section {
+                Label("Od macOS 27 limit ładowania ustawia sam system. Apple zablokował innym aplikacjom wstrzymywanie ładowania, więc Pulse nie może już tego robić.",
+                      systemImage: "info.circle")
+                Button("Otwórz ustawienia baterii…") { ChargeLimit.openSystemBatterySettings() }
+            } header: {
+                Text("Limit ładowania")
+            } footer: {
+                Text("W Ustawieniach systemowych → Bateria wybierz „Limit ładowania”. Pulse dalej pokazuje stan i kondycję baterii.")
+            }
+        } else if charge.isSupported {
             if FanControl.shared.helperState != .ready && charge.enabled {
                 FanHelperSetupCard(reason: String(localized: "Wstrzymanie ładowania wymaga uprawnień systemowych, dlatego Pulse musi dodać małego pomocnika (tego samego co do wentylatora). Trzeba to zrobić tylko raz i można go później usunąć."),
                                    symbol: "battery.75percent")
@@ -99,6 +141,12 @@ struct ChargeLimitSection: View {
                     Text("Ładuj do")
                 }
                 .disabled(!charge.enabled)
+                if charge.enabled {
+                    Toggle(isOn: Binding(get: { charge.fullOnce }, set: { charge.setFullOnce($0) })) {
+                        Text("Naładuj raz do pełna")
+                        Text("Np. przed podróżą. Po naładowaniu do 100% limit \(charge.limit)% wróci sam.")
+                    }
+                }
                 if let error = charge.errorText {
                     Label(error, systemImage: "xmark.octagon.fill").foregroundStyle(.red)
                 }
@@ -125,6 +173,29 @@ struct ChargeLimitShortcut: View {
     private var charge: ChargeLimit { .shared }
 
     var body: some View {
+        if charge.isSystemManaged { systemManaged } else { pulseManaged }
+    }
+
+    private var systemManaged: some View {
+        HStack {
+            Image(systemName: "battery.75percent").font(.system(size: 11)).foregroundStyle(.secondary)
+            Text("Limit ładowania ustawia macOS").font(.system(size: 11)).foregroundStyle(.secondary)
+            Spacer()
+            Button { ChargeLimit.openSystemBatterySettings() } label: {
+                HStack(spacing: 3) {
+                    Text("Ustawienia baterii")
+                    Image(systemName: "chevron.right").font(.system(size: 9, weight: .semibold))
+                }
+                .font(.system(size: 11, weight: .medium))
+                .foregroundStyle(Color.accentColor)
+                .contentShape(.rect)
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(.horizontal, 4)
+    }
+
+    private var pulseManaged: some View {
         HStack {
             Image(systemName: charge.enabled ? "battery.75percent" : "battery.100percent")
                 .font(.system(size: 11)).foregroundStyle(charge.enabled ? Module.battery.tint : .secondary)

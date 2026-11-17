@@ -37,7 +37,29 @@ enum ValueWidth {
 
 /// Severity 0…1 used to tint values when "colorize" is on (≥0.7 warning, ≥0.9 critical).
 enum Severity {
-    static func temp(_ t: Double?) -> Double? { t.map { max(0, ($0 - 50) / 45) } }
+    /// Settings → CPU: load from which the value turns orange; red 20 points higher (at most 95%). 0 = never.
+    static let cpuKey = "warn.cpu", tempKey = "warn.temp"
+    static let cpuChoices = [50, 60, 70, 80, 0], tempChoices = [70, 75, 80, 85, 90, 0]
+    static var cpuWarn: Int { saved(cpuKey, cpuChoices, 70) }
+    /// Settings → Czujniki: °C from which the temperature turns orange; red 10° higher. 0 = never.
+    static var tempWarn: Int { saved(tempKey, tempChoices, 80) }
+    static func cpuRed(_ warn: Int) -> Int { min(warn + 20, 95) }
+    private static func saved(_ key: String, _ choices: [Int], _ fallback: Int) -> Int {
+        let v = UserDefaults.standard.object(forKey: key) as? Int ?? fallback
+        return choices.contains(v) ? v : fallback
+    }
+    private static func level(_ v: Double, warn: Double, red: Double) -> Double { v >= red ? 1 : (v >= warn ? 0.75 : 0) }
+
+    static func cpu(_ load: Double?) -> Double? {
+        guard let load else { return nil }
+        let w = cpuWarn
+        return w == 0 ? 0 : level(load * 100, warn: Double(w), red: Double(cpuRed(w)))
+    }
+    static func temp(_ t: Double?) -> Double? {
+        guard let t else { return nil }
+        let w = tempWarn
+        return w == 0 ? 0 : level(t, warn: Double(w), red: Double(w + 10))
+    }
     static func memory(_ p: MemoryPressure) -> Double { p == .critical ? 1 : (p == .warning ? 0.75 : 0) }
     static func battery(_ b: BatteryInfo) -> Double? {
         guard b.present, !b.onAC else { return nil }
@@ -88,7 +110,7 @@ struct StatusSnapshot {
             for item in OverviewItem.ordered where item.isOn {
                 var cell: OverviewCell
                 switch item {
-                case .cpu: cell = .init(module: .cpu, label: "CPU", text: Fmt.pct(m.cpu), value: m.cpu, history: m.cpuHistory, maxHistory: 1, level: m.cpu)
+                case .cpu: cell = .init(module: .cpu, label: "CPU", text: Fmt.pct(m.cpu), value: m.cpu, history: m.cpuHistory, maxHistory: 1, level: Severity.cpu(m.cpu))
                 case .gpu: cell = .init(module: .gpu, label: "GPU", text: m.gpu.map(Fmt.pct) ?? "—", value: m.gpu ?? 0, history: m.gpuHistory, maxHistory: 1, level: m.gpu)
                 case .mem: cell = .init(module: .memory, label: "MEM", text: Fmt.pct(m.memFraction), value: m.memFraction, history: m.memHistory, maxHistory: 1, level: Severity.memory(m.memPressure))
                 case .disk:
@@ -119,9 +141,9 @@ struct StatusSnapshot {
                 cell.showLabel = item.showsLabel
                 s.cells.append(cell)
             }
-            if s.cells.isEmpty { s.cells = [.init(module: .cpu, label: "CPU", text: Fmt.pct(m.cpu), value: m.cpu, history: m.cpuHistory, maxHistory: 1, level: m.cpu)] }
+            if s.cells.isEmpty { s.cells = [.init(module: .cpu, label: "CPU", text: Fmt.pct(m.cpu), value: m.cpu, history: m.cpuHistory, maxHistory: 1, level: Severity.cpu(m.cpu))] }
         case .cpu:
-            s.value = m.cpu; s.text = Fmt.pct(m.cpu); s.history = m.cpuHistory; s.bars = m.cores; s.level = m.cpu
+            s.value = m.cpu; s.text = Fmt.pct(m.cpu); s.history = m.cpuHistory; s.bars = m.cores; s.level = Severity.cpu(m.cpu)
         case .gpu:
             s.value = m.gpu ?? 0; s.text = m.gpu.map(Fmt.pct) ?? "—"; s.history = m.gpuHistory; s.bars = [m.gpu ?? 0]; s.level = m.gpu
         case .memory:

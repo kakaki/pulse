@@ -5,6 +5,7 @@ import IOKit
 import IOKit.ps
 import Observation
 import WidgetKit
+import CoreWLAN
 
 enum MemoryPressure: Equatable {
     case normal, warning, critical
@@ -202,7 +203,7 @@ final class SystemMonitor {
         sampleTemperatures()
         sampleGPU()
         sampleNetwork()
-        if tick % 5 == 0 { battery = BatterySampler.read(); updateSaving(); BatteryLog.shared.record(battery) }
+        if tick % 5 == 0 { battery = BatterySampler.read(); updateSaving(); BatteryLog.shared.record(battery); ChargeLimit.shared.batteryRead(battery) }
         if battery.present { push(&batteryHistory, battery.percent) }
         if processWatchers > 0 { sampleProcesses() }
         if gpuProcessWatchers > 0 {
@@ -221,6 +222,7 @@ final class SystemMonitor {
         RemoteMacs.shared.tick(self)
         BluetoothBatteries.shared.tick()
         DockerContainers.shared.tick()
+        SSDHealth.shared.tick()
         tick += 1
         onUpdate?()
     }
@@ -231,10 +233,14 @@ final class SystemMonitor {
         let enc: ([Double]) -> [Double] = { $0.map { $0.isFinite ? $0 : -1 } }
         var cpuHour = enc(history.series(.cpu, range: .hour))
         if !cpuHour.contains(where: { $0 >= 0 }) { cpuHour = cpuHistory }
+        let live = RemoteMacs.shared.peers.filter { !$0.isStale }
+        let hot = live.filter { $0.report.temp != nil }.max { ($0.report.temp ?? 0) < ($1.report.temp ?? 0) }
         WidgetData(date: Date(), chip: chipName, cpu: cpu, mem: memFraction, disk: diskFraction, temp: socMax ?? socAvg,
                    gpu: gpu, battery: battery.present ? battery.percent : nil, charging: battery.isCharging,
                    netIn: netIn, netOut: netOut, cpuHour: cpuHour,
-                   memHour: enc(history.series(.mem, range: .hour)), tempHour: enc(history.series(.temp, range: .hour)))
+                   memHour: enc(history.series(.mem, range: .hour)), tempHour: enc(history.series(.temp, range: .hour)),
+                   chargedMonth: battery.present ? BatteryLog.shared.charged(monthsBack: 0) : nil,
+                   hotName: hot?.report.name, hotTemp: hot?.report.temp, computers: live.isEmpty ? nil : live.count)
             .save()
         if Date().timeIntervalSince(lastWidgetReload) > 290 {
             lastWidgetReload = Date()
@@ -253,11 +259,18 @@ final class SystemMonitor {
         history.add(.netOut, netOut)
         for s in sensorGroups.isEmpty ? sensors : sensorGroups { recordItem("sensor.\(s.id)", s.value) }
         for fan in fans { recordItem("fan.\(fan.id)", fan.rpm) }
+        // Wi‑Fi signal, stored as RSSI + 100 (−30 dBm → 70) so the chart starts at zero.
+        if let iface = CWWiFiClient.shared().interface(), iface.powerOn() {
+            let rssi = iface.rssiValue()
+            if rssi < 0 { recordItem(Self.wifiKey, Double(rssi + 100)) }
+        }
         if battery.present {
             history.add(.battery, battery.percent)
             history.add(.batteryPower, battery.watts)
         }
     }
+
+    static let wifiKey = "wifi.rssi"
 
     private func recordItem(_ key: String, _ value: Double) {
         history.add(key: key, value)

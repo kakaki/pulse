@@ -259,6 +259,7 @@ struct DiskDetail: View {
                              metric2: .diskWrite, live2: m.writeHistory, color2: writeColor, height: 56, mirrored: true)
                 PeakRow(down: m.peakRead, up: m.peakWrite, downColor: readColor, upColor: writeColor)
             }
+            SSDHealthCard()
             ProcessList(metric: .disk)
             DiskUsageCard()
         }
@@ -347,11 +348,22 @@ struct NetworkDetail: View {
                                 .help("macOS udostępnia nazwę sieci Wi‑Fi tylko aplikacjom z dostępem do lokalizacji.")
                         }
                     }
+                    HistoryChart(live: m.itemHistory[SystemMonitor.wifiKey] ?? [], maxValue: 70, color: .blue, height: 44,
+                                 key: SystemMonitor.wifiKey, format: { "\(Int($0.rounded()) - 100) dBm" })
                     VStack(spacing: 7) {
                         InfoRow(title: "Siła sygnału (RSSI)", value: "\(w.rssi) dBm")
                         InfoRow(title: "Szum", value: "\(w.noise) dBm")
+                        HStack {
+                            Text("Sygnał/szum (SNR)").foregroundStyle(.secondary)
+                            Spacer()
+                            Text(verbatim: "\(w.snr) dB · \(w.snrVerdict.text)").foregroundStyle(w.snrVerdict.color).monospacedDigit().fontWeight(.medium)
+                        }
+                        .help("Różnica między sygnałem a szumem. Powyżej 25 dB połączenie jest stabilne, poniżej 15 dB mogą być przerwy i spowolnienia.")
                         InfoRow(title: "Szybkość łącza", value: "\(Int(w.txRate)) Mb/s")
-                        if let c = w.channel { InfoRow(title: "Kanał", value: "\(c)") }
+                        if let s = w.standard { InfoRow(title: "Standard", value: s) }
+                        if let c = w.channel {
+                            InfoRow(title: "Kanał", value: w.width.map { "\(c) · \($0) MHz" } ?? "\(c)")
+                        }
                     }
                 }
             }
@@ -581,7 +593,7 @@ struct BatteryDetail: View {
                     HistoryChart(metric: .battery, live: m.batteryHistory, maxValue: 1, color: Module.battery.tint, height: 52)
                 }
                 healthCard(b)
-                if ChargeLimit.shared.isSupported { ChargeLimitShortcut(battery: b) }
+                if ChargeLimit.shared.isSupported || ChargeLimit.shared.isSystemManaged { ChargeLimitShortcut(battery: b) }
                 BatteryLogCard()
                 if Self.measuresEnergy { ProcessList(metric: .energy) }
                 BluetoothBatteriesCard()
@@ -628,7 +640,7 @@ struct BatteryDetail: View {
                         LinearMeter(value: Double(cycles) / Double(design), colors: [.blue.opacity(0.6), .blue], height: 4)
                     }
                 }
-                InfoRow(title: "Temperatura", value: Fmt.temp(b.temperature))
+                InfoRow(title: "Temperatura", value: Fmt.temp(b.temperature ?? m.batteryTemp))  // macOS 27: only the thermal sensor
                 if let v = b.voltage { InfoRow(title: "Napięcie", value: String(format: "%.2f V", v)) }
             }
         }

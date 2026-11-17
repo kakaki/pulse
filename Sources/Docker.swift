@@ -16,12 +16,20 @@ final class DockerContainers {
         let cpu: Double        // fraction of one core (1.0 = 100%)
         let memory: UInt64     // bytes, without page cache
         let memoryLimit: UInt64
+        /// Engine state ("running", "exited", "paused", …); missing in reports from older Pulse versions.
+        var state: String?
+        var isRunning: Bool { state == nil || state == "running" }
     }
+
+    enum Action: String { case start, stop, restart }
 
     private(set) var containers: [Container] = []
     /// A Docker socket answered at least once.
     private(set) var available = false
     private(set) var loaded = false
+    /// Containers with a start/stop/restart in progress.
+    private(set) var busy: Set<String> = []
+    private(set) var lastError: String?
 
     @ObservationIgnored var watchers = 0 {
         didSet { if watchers > 0 && oldValue == 0 { refresh() } }
@@ -61,6 +69,25 @@ final class DockerContainers {
         }
     }
 
+    /// Running containers only: what other Macs get.
+    var runningContainers: [Container] { containers.filter(\.isRunning) }
+
+    func perform(_ action: Action, on c: Container) {
+        guard let path = Self.socketPath, !busy.contains(c.id) else { return }
+        busy.insert(c.id)
+        lastError = nil
+        let id = c.id, name = c.name
+        Task.detached(priority: .userInitiated) {
+            let ok = Self.post(socket: path, path: "/containers/\(id)/\(action.rawValue)\(action == .start ? "" : "?t=10")")
+            await MainActor.run {
+                let shared = DockerContainers.shared
+                shared.busy.remove(id)
+                if !ok { shared.lastError = String(localized: "Nie udało się wykonać polecenia dla „\(name)”.") }
+                shared.refresh()
+            }
+        }
+    }
+
     // MARK: - Engine API
 
     nonisolated static var socketPath: String? {
@@ -76,7 +103,7 @@ final class DockerContainers {
 
     private nonisolated static func read(socket: String, previous: [String: (total: UInt64, system: UInt64)])
         -> (list: [Container], counters: [String: (total: UInt64, system: UInt64)])? {
-        guard let data = request(socket: socket, path: "/containers/json"),
+        guard let data = request(socket: socket, path: "/containers/json?all=true"),
               let items = try? JSONSerialization.jsonObject(with: data) as? [[String: Any]] else { return nil }
         var list: [Container] = []
         var counters: [String: (total: UInt64, system: UInt64)] = [:]
@@ -84,8 +111,9 @@ final class DockerContainers {
             guard let id = item["Id"] as? String else { continue }
             let name = ((item["Names"] as? [String])?.first ?? String(id.prefix(12))).trimmingCharacters(in: CharacterSet(charactersIn: "/"))
             let image = item["Image"] as? String ?? ""
+            let state = item["State"] as? String ?? "running"
             var cpu = 0.0, memory: UInt64 = 0, limit: UInt64 = 0
-            if let raw = request(socket: socket, path: "/containers/\(id)/stats?stream=false&one-shot=true"),
+            if state == "running", let raw = request(socket: socket, path: "/containers/\(id)/stats?stream=false&one-shot=true"),
                let stats = try? JSONSerialization.jsonObject(with: raw) as? [String: Any] {
                 let cpuStats = stats["cpu_stats"] as? [String: Any] ?? [:]
                 let total = ((cpuStats["cpu_usage"] as? [String: Any])?["total_usage"] as? NSNumber)?.uint64Value ?? 0
@@ -102,13 +130,27 @@ final class DockerContainers {
                 memory = usage > cache ? usage - cache : usage
                 limit = (mem["limit"] as? NSNumber)?.uint64Value ?? 0
             }
-            list.append(Container(id: id, name: name, image: image, cpu: cpu, memory: memory, memoryLimit: limit))
+            list.append(Container(id: id, name: name, image: image, cpu: cpu, memory: memory, memoryLimit: limit, state: state))
         }
-        return (list.sorted { $0.cpu == $1.cpu ? $0.name < $1.name : $0.cpu > $1.cpu }, counters)
+        return (list.sorted {
+            if $0.isRunning != $1.isRunning { return $0.isRunning }
+            return $0.cpu == $1.cpu ? $0.name < $1.name : $0.cpu > $1.cpu
+        }, counters)
+    }
+
+    /// POST without a body; 204 (done) and 304 (already in that state) count as success.
+    nonisolated static func post(socket path: String, path resource: String) -> Bool {
+        guard let (status, _) = send(socket: path, method: "POST", path: resource, timeout: 30) else { return false }
+        return status == 204 || status == 304
     }
 
     /// Minimal HTTP/1.0 GET over a unix socket; returns the body of a 200 response.
     nonisolated static func request(socket path: String, path resource: String, timeout: Int = 3) -> Data? {
+        guard let (status, body) = send(socket: path, method: "GET", path: resource, timeout: timeout), status == 200 else { return nil }
+        return body
+    }
+
+    private nonisolated static func send(socket path: String, method: String, path resource: String, timeout: Int) -> (Int, Data)? {
         let fd = Darwin.socket(AF_UNIX, SOCK_STREAM, 0)
         guard fd >= 0 else { return nil }
         defer { close(fd) }
@@ -129,7 +171,8 @@ final class DockerContainers {
             $0.withMemoryRebound(to: sockaddr.self, capacity: 1) { connect(fd, $0, socklen_t(MemoryLayout<sockaddr_un>.size)) }
         }
         guard connected == 0 else { return nil }
-        let request = Array("GET \(resource) HTTP/1.0\r\nHost: docker\r\n\r\n".utf8)
+        let extra = method == "POST" ? "Content-Length: 0\r\n" : ""
+        let request = Array("\(method) \(resource) HTTP/1.0\r\nHost: docker\r\n\(extra)\r\n".utf8)
         guard write(fd, request, request.count) == request.count else { return nil }
         var response = Data()
         var chunk = [UInt8](repeating: 0, count: 16_384)
@@ -140,9 +183,9 @@ final class DockerContainers {
         }
         guard let split = response.range(of: Data("\r\n\r\n".utf8)) else { return nil }
         let head = String(decoding: response[..<split.lowerBound], as: UTF8.self)
-        guard head.hasPrefix("HTTP/1.") && head.split(separator: " ").dropFirst().first == "200" else { return nil }
+        guard head.hasPrefix("HTTP/1."), let status = head.split(separator: " ").dropFirst().first.flatMap({ Int($0) }) else { return nil }
         let body = response[split.upperBound...]
-        return head.lowercased().contains("transfer-encoding: chunked") ? dechunk(Data(body)) : Data(body)
+        return (status, head.lowercased().contains("transfer-encoding: chunked") ? dechunk(Data(body)) : Data(body))
     }
 
     private nonisolated static func dechunk(_ data: Data) -> Data {
@@ -166,6 +209,7 @@ final class DockerContainers {
             Container(id: "demo1", name: "gitlab-runner", image: "gitlab/gitlab-runner:latest", cpu: 0.64, memory: 412 * mb, memoryLimit: 8192 * mb),
             Container(id: "demo2", name: "postgres", image: "postgres:17", cpu: 0.03, memory: 96 * mb, memoryLimit: 8192 * mb),
             Container(id: "demo3", name: "redis", image: "redis:7-alpine", cpu: 0.01, memory: 9 * mb, memoryLimit: 8192 * mb),
+            Container(id: "demo4", name: "mailpit", image: "axllent/mailpit", cpu: 0, memory: 0, memoryLimit: 0, state: "exited"),
         ]
         available = true
         loaded = true
@@ -191,6 +235,10 @@ struct DockerContainersCard: View {
                              : (containers == nil && !docker.loaded ? String(localized: "Zbieranie danych…") : String(localized: "Brak uruchomionych kontenerów.")))
                             .font(.system(size: 11.5)).foregroundStyle(.secondary)
                     }
+                    if containers == nil, let error = docker.lastError {
+                        Label(error, systemImage: "exclamationmark.triangle.fill")
+                            .font(.system(size: 11)).foregroundStyle(.orange)
+                    }
                     VStack(spacing: 7) {
                         ForEach(list) { row($0) }
                     }
@@ -203,16 +251,43 @@ struct DockerContainersCard: View {
 
     private func row(_ c: DockerContainers.Container) -> some View {
         HStack(spacing: 8) {
-            Image(systemName: "shippingbox.fill").font(.system(size: 11)).foregroundStyle(.blue).frame(width: 16)
+            Image(systemName: "shippingbox.fill").font(.system(size: 11))
+                .foregroundStyle(c.isRunning ? AnyShapeStyle(.blue) : AnyShapeStyle(.secondary)).frame(width: 16)
             VStack(alignment: .leading, spacing: 0) {
                 Text(verbatim: c.name).font(.system(size: 12)).lineLimit(1)
+                    .foregroundStyle(c.isRunning ? .primary : .secondary)
                 Text(verbatim: c.image).font(.system(size: 10)).foregroundStyle(.secondary).lineLimit(1).truncationMode(.middle)
             }
             Spacer(minLength: 6)
-            Text(verbatim: String(format: "%.1f%%", c.cpu * 100) + " · " + Fmt.memory(c.memory))
-                .font(.system(size: 11.5, weight: .medium)).monospacedDigit()
-                .foregroundStyle(.secondary)
+            if c.isRunning {
+                Text(verbatim: String(format: "%.1f%%", c.cpu * 100) + " · " + Fmt.memory(c.memory))
+                    .font(.system(size: 11.5, weight: .medium)).monospacedDigit()
+                    .foregroundStyle(.secondary)
+            } else {
+                Text(c.state == "paused" ? String(localized: "wstrzymany") : String(localized: "zatrzymany"))
+                    .font(.system(size: 11)).foregroundStyle(.tertiary)
+            }
+            if containers == nil { controls(c) }
         }
         .help(Text(verbatim: c.image))
+    }
+
+    @ViewBuilder private func controls(_ c: DockerContainers.Container) -> some View {
+        if docker.busy.contains(c.id) {
+            ProgressView().controlSize(.mini).frame(width: 22)
+        } else {
+            Menu {
+                if c.isRunning {
+                    Button("Zatrzymaj", systemImage: "stop.fill") { docker.perform(.stop, on: c) }
+                    Button("Uruchom ponownie", systemImage: "arrow.clockwise") { docker.perform(.restart, on: c) }
+                } else {
+                    Button("Uruchom", systemImage: "play.fill") { docker.perform(.start, on: c) }
+                }
+            } label: {
+                Image(systemName: "ellipsis.circle")
+            }
+            .menuStyle(.borderlessButton).menuIndicator(.hidden).fixedSize()
+            .help("Uruchom, zatrzymaj lub uruchom ponownie kontener")
+        }
     }
 }

@@ -151,6 +151,65 @@ struct PulseWidgetView: View {
     }
 }
 
+private func energy(_ wh: Double) -> String {
+    wh >= 1000 ? String(format: "%.2f kWh", wh / 1000) : String(format: "%.0f Wh", wh)
+}
+
+/// Second widget: energy charged into the battery this month and the hottest computer on the network.
+struct PulseExtrasView: View {
+    let entry: Entry
+
+    var body: some View {
+        if let d = entry.data, d.chargedMonth != nil || d.hotName != nil {
+            VStack(alignment: .leading, spacing: 8) {
+                if let wh = d.chargedMonth {
+                    VStack(alignment: .leading, spacing: 1) {
+                        Label("Ładowanie", systemImage: "bolt.fill").font(.system(size: 10, weight: .semibold)).foregroundStyle(.green)
+                        Text(energy(wh)).font(.system(size: 22, weight: .bold, design: .rounded)).monospacedDigit()
+                            .minimumScaleFactor(0.6).lineLimit(1)
+                        Text("w tym miesiącu").font(.system(size: 9.5)).foregroundStyle(.secondary)
+                    }
+                }
+                if d.chargedMonth != nil && d.hotName != nil { Divider() }
+                if let name = d.hotName {
+                    VStack(alignment: .leading, spacing: 1) {
+                        Label("Najcieplejszy", systemImage: "desktopcomputer").font(.system(size: 10, weight: .semibold)).foregroundStyle(.orange)
+                        HStack(alignment: .firstTextBaseline) {
+                            Text(verbatim: name).font(.system(size: 12, weight: .semibold)).lineLimit(1).truncationMode(.middle)
+                            Spacer(minLength: 4)
+                            Text(temp(d.hotTemp)).font(.system(size: 15, weight: .bold, design: .rounded)).monospacedDigit()
+                        }
+                        if let n = d.computers, n > 1 {
+                            Text("Komputerów w sieci: \(n)").font(.system(size: 9.5)).foregroundStyle(.secondary)
+                        }
+                    }
+                }
+                Spacer(minLength: 0)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .opacity(Date().timeIntervalSince(d.date) > 900 ? 0.5 : 1)
+        } else {
+            VStack(spacing: 6) {
+                Image(systemName: "bolt.fill").font(.title2)
+                Text("Brak baterii i innych komputerów z Pulse w sieci").font(.caption).multilineTextAlignment(.center)
+            }
+            .foregroundStyle(.secondary)
+        }
+    }
+}
+
+struct PulseExtrasWidget: Widget {
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: "PulseExtras", provider: Provider()) { entry in
+            PulseExtrasView(entry: entry)
+                .containerBackground(.fill.tertiary, for: .widget)
+        }
+        .configurationDisplayName("Pulse – energia i sieć")
+        .description("Energia oddana do baterii w tym miesiącu i najcieplejszy komputer w sieci.")
+        .supportedFamilies([.systemSmall])
+    }
+}
+
 struct PulseWidget: Widget {
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: "PulseWidget", provider: Provider()) { entry in
@@ -165,5 +224,8 @@ struct PulseWidget: Widget {
 
 @main
 struct PulseWidgetBundle: WidgetBundle {
-    var body: some Widget { PulseWidget() }
+    var body: some Widget {
+        PulseWidget()
+        PulseExtrasWidget()
+    }
 }

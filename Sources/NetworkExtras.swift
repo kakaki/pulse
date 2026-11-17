@@ -1,5 +1,6 @@
 import AppKit
 import CoreWLAN
+import SwiftUI
 import CoreLocation
 import Network
 import Observation
@@ -18,6 +19,14 @@ final class NetworkExtras: NSObject, CLLocationManagerDelegate {
         var txRate: Double
         var channel: Int?
         var band: String?
+        var width: Int? = nil        // MHz
+        var standard: String? = nil  // "Wi‑Fi 6E (802.11ax)"
+        /// Signal-to-noise ratio in dB: above ~25 is comfortable, below ~15 the connection struggles.
+        var snr: Int { rssi - noise }
+        var snrVerdict: (text: String, color: Color) {
+            snr >= 40 ? (String(localized: "doskonały"), .green) : snr >= 25 ? (String(localized: "dobry"), .green)
+                : snr >= 15 ? (String(localized: "słaby"), .orange) : (String(localized: "bardzo słaby"), .red)
+        }
         /// 0…4 bars from RSSI.
         var bars: Int { rssi >= -55 ? 4 : rssi >= -65 ? 3 : rssi >= -75 ? 2 : rssi >= -85 ? 1 : 0 }
         var quality: String { [String(localized: "Bardzo słaby"), String(localized: "Słaby"), String(localized: "Średni"), String(localized: "Dobry"), String(localized: "Doskonały")][bars] }
@@ -146,8 +155,25 @@ final class NetworkExtras: NSObject, CLLocationManagerDelegate {
         case .band6GHz: "6 GHz"
         default: nil
         }
+        let width: Int? = switch ch?.channelWidth {
+        case .width20MHz: 20
+        case .width40MHz: 40
+        case .width80MHz: 80
+        case .width160MHz: 160
+        default: nil
+        }
+        let standard: String? = switch iface.activePHYMode().rawValue {
+        case 7: "Wi‑Fi 7 (802.11be)"
+        case 6: ch?.channelBand == .band6GHz ? "Wi‑Fi 6E (802.11ax)" : "Wi‑Fi 6 (802.11ax)"
+        case 5: "Wi‑Fi 5 (802.11ac)"
+        case 4: "Wi‑Fi 4 (802.11n)"
+        case 1: "802.11a"
+        case 2: "802.11b"
+        case 3: "802.11g"
+        default: nil
+        }
         wifi = WiFi(ssid: iface.ssid(), rssi: iface.rssiValue(), noise: iface.noiseMeasurement(),
-                    txRate: iface.transmitRate(), channel: ch?.channelNumber, band: band)
+                    txRate: iface.transmitRate(), channel: ch?.channelNumber, band: band, width: width, standard: standard)
     }
 
     private static func fetchPublicIP() async -> String? {
@@ -199,7 +225,7 @@ extension NetworkExtras {
             AppTraffic(id: 99908, name: "softwareupdated", inRate: 41_000, outRate: 2_000),
         ]
         publicIP = "203.0.113.42"
-        wifi = nil
+        wifi = WiFi(ssid: "Dom", rssi: -58, noise: -92, txRate: 1201, channel: 36, band: "5 GHz", width: 80, standard: "Wi‑Fi 6 (802.11ax)")
         pingHistory = demoSeries(40, base: 14, amp: 4, seed: 10)
         ping = pingHistory.last
     }

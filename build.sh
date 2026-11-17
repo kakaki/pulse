@@ -18,15 +18,29 @@ MIN_MACOS=15.0
 BIN="$BUILD_DIR/bin"
 rm -rf "$BIN"; mkdir -p "$BIN"
 SDK="$(xcrun --sdk macosx --show-sdk-path)"
+# App Intents (Shortcuts): the arm64 pass also saves the intents' constant values for the metadata step below.
+INTENTS="$BUILD_DIR/intents"
+rm -rf "$INTENTS"; mkdir -p "$INTENTS"
+cat > "$INTENTS/protocols.json" <<'JSON'
+["AppIntent","EntityQuery","AppEntity","TransientEntity","AppEnum","AppShortcutProviding","AppShortcutsProvider","AnyResolverProviding","AppIntentsPackage","DynamicOptionsProvider","_IntentValueRepresentable","IntentValueQuery","Resolver"]
+JSON
 for ARCH in arm64 x86_64; do
-  STRINGS=(); [[ $ARCH == arm64 ]] && STRINGS=(-emit-localized-strings -emit-localized-strings-path "$LOC/app")
-  xcrun swiftc -O -swift-version 5 -parse-as-library \
+  STRINGS=(); [[ $ARCH == arm64 ]] && STRINGS=(-emit-localized-strings -emit-localized-strings-path "$LOC/app"
+    -emit-const-values-path "$INTENTS/Pulse.swiftconstvalues" -const-gather-protocols-list "$INTENTS/protocols.json")
+  xcrun swiftc -O -swift-version 5 -parse-as-library -module-name Pulse -whole-module-optimization \
     -target "$ARCH-apple-macos$MIN_MACOS" -sdk "$SDK" \
     -F "$SPARKLE" -framework Sparkle -Xlinker -rpath -Xlinker @executable_path/../Frameworks \
     ${STRINGS[@]+"${STRINGS[@]}"} \
     Sources/*.swift -o "$BIN/Pulse-$ARCH"
 done
 lipo -create "$BIN"/Pulse-* -output "$APP/Contents/MacOS/Pulse"
+ls "$PWD"/Sources/*.swift > "$INTENTS/sources.txt"
+echo "$INTENTS/Pulse.swiftconstvalues" > "$INTENTS/consts.txt"
+xcrun appintentsmetadataprocessor --toolchain-dir "$DEVELOPER_DIR/Toolchains/XcodeDefault.xctoolchain" --module-name Pulse \
+  --sdk-root "$SDK" --xcode-version "$(xcodebuild -version | awk '/Build version/{print $3}')" --platform-family macOS \
+  --deployment-target "$MIN_MACOS" --target-triple "arm64-apple-macos$MIN_MACOS" --binary-file "$BIN/Pulse-arm64" \
+  --source-file-list "$INTENTS/sources.txt" --swift-const-vals-list "$INTENTS/consts.txt" \
+  --output "$APP/Contents/Resources" --force >/dev/null 2>"$INTENTS/log.txt" || { cat "$INTENTS/log.txt"; exit 1; }
 # Desktop widget extension (sandboxed; reads the JSON snapshot the app writes)
 WX="$APP/Contents/PlugIns/PulseWidget.appex"
 mkdir -p "$WX/Contents/MacOS"

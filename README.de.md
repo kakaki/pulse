@@ -27,7 +27,7 @@
 - **Übersicht in einem einzigen Menüleistenobjekt.** Alle Module können nebeneinander stehen, oder jedes bekommt ein eigenes Objekt. Ein Klick auf einen Wert in der Menüleiste öffnet die Details dieses Moduls.
 - **Vier Darstellungsstile:** Text, Ring, Balken oder Mini-Diagramm. Stil, Beschriftung und Reihenfolge lassen sich für jeden Wert einzeln festlegen; die Reihenfolge änderst du per Drag & Drop.
 - **Detaillierte Fenster** für jedes Modul:
-  - **CPU:** Auslastung, Kerne, Durchschnittslast, Prozesse mit der höchsten Last, Docker-Container
+  - **CPU:** Auslastung, Kerne, Durchschnittslast, Prozesse mit der höchsten Last, Docker-Container (starten, stoppen, neu starten)
   - **GPU:** Auslastungsverlauf, Last von Renderer und Tiler, GPU-Speicher, Kerne, Neustarts, Prozesse mit GPU-Nutzung
   - **Speicher:** Speicherdruck, App-, gebundener und komprimierter Speicher, Swap, Prozesse
   - **Festplatte:** belegter oder freier Speicher in Prozent oder GB/TB, mehrere Laufwerke, Lese- und Schreibrate, was den Platz belegt
@@ -35,14 +35,14 @@
   - **Sensoren:** Temperaturen von SoC, SSD und Batterie, Lüfter, thermischer Zustand
   - **Batterie:** Ladeverlauf, Zustand, Ladezyklen, Leistungsaufnahme, Netzteilleistung, Energieverbrauch pro App, geladene Energie pro Monat, Zustand im Zeitverlauf, Akkus von Bluetooth-Geräten (AirPods, Tastatur, Maus)
   - **Andere Computer:** Auslastung, Temperaturen, Lüfter, Prozesse und Docker-Container anderer Macs mit Pulse und Windows-PCs mit PulseWin im lokalen Netzwerk; Pulse auf diesen Macs aus der Ferne aktualisieren (wenn der Mac es erlaubt)
-- **Ladelimit** bei MacBooks (50–95 %), damit der Akku nicht ständig bei 100 % steht.
+- **Ladelimit** bei MacBooks (50–95 %), damit der Akku nicht ständig bei 100 % steht, mit einmaligem „Voll laden“ vor Reisen. Ab macOS 27 erlaubt Apple nur noch das Ladelimit des Systems; Pulse führt zu dessen Einstellungen.
 - **Verlauf über 2 Min., 1 h, 24 h, 7 Tage und 30 Tage**, 7, 14 oder 30 Tage aufbewahrt, mit CSV-Export.
 - **Praktische Aktionen:** Speicher freigeben (`purge`, fragt nach dem Administratorpasswort), Prozesse per Rechtsklick beenden (Prozesse mit gleichem Namen lassen sich zusammenfassen), IP-Adresse per Klick kopieren.
-- **Mitteilungen** bei anhaltender CPU-Last, hoher Temperatur, thermischer Drosselung, Speicherdruck, wenig Speicherplatz und niedrigem Akkustand.
-- **Kritische Werte blinken** in der Menüleiste, und bei hoher Last werden Werte eingefärbt.
+- **Mitteilungen** bei anhaltender CPU-Last, hoher Temperatur, thermischer Drosselung, Speicherdruck, wenig Speicherplatz und niedrigem Akkustand sowie wenn ein Computer im Netzwerk nicht mehr antwortet.
+- **Kritische Werte blinken** in der Menüleiste, und bei hoher Last werden Werte eingefärbt (Schwellen für CPU, Temperatur und Festplatte einstellbar).
 - **Stört nicht:** blendet sich im Vollbild und bei Bildschirmspiegelung aus und aktualisiert im Batteriebetrieb und im Stromsparmodus seltener.
 - **Passt neben die Kamera-Aussparung:** Wenn macOS Pulse aus Platzmangel ausblendet, entfallen Beschriftungen und der schmalste Stil wird gewählt. Auf Wunsch bleibt nur das Pulse-Symbol in der Menüleiste.
-- **Widget** für den Schreibtisch und Start beim Anmelden.
+- **Widgets** für den Schreibtisch (Auslastung oder geladene Energie und wärmster Computer), **Kurzbefehle-Aktionen** zum Abfragen von Werten und Start beim Anmelden.
 - **Automatische Updates** über Sparkle. Jede Version ist von Apple signiert und notarisiert.
 
 ## Bildschirmfotos
@@ -72,7 +72,7 @@ Pulse sucht automatisch nach Updates. Du kannst auch manuell unter Einstellungen
 
 ## Selbst bauen
 
-Benötigt wird Xcode 26 (die Befehlszeilenwerkzeuge reichen, es gibt kein Xcode-Projekt).
+Benötigt wird Xcode 26 (es gibt kein Xcode-Projekt; der Build nutzt die App-Intents-Werkzeuge).
 
 ```bash
 ./build.sh --install     # bauen und nach /Applications kopieren (Ad-hoc-Signatur)
