@@ -73,6 +73,10 @@ if dmg and os.path.exists(dmg):
         for i in range(0, len(parts), 2):   # odd parts are the changelog block
             lines = parts[i].split("\n")
             for n, line in enumerate(lines):
+                # Values the site marks as Pulse for Mac (version and size spans).
+                line = re.sub(r'(data-wersja="pulse-mac">)[^<]*', rf"\g<1>{version}", line)
+                line = re.sub(r'(data-mb="pulse-mac">)[^<]*', rf"\g<1>{size}", line)
+                lines[n] = line
                 # Only lines about Pulse: they name the old Pulse version or file (other apps also offer .dmg files).
                 about_pulse = any(f"Pulse-{v}.dmg" in line or re.search(rf"\b(?:wersja|version|Pulse) {re.escape(v)}\b", line)
                                   for v in old_versions)
