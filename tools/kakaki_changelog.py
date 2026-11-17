@@ -17,17 +17,25 @@ def git(*args):
 releases = []
 for tag in git("tag", "-l", "v*", "--sort=-v:refname").split():
     notes = git("tag", "-l", "--format=%(contents)", tag)
-    lines = dict(re.findall(r"^(PL|EN):\s*(.+)$", notes, re.M))
+    lines = {}
+    for lang, text in re.findall(r"^(PL|EN):\s*(.+)$", notes, re.M):
+        lines.setdefault(lang, []).append(text.strip())
     if "PL" in lines and "EN" in lines:
         y, m, d = git("log", "-1", "--format=%as", tag).strip().split("-")
         releases.append((tag[1:], f"{d}.{m}.{y}", lines))
     if len(releases) == LIMIT:
         break
 
+def notes_html(items):
+    """One line as a paragraph, several as a list."""
+    if len(items) == 1:
+        return f"      <p>{html.escape(items[0])}</p>"
+    return "      <ul>\n" + "\n".join(f"        <li>{html.escape(t)}</li>" for t in items) + "\n      </ul>"
+
 def section(lang):
     title, more, sid = (("Co nowego", "Wszystkie wersje na GitHubie ↗", "zmiany") if lang == "PL"
                         else ("What's new", "All versions on GitHub ↗", "changes"))
-    rows = "\n".join(f'      <h3>Pulse {v} <span class="szary">· {date}</span></h3>\n      <p>{html.escape(n[lang])}</p>'
+    rows = "\n".join(f'      <h3>Pulse {v} <span class="szary">· {date}</span></h3>\n{notes_html(n[lang])}'
                      for v, date, n in releases)
     return (f'<!-- ZMIANY:START -->\n      <h2 id="{sid}">{title}</h2>\n{rows}\n'
             f'      <p><a href="https://github.com/kakaki/pulse/releases">{more}</a></p>\n      <!-- ZMIANY:END -->')
