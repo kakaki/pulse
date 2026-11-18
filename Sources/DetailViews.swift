@@ -80,7 +80,9 @@ struct CPUDetail: View {
                 }
             }
             ProcessList(metric: .cpu)
+            WeekHeatmapCard()
             DockerContainersCard()
+            StartupItemsCard()
         }
     }
 }
@@ -224,6 +226,11 @@ struct DiskDetail: View {
                     }
                 }
                 LinearMeter(value: m.diskFraction, colors: Module.disk.colors, height: 10)
+                if let trend = DiskTrend.shared.summary {
+                    Label(trend.text, systemImage: "chart.line.downtrend.xyaxis")
+                        .font(.system(size: 10.5)).foregroundStyle(trend.color)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
             }
             let others = m.volumes.filter { !$0.isSystem }
             if !others.isEmpty {
@@ -367,6 +374,7 @@ struct NetworkDetail: View {
                     }
                 }
             }
+            NetworkUsageCard()
             Card {
                 SectionTitle(text: "Połączenie")
                 VStack(spacing: 7) {
@@ -595,7 +603,7 @@ struct BatteryDetail: View {
                 healthCard(b)
                 if ChargeLimit.shared.isSupported || ChargeLimit.shared.isSystemManaged { ChargeLimitShortcut(battery: b) }
                 BatteryLogCard()
-                if Self.measuresEnergy { ProcessList(metric: .energy) }
+                if Self.measuresEnergy { ProcessList(metric: .energy); AppEnergyCard() }
                 BluetoothBatteriesCard()
             } else {
                 Card {
@@ -603,7 +611,7 @@ struct BatteryDetail: View {
                     Label("Ten Mac jest zasilany z sieci.", systemImage: "powerplug.fill")
                         .font(.callout).foregroundStyle(.secondary)
                 }
-                if Self.measuresEnergy { ProcessList(metric: .energy) }
+                if Self.measuresEnergy { ProcessList(metric: .energy); AppEnergyCard() }
                 BluetoothBatteriesCard(showEmpty: true)
             }
         }

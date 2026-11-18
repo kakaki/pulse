@@ -179,8 +179,8 @@ struct SSDHealthCard: View {
                                 .font(.system(size: 11, weight: .semibold)).foregroundStyle(.red)
                         }
                     }
-                    ProgressView(value: i.lifeLeft)
-                        .tint(i.lifeLeft > 0.3 ? .green : (i.lifeLeft > 0.1 ? .orange : .red))
+                    let c: Color = i.lifeLeft > 0.3 ? .green : (i.lifeLeft > 0.1 ? .orange : .red)
+                    LinearMeter(value: i.lifeLeft, colors: [c.opacity(0.7), c], height: 6)
                     VStack(spacing: 7) {
                         InfoRow(title: "Zapisano", value: Fmt.file(Int64(i.bytesWritten)))
                         if let recent = ssd.writtenRecently(days: 30) {

@@ -119,6 +119,7 @@ struct DropdownFooter: View {
                     .foregroundStyle(.secondary)
             }
             Spacer()
+            PresentationButton()
             KeepAwakeMenu()
             Button {
                 AppActions.openSettings(module)

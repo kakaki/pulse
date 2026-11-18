@@ -151,6 +151,7 @@ final class RemoteMacs {
         return name
     }
 
+    static func historyKey(_ id: String, _ metric: String) -> String { "remote.\(id).\(metric)" }
     nonisolated static let metricKey = "remote.metric"
     static let targetKey = "remote.target"
     static let targetNameKey = "remote.targetName"
@@ -457,6 +458,10 @@ final class RemoteMacs {
             updateRequests[key] = nil
         }
         let peer = Peer(id: key, report: report)
+        // 24 h / 7 d charts of the other computer (kept with this Mac's history).
+        let history = SystemMonitor.shared.history
+        history.add(key: Self.historyKey(report.id, "cpu"), report.cpu)
+        history.add(key: Self.historyKey(report.id, "temp"), report.temp)
         if let i = peers.firstIndex(where: { $0.id == key }) {
             // Same answer as last time (the other Mac hasn't refreshed yet): nothing to redraw.
             if peers[i].report != report || peers[i].isStale { peers[i] = peer }

@@ -83,6 +83,10 @@ extension View {
                 Button("Wymuś zakończenie…") { ProcessActions.forceQuit(pid, name: name) }.disabled(!ok)
             }
             Divider()
+            Button("Powiadom, gdy długo obciąża CPU") {
+                ProcessInsights.shared.addRule(name: name)
+                AppActions.openSettings(.cpu)
+            }
             Button("Pokaż w Monitorze aktywności") { ProcessActions.openActivityMonitor() }
         }
     }

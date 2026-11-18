@@ -203,6 +203,40 @@ final class HistoryStore {
         return values
     }
 
+    /// Average and highest 10-minute value between `from` and `to` minutes ago (from > to); nil without data.
+    func stats(key: String, fromMinutesAgo from: Int, toMinutesAgo to: Int) -> (avg: Double, max: Double, minutes: Int)? {
+        let now = Self.minuteNow()
+        var sum = 0.0, count = 0, top = -Double.infinity
+        for b in coarse {
+            let age = now - b.minute
+            guard age <= from, age > to, let v = b.values[key], v.isFinite else { continue }
+            sum += v; count += 1; top = max(top, v)
+        }
+        return count > 0 ? (sum / Double(count), top, count * 10) : nil
+    }
+
+    /// Average per weekday (Monday first) and hour from the kept 10-minute history; NaN where there is no data.
+    func heatmap(key: String) -> [[Double]] {
+        if let c = heatmapCache, c.key == key, c.count == coarse.count { return c.values }
+        var sums = [[(Double, Int)]](repeating: [(Double, Int)](repeating: (0, 0), count: 24), count: 7)
+        let cal = Calendar.current
+        for b in coarse {
+            guard let v = b.values[key], v.isFinite else { continue }
+            let date = Date(timeIntervalSince1970: TimeInterval(b.minute * 60))
+            let c = cal.dateComponents([.weekday, .hour], from: date)
+            guard let wd = c.weekday, let h = c.hour else { continue }
+            let row = (wd + 5) % 7
+            sums[row][h].0 += v; sums[row][h].1 += 1
+        }
+        let values = sums.map { $0.map { $0.1 > 0 ? $0.0 / Double($0.1) : .nan } }
+        heatmapCache = (key, coarse.count, values)
+        return values
+    }
+    private var heatmapCache: (key: String, count: Int, values: [[Double]])?
+
+    /// Minutes covered by the 10-minute history (for "enough data yet?").
+    var coarseSpanMinutes: Int { coarse.count * 10 }
+
     /// CSV (semicolon-separated, decimal comma – opens directly in Polish Excel / Numbers):
     /// 10-minute rows for the last 30 days, then per-minute rows for the last 24 h.
     func csv() -> String {

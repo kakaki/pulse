@@ -220,9 +220,12 @@ final class SystemMonitor {
         recordHistory()
         if tick % 30 == 0 { publishWidget() }
         RemoteMacs.shared.tick(self)
-        BluetoothBatteries.shared.tick()
+        BluetoothBatteries.shared.tick(history: history)
         DockerContainers.shared.tick()
         SSDHealth.shared.tick()
+        ProcessInsights.shared.tick(onBattery: battery.present && !battery.onAC)
+        ShortcutTriggers.shared.evaluate(self)
+        WeeklySummary.tick(self)
         tick += 1
         onUpdate?()
     }
@@ -366,6 +369,7 @@ final class SystemMonitor {
         diskFree = values.volumeAvailableCapacityForImportantUsage ?? 0
         if let name = values.volumeLocalizedName { diskName = name }
         volumes = DiskVolumes.list()
+        DiskTrend.shared.record(free: diskFree)
     }
 
     private func sampleDiskIO() {
@@ -421,6 +425,8 @@ final class SystemMonitor {
                 netOut = Double(dOut) / dt
                 netSessionIn += dIn
                 netSessionOut += dOut
+                // A vanished interface makes the summed 32-bit counters jump by ~4 GB: no real link is that fast.
+                if Double(dIn + dOut) / dt < 1.5e9 { NetworkUsage.shared.add(down: dIn, up: dOut) }
                 peakIn = max(peakIn, netIn)
                 peakOut = max(peakOut, netOut)
                 push(&netInHistory, netIn)

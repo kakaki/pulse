@@ -87,6 +87,25 @@ struct KeepAwakeIntent: AppIntent {
     }
 }
 
+struct PresentationModeIntent: AppIntent {
+    static let title: LocalizedStringResource = "Tryb prezentacji Pulse"
+    static let description = IntentDescription("Ukrywa wartości w pasku menu i wycisza powiadomienia Pulse albo przywraca je z powrotem.")
+    static let openAppWhenRun = false
+
+    @Parameter(title: "Włączony", default: true)
+    var on: Bool
+
+    static var parameterSummary: some ParameterSummary {
+        Summary("Tryb prezentacji Pulse: \(\.$on)")
+    }
+
+    @MainActor
+    func perform() async throws -> some IntentResult {
+        PresentationMode.set(on)
+        return .result()
+    }
+}
+
 enum PulseIntentError: Error, CustomLocalizedStringResourceConvertible {
     case unavailable
     var localizedStringResource: LocalizedStringResource { "Ta wartość nie jest dostępna na tym Macu." }

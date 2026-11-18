@@ -181,6 +181,15 @@ struct RemoteMacCard: View {
 
     @ViewBuilder private var details: some View {
         VStack(spacing: 6) {
+            SectionTitle(text: "Historia CPU")
+            HistoryChart(live: r.cpuHistory, maxValue: 1, color: cpuColors[1], height: 44,
+                         key: RemoteMacs.historyKey(r.id, "cpu"), format: Fmt.pct)
+            if r.temp != nil {
+                SectionTitle(text: "Historia temperatury").padding(.top, 2)
+                HistoryChart(live: r.tempHistory, maxValue: 105, color: Heat.color(r.temp ?? 50), height: 44,
+                             key: RemoteMacs.historyKey(r.id, "temp"), format: { Fmt.temp($0) })
+            }
+            Divider().padding(.vertical, 2)
             if let processes = r.processes, !processes.isEmpty {
                 SectionTitle(text: "Procesy · CPU")
                 ForEach(Array(processes.enumerated()), id: \.offset) { _, p in

@@ -166,7 +166,7 @@ struct BatteryLogCard: View {
                     .font(.system(size: 10)).foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
                 Spacer(minLength: 6)
-                if !log.days.isEmpty {
+                if !log.days.isEmpty && !Snapshot.isRunning {
                     Button { log.exportCSV() } label: { Image(systemName: "square.and.arrow.up") }
                         .buttonStyle(.borderless).font(.system(size: 11))
                         .help("Zapisz cały dziennik baterii jako CSV w folderze Pobrane")

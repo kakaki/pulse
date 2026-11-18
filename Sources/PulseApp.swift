@@ -27,7 +27,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         // Save history on SIGTERM too (pkill, logout), not only on a regular quit.
         signal(SIGTERM, SIG_IGN)
         let term = DispatchSource.makeSignalSource(signal: SIGTERM, queue: .main)
-        term.setEventHandler { MainActor.assumeIsolated { SystemMonitor.shared.history.saveFinal(); BatteryLog.shared.save() }; exit(0) }
+        term.setEventHandler { MainActor.assumeIsolated { SystemMonitor.shared.history.saveFinal(); BatteryLog.shared.save(); ProcessInsights.shared.save(); NetworkUsage.shared.save() }; exit(0) }
         term.resume()
         sigterm = term
         Snapshot.runIfRequested(monitor: SystemMonitor.shared)
@@ -36,6 +36,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationWillTerminate(_ notification: Notification) {
         SystemMonitor.shared.history.saveFinal()
         BatteryLog.shared.save()
+        ProcessInsights.shared.save()
+        NetworkUsage.shared.save()
     }
 }
 
@@ -225,6 +227,7 @@ final class StatusBarController: NSObject, NSPopoverDelegate {
         }
         scheduleCompactCheck(after: 0.8)
         // Space switches settle a moment after the notification.
+        PresentationMode.updateMirroring()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { [weak self] in
             guard let self else { return }
             let d = UserDefaults.standard
@@ -269,7 +272,7 @@ final class StatusBarController: NSObject, NSPopoverDelegate {
     }
 
     /// Settings → Ogólne: one Pulse icon instead of all the values; a click opens the Overview.
-    static var iconOnly: Bool { UserDefaults.standard.bool(forKey: "menubar.iconOnly") }
+    static var iconOnly: Bool { UserDefaults.standard.bool(forKey: "menubar.iconOnly") || PresentationMode.isActive }
     private static func shows(_ module: Module) -> Bool { iconOnly ? module == .overview : module.isEnabled }
 
     private func syncItems() {
@@ -291,7 +294,7 @@ final class StatusBarController: NSObject, NSPopoverDelegate {
                     if change.newValue == false {
                         Task { @MainActor in
                             // Dragging away the only icon brings the separate values back instead of hiding Pulse.
-                            if StatusBarController.iconOnly { UserDefaults.standard.set(false, forKey: "menubar.iconOnly") }
+                            if UserDefaults.standard.bool(forKey: "menubar.iconOnly") { UserDefaults.standard.set(false, forKey: "menubar.iconOnly") }
                             else { UserDefaults.standard.set(false, forKey: module.enabledKey) }
                         }
                     }

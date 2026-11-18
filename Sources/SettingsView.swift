@@ -155,6 +155,7 @@ struct ModuleSettings: View {
             }
             if module == .network { NetworkUnitSection() }
             if module == .cpu || module == .memory { ProcessListSection() }
+            if module == .cpu { ProcessAlertsSection() }
             if module == .battery { ChargeLimitSection(); EnergySavingSection() }
             if module == .macs { RemoteSharingSection() }
             ForEach(Alerts.Kind.kinds(for: module)) { AlertRow(kind: $0) }
@@ -412,6 +413,7 @@ struct GeneralSettings: View {
             } header: {
                 Text("Ukrywanie")
             }
+            PresentationSettingsSection()
             Section("Wygląd") {
                 LabeledContent("Kolor akcentu") {
                     HStack(spacing: 8) {
@@ -456,6 +458,15 @@ struct GeneralSettings: View {
                     Text(historySize > 0 ? String(localized: "Plik: \(Fmt.file(historySize))") : String(localized: "Brak zapisanej historii"))
                 }
                 .onAppear { historySize = HistoryStore.fileSize }
+                LabeledContent {
+                    HStack {
+                        Button("Eksportuj…") { SettingsTransfer.exportSettings() }
+                        Button("Importuj…") { SettingsTransfer.importSettings() }
+                    }
+                } label: {
+                    Text("Ustawienia Pulse")
+                    Text("Plik do przeniesienia ustawień na nowego Maca albo na kilka Maców naraz.")
+                }
                 .confirmationDialog("Wyczyścić historię wykresów?", isPresented: $confirmClear) {
                     Button("Wyczyść historię", role: .destructive) {
                         monitor.history.clear()

@@ -27,22 +27,25 @@
 - **Przegląd w jednym elemencie paska menu.** Wszystkie moduły mogą stać obok siebie albo każdy może mieć osobny element. Kliknięcie wartości w pasku otwiera szczegóły tego modułu.
 - **Cztery style wartości:** tekst, pierścień, słupki albo mini wykres. Styl, etykietę i kolejność ustawiasz osobno dla każdej wartości; kolejność zmieniasz przeciąganiem.
 - **Szczegółowe panele** dla każdego modułu:
-  - **CPU:** obciążenie, rdzenie, średnie obciążenie, najbardziej obciążające procesy, kontenery Dockera (uruchamianie, zatrzymywanie, restart)
+  - **CPU:** obciążenie, rdzenie, średnie obciążenie, najbardziej obciążające procesy, rytm tygodnia (mapa obciążenia dzień × godzina), kontenery Dockera (uruchamianie, zatrzymywanie, restart), programy działające w tle (LaunchAgents) z zużyciem CPU i pamięci oraz wyłączaniem
   - **GPU:** historia użycia, obciążenie renderera i tilera, pamięć GPU, rdzenie, restarty, procesy używające GPU
   - **Pamięć:** ciśnienie, pamięć aplikacji / związana / skompresowana, swap, procesy
-  - **Dysk:** miejsce zajęte lub wolne w procentach albo GB/TB, wiele dysków, odczyt i zapis, co zajmuje miejsce
-  - **Sieć:** wysyłanie i pobieranie w MB/s lub Mb/s, ruch per aplikacja, opóźnienie, test połączenia (router czy internet), adres lokalny i publiczny
+  - **Dysk:** miejsce zajęte lub wolne w procentach albo GB/TB, wiele dysków, odczyt i zapis, co zajmuje miejsce, prognoza zapełnienia dysku, żywotność SSD ze SMART (zużycie, zapisane dane, temperatura)
+  - **Sieć:** wysyłanie i pobieranie w MB/s lub Mb/s, ruch per aplikacja, opóźnienie, test połączenia (router czy internet), adres lokalny i publiczny, szczegóły Wi‑Fi (sygnał/szum, standard, kanał, historia sygnału), dane w miesiącu z limitem (także osobno przez hotspot)
   - **Czujniki:** temperatury SoC, SSD i baterii, wentylatory, stan termiczny
-  - **Bateria:** wykres naładowania, kondycja, cykle, pobór mocy, moc zasilacza, zużycie energii przez aplikacje, energia ładowania w miesiącu, kondycja w czasie, baterie urządzeń Bluetooth (AirPods, klawiatura, mysz)
-  - **Inne komputery:** obciążenie, temperatury, wentylatory, procesy i kontenery Dockera innych Maców z Pulse oraz komputerów z Windowsem i PulseWin w sieci lokalnej; zdalna aktualizacja Pulse na Makach (jeśli dany Mac na to pozwala)
+  - **Bateria:** wykres naładowania, kondycja, cykle, pobór mocy, moc zasilacza, zużycie energii przez aplikacje i ranking energii z 24 h (ile baterii zużyła każda aplikacja), energia ładowania w miesiącu, kondycja w czasie, baterie urządzeń Bluetooth (AirPods, klawiatura, mysz) z historią
+  - **Inne komputery:** obciążenie, temperatury, wentylatory, procesy, kontenery Dockera i historia CPU i temperatury innych Maców z Pulse oraz komputerów z Windowsem i PulseWin w sieci lokalnej; zdalna aktualizacja Pulse na Makach (jeśli dany Mac na to pozwala)
 - **Limit ładowania** w MacBookach (50–95%), żeby bateria nie stała stale na 100%, z jednorazowym „naładuj do pełna” przed podróżą. Od macOS 27 Apple pozwala tylko na systemowy limit ładowania – Pulse prowadzi do jego ustawień.
 - **Historia z 2 min, 1 h, 24 h, 7 dni i 30 dni**, przechowywana 7, 14 lub 30 dni, z eksportem do CSV.
 - **Przydatne akcje:** zwalnianie pamięci (`purge`, pyta o hasło administratora), kończenie procesów prawym klikiem (procesy o tej samej nazwie można łączyć w jeden wiersz), kopiowanie adresu IP kliknięciem.
-- **Powiadomienia** o długotrwałym obciążeniu CPU, wysokiej temperaturze, spowolnieniu termicznym, braku pamięci, małej ilości miejsca na dysku i niskim poziomie baterii, a także o komputerze w sieci, który przestał odpowiadać.
+- **Powiadomienia** o długotrwałym obciążeniu CPU, wysokiej temperaturze, spowolnieniu termicznym, braku pamięci, małej ilości miejsca na dysku, prognozie zapełnienia dysku, limicie danych i niskim poziomie baterii, a także o komputerze w sieci, który przestał odpowiadać. Alert dla wybranego procesu (np. „Chrome Helper powyżej 80% przez 5 minut”) ma przycisk „Zakończ”. W poniedziałek przychodzi tygodniowe podsumowanie.
+- **Skróty po przekroczeniu progu:** np. temperatura powyżej 90° uruchamia wybrany skrót.
 - **Wartości krytyczne pulsują** w pasku menu, a przy wysokim obciążeniu wartości zmieniają kolor (progi CPU, temperatury i dysku ustawisz sam).
+- **Nie usypiaj:** Mac (i opcjonalnie ekran) nie zaśnie przez 30 min, 1 h, 3 h albo do wyłączenia.
+- **Tryb prezentacji:** jednym kliknięciem zostaje sama ikona Pulse, a powiadomienia milkną; może włączać się sam przy dublowaniu ekranu.
 - **Nie przeszkadza:** chowa się na pełnym ekranie i przy dublowaniu ekranu, a na baterii i w trybie niskiego zużycia energii odświeża dane rzadziej.
 - **Mieści się przy notchu:** gdy macOS chowa Pulse z braku miejsca, Pulse ukrywa etykiety i przechodzi na najwęższy styl. Można też zostawić w pasku samą ikonę Pulse.
-- **Widżety na biurko** (obciążenie albo energia ładowania i najcieplejszy komputer), **akcje w Skrótach** do odczytu wartości i uruchamianie przy logowaniu.
+- **Widżety na biurko** (obciążenie albo energia ładowania i najcieplejszy komputer), **akcje w Skrótach** do odczytu wartości i uruchamianie przy logowaniu, eksport i import ustawień.
 - **Automatyczne aktualizacje** przez Sparkle. Każda wersja jest podpisana i notaryzowana przez Apple.
 
 ## Zrzuty ekranu

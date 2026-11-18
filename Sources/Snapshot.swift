@@ -3,6 +3,8 @@ import SwiftUI
 /// Debug helper: `Pulse --snapshot <dir>` renders every dropdown and menu bar style to PNG files and exits.
 @MainActor
 enum Snapshot {
+    /// ImageRenderer can't draw AppKit-backed controls (menus, segmented pickers): views show a plain stand-in.
+    nonisolated static let isRunning = CommandLine.arguments.contains("--snapshot")
     private static var started = false
     static func runIfRequested(monitor: SystemMonitor) {
         guard !started else { return }
@@ -23,7 +25,7 @@ enum Snapshot {
                 monitor.refresh()
             }
             if args.contains("--demo") {
-                monitor.applyDemo(); NetworkExtras.shared.applyDemo(); DiskUsage.shared.applyDemo(); RemoteMacs.shared.applyDemo(); BluetoothBatteries.shared.applyDemo(); BatteryLog.shared.applyDemo(); DockerContainers.shared.applyDemo(); SSDHealth.shared.applyDemo()
+                monitor.applyDemo(); NetworkExtras.shared.applyDemo(); DiskUsage.shared.applyDemo(); RemoteMacs.shared.applyDemo(); BluetoothBatteries.shared.applyDemo(); BatteryLog.shared.applyDemo(); DockerContainers.shared.applyDemo(); SSDHealth.shared.applyDemo(); ProcessInsights.shared.applyDemo(); NetworkUsage.shared.applyDemo(); DiskTrend.shared.applyDemo(); StartupItems.shared.applyDemo()
             }
             for s in monitor.sensors { print("sensor:", s.id, s.kind, String(format: "%.1f", s.value)) }
             for s in monitor.sensorGroups { print("group:", s.id, s.name, String(format: "%.1f", s.value)) }

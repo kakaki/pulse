@@ -8,7 +8,7 @@ final class Alerts: NSObject, UNUserNotificationCenterDelegate {
     static let shared = Alerts()
 
     enum Kind: String, CaseIterable, Identifiable {
-        case temp, thermal, cpu, memory, battery, bluetooth, disk, remote
+        case temp, thermal, cpu, memory, battery, bluetooth, disk, diskTrend, remote
         var id: String { rawValue }
         var title: String {
             switch self {
@@ -19,6 +19,7 @@ final class Alerts: NSObject, UNUserNotificationCenterDelegate {
             case .battery: String(localized: "Niski poziom baterii")
             case .bluetooth: String(localized: "Słaba bateria urządzenia Bluetooth")
             case .disk: String(localized: "Mało miejsca na dysku")
+            case .diskTrend: String(localized: "Dysk niedługo się zapełni")
             case .remote: String(localized: "Inny komputer przestał odpowiadać")
             }
         }
@@ -31,6 +32,7 @@ final class Alerts: NSObject, UNUserNotificationCenterDelegate {
             case .battery: "battery.25percent"
             case .bluetooth: "keyboard.badge.ellipsis"
             case .disk: "internaldrive"
+            case .diskTrend: "chart.line.downtrend.xyaxis"
             case .remote: "desktopcomputer.trianglebadge.exclamationmark"
             }
         }
@@ -39,7 +41,7 @@ final class Alerts: NSObject, UNUserNotificationCenterDelegate {
             switch module {
             case .cpu: [.cpu]
             case .memory: [.memory]
-            case .disk: [.disk]
+            case .disk: [.disk, .diskTrend]
             case .battery: [.battery, .bluetooth]
             case .sensors: [.temp, .thermal]
             case .macs: [.remote]
@@ -55,9 +57,9 @@ final class Alerts: NSObject, UNUserNotificationCenterDelegate {
             switch self {
             case .temp: 95
             case .cpu: 0.9
-            case .memory, .thermal, .remote: 0
+            case .memory, .thermal, .remote, .diskTrend: 0
             case .battery: 0.15
-            case .bluetooth: 0.15
+            case .bluetooth: 0.2
             case .disk: 10
             }
         }
@@ -74,6 +76,10 @@ final class Alerts: NSObject, UNUserNotificationCenterDelegate {
     override private init() {
         super.init()
         UNUserNotificationCenter.current().delegate = self
+        let quit = UNNotificationAction(identifier: "quit", title: String(localized: "Zakończ"), options: [.destructive])
+        UNUserNotificationCenter.current().setNotificationCategories([
+            UNNotificationCategory(identifier: Self.processCategory, actions: [quit], intentIdentifiers: []),
+        ])
     }
 
     func requestAuthorization() {
@@ -108,6 +114,10 @@ final class Alerts: NSObject, UNUserNotificationCenterDelegate {
                       ?? String(localized: "Bateria: \(Fmt.pct(m.battery.percent))."))
         }
         // Disk
+        // No forecast (space stopped shrinking) also re-arms the warning.
+        let days = min(DiskTrend.shared.daysLeft ?? 9999, 9999)
+        check(.diskTrend, firing: days < 14, clear: days > 21,
+              body: String(localized: "Przy obecnym tempie na dysku \(m.diskName) zabraknie miejsca za ok. \(Int(days.rounded())) dni. Największe foldery pokaże panel Dysk → Co zajmuje miejsce."))
         if m.diskTotal > 0 {
             let freeGB = Double(m.diskFree) / 1e9
             check(.disk, firing: freeGB < Kind.disk.limit, clear: freeGB > Kind.disk.limit + 5,
@@ -124,11 +134,19 @@ final class Alerts: NSObject, UNUserNotificationCenterDelegate {
         send(title: kind.title, body: body, id: kind.rawValue)
     }
 
-    func send(title: String, body: String, id: String, file: URL? = nil) {
+    static let processCategory = "pulse.process"
+
+    /// `category`: notification with buttons (process alerts: "Zakończ").
+    func send(title: String, body: String, id: String, file: URL? = nil, category: String? = nil, info: [String: String] = [:]) {
+        // Presentation mode keeps quiet (except the test button in Settings).
+        if PresentationMode.isActive && id != "test" { return }
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = body
-        if let file { content.userInfo = ["file": file.path] }
+        var userInfo: [String: String] = info
+        if let file { userInfo["file"] = file.path }
+        content.userInfo = userInfo
+        if let category { content.categoryIdentifier = category }
         content.sound = .default
         let request = UNNotificationRequest(identifier: "pulse.\(id)", content: content, trigger: nil)
         UNUserNotificationCenter.current().add(request)
@@ -142,7 +160,13 @@ final class Alerts: NSObject, UNUserNotificationCenterDelegate {
     /// Clicking a notification that points to a file (a hang report) shows it in Finder.
     nonisolated func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse,
                                             withCompletionHandler completionHandler: @escaping () -> Void) {
-        let path = response.notification.request.content.userInfo["file"] as? String
+        let info = response.notification.request.content.userInfo
+        let path = info["file"] as? String
+        if response.actionIdentifier == "quit", let name = info["quitName"] as? String {
+            DispatchQueue.main.async { MainActor.assumeIsolated { ProcessInsights.quitAll(named: name) } }
+            completionHandler()
+            return
+        }
         DispatchQueue.main.async {
             if let path, FileManager.default.fileExists(atPath: path) {
                 NSWorkspace.shared.activateFileViewerSelecting([URL(fileURLWithPath: path)])
@@ -174,8 +198,10 @@ struct AlertSettings: View {
                     }
                 }
             } footer: {
-                Text("To samo powiadomienie nie pojawi się częściej niż co 30 minut ani ponownie, zanim wartość nie wróci do normy. Progi ustawisz na stronach modułów: CPU, Pamięć, Dysk, Czujniki i Bateria (także dla urządzeń Bluetooth). Na stronie Inne komputery włączysz powiadomienie, gdy komputer z sieci przestanie odpowiadać.")
+                Text("W trybie prezentacji Pulse nie wysyła powiadomień. To samo powiadomienie nie pojawi się częściej niż co 30 minut ani ponownie, zanim wartość nie wróci do normy. Progi ustawisz na stronach modułów: CPU, Pamięć, Dysk, Czujniki i Bateria (także dla urządzeń Bluetooth). Na stronie Inne komputery włączysz powiadomienie, gdy komputer z sieci przestanie odpowiadać.")
             }
+            WeeklySummarySection()
+            ShortcutTriggersSection()
         }
         .formStyle(.grouped)
         .navigationTitle("Powiadomienia")
@@ -196,6 +222,23 @@ struct AlertSettings: View {
 
     private func refreshSoon() {
         Task { try? await Task.sleep(for: .seconds(2)); await refresh() }
+    }
+}
+
+struct WeeklySummarySection: View {
+    @Environment(SystemMonitor.self) private var m
+    @AppStorage(WeeklySummary.enabledKey) private var enabled = true
+
+    var body: some View {
+        Section {
+            HStack {
+                Toggle(isOn: $enabled) {
+                    Label("Tygodniowe podsumowanie", systemImage: "calendar")
+                    Text("W poniedziałek rano: średnie obciążenie CPU w porównaniu z poprzednim tygodniem, najwyższa temperatura, zapis na SSD i kondycja baterii.")
+                }
+                Button("Pokaż teraz") { WeeklySummary.sendNow(m) }
+            }
+        }
     }
 }
 
@@ -221,6 +264,8 @@ struct AlertRow: View {
                     Stepper("Próg: \(Fmt.pct(limit)) przez 2 min", value: $limit, in: 0.5...1, step: 0.05)
                 case .battery, .bluetooth:
                     Stepper("Próg: \(Fmt.pct(limit))", value: $limit, in: 0.05...0.5, step: 0.05)
+                case .diskTrend:
+                    Text("Gdy z historii wolnego miejsca wynika, że dysk zapełni się w ciągu 2 tygodni. Prognoza pojawia się po 2 dniach pomiarów.").foregroundStyle(.secondary)
                 case .disk:
                     Stepper("Gdy wolne < \(Int(limit)) GB", value: $limit, in: 5...200, step: 5)
                 case .memory:

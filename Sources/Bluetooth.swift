@@ -58,7 +58,20 @@ final class BluetoothBatteries {
     /// Devices already warned about; re-armed when the level rises again.
     @ObservationIgnored private var warned: Set<String> = []
 
-    func tick() {
+    /// Live series per device (last 2 minutes); longer history goes to the history file.
+    private(set) var live: [String: [Double]] = [:]
+    static func historyKey(_ id: String) -> String { "bt.\(id)" }
+
+    /// `history` is passed in: this runs inside SystemMonitor's own init, before `SystemMonitor.shared` exists.
+    func tick(history: HistoryStore) {
+        for d in devices {
+            guard let low = d.lowest ?? d.levels.first?.percent else { continue }
+            history.add(key: Self.historyKey(d.id), low)
+            var series = live[d.id] ?? []
+            series.append(low)
+            if series.count > SystemMonitor.historyLength { series.removeFirst(series.count - SystemMonitor.historyLength) }
+            live[d.id] = series
+        }
         let every: TimeInterval = watchers > 0 ? 15 : 120
         if Date().timeIntervalSince(lastRefresh) >= every { refresh() }
     }
@@ -153,6 +166,7 @@ final class BluetoothBatteries {
 
 struct BluetoothBatteriesCard: View {
     private let bt = BluetoothBatteries.shared
+    @State private var expanded: String?
     /// Without a Mac battery the card is the whole panel, so it also says when nothing is connected.
     var showEmpty = false
 
@@ -162,8 +176,18 @@ struct BluetoothBatteriesCard: View {
                 Card {
                     SectionTitle(text: "Urządzenia Bluetooth")
                     VStack(spacing: 10) {
-                        ForEach(bt.devices) { row($0) }
+                        ForEach(bt.devices) { d in
+                            Button {
+                                withAnimation(.easeOut(duration: 0.15)) { expanded = expanded == d.id ? nil : d.id }
+                            } label: { row(d).contentShape(.rect) }
+                            .buttonStyle(.plain)
+                            if expanded == d.id {
+                                HistoryChart(live: bt.live[d.id] ?? [], maxValue: 1, color: Module.battery.tint, height: 40,
+                                             key: BluetoothBatteries.historyKey(d.id), format: Fmt.pct)
+                            }
+                        }
                     }
+                    Text("Kliknij urządzenie, aby zobaczyć historię baterii.").font(.system(size: 10)).foregroundStyle(.secondary)
                 }
             } else if showEmpty && bt.loaded {
                 Card {

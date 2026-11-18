@@ -1,6 +1,25 @@
 {
   "sourceLanguage" : "pl",
   "strings" : {
+    "" : {
+
+    },
+    " (hotspot i sieci komórkowe)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " (Hotspot und Mobilfunk)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " (hotspot and cellular)"
+          }
+        }
+      }
+    },
     " Najwięcej zużywa: %@." : {
       "localizations" : {
         "de" : {
@@ -32,6 +51,44 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ (unavailable)"
+          }
+        }
+      }
+    },
+    "%@ CPU od ponad %lld min (próg %@)." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ CPU seit über %2$lld Min. (Schwelle %3$@)."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ CPU for over %2$lld min (threshold %3$@)."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ CPU od ponad %2$lld min (próg %3$@)."
+          }
+        }
+      }
+    },
+    "%@ baterii" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ des Akkus"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ of battery"
           }
         }
       }
@@ -86,6 +143,28 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "%1$@ wolne z %2$@"
+          }
+        }
+      }
+    },
+    "%@ z %@ w tym okresie%@." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ von %2$@ in diesem Zeitraum%3$@."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ of %2$@ this period%3$@."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ z %2$@ w tym okresie%3$@."
           }
         }
       }
@@ -200,6 +279,28 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "%1$lld z %2$lld"
+          }
+        }
+      }
+    },
+    "%lld z %lld działa" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld von %2$lld laufen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld of %2$lld running"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld z %2$lld działa"
           }
         }
       }
@@ -737,6 +838,22 @@
         }
       }
     },
+    "Bateria poniżej" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Akku unter"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Battery below"
+          }
+        }
+      }
+    },
     "Bateria: %@, zostało ok. %@." : {
       "localizations" : {
         "de" : {
@@ -771,6 +888,44 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Battery: %@."
+          }
+        }
+      }
+    },
+    "Bateria: kondycja %@%@, naładowano %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Akku: Zustand %1$@%2$@, geladen %3$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Battery: health %1$@%2$@, charged %3$@"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Bateria: kondycja %1$@%2$@, naładowano %3$@"
+          }
+        }
+      }
+    },
+    "Bez limitu" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein Limit"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No limit"
           }
         }
       }
@@ -819,6 +974,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Desktop"
+          }
+        }
+      }
+    },
+    "Brak agentów i demonów innych aplikacji." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Agenten oder Daemons anderer Apps."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No agents or daemons from other apps."
           }
         }
       }
@@ -1075,6 +1246,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "CPU %"
+          }
+        }
+      }
+    },
+    "CPU powyżej" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CPU über"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CPU above"
           }
         }
       }
@@ -1495,6 +1682,38 @@
         }
       }
     },
+    "Dane w tym okresie" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daten in diesem Zeitraum"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Data this period"
+          }
+        }
+      }
+    },
+    "Dane z %lld h." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daten aus %lld Std."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Data from %lld h."
+          }
+        }
+      }
+    },
     "Diagnostyka" : {
       "localizations" : {
         "de" : {
@@ -1607,6 +1826,22 @@
         }
       }
     },
+    "Dodaj" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hinzufügen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add"
+          }
+        }
+      }
+    },
     "Dodaj pomocnika" : {
       "localizations" : {
         "de" : {
@@ -1619,6 +1854,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Add helper"
+          }
+        }
+      }
+    },
+    "Dodaj regułę" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regel hinzufügen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add rule"
           }
         }
       }
@@ -1719,6 +1970,22 @@
         }
       }
     },
+    "Dysk niedługo się zapełni" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volume ist bald voll"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disk will be full soon"
+          }
+        }
+      }
+    },
     "Dysk odczyt B/s" : {
       "localizations" : {
         "de" : {
@@ -1763,6 +2030,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Disk write B/s"
+          }
+        }
+      }
+    },
+    "Działa w tle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Läuft im Hintergrund"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Running in the background"
           }
         }
       }
@@ -1815,6 +2098,22 @@
         }
       }
     },
+    "Eksportuj…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exportieren …"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export…"
+          }
+        }
+      }
+    },
     "Energia" : {
       "localizations" : {
         "de" : {
@@ -1827,6 +2126,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Energy"
+          }
+        }
+      }
+    },
+    "Energia aplikacji" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Energie der Apps"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App energy"
           }
         }
       }
@@ -1975,6 +2290,22 @@
         }
       }
     },
+    "Gdy" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wenn"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "When"
+          }
+        }
+      }
+    },
     "Gdy Pulse przestanie odpowiadać na dłużej niż 6 sekund, zapisuje raport w ~/Library/Logs/Pulse. Raport zostaje na tym Macu – możesz go przesłać, aby pomóc znaleźć przyczynę." : {
       "localizations" : {
         "de" : {
@@ -2071,6 +2402,22 @@
         }
       }
     },
+    "Gdy z historii wolnego miejsca wynika, że dysk zapełni się w ciągu 2 tygodni. Prognoza pojawia się po 2 dniach pomiarów." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wenn der Verlauf des freien Speichers zeigt, dass das Volume innerhalb von 2 Wochen voll ist. Die Prognose erscheint nach 2 Tagen Messung."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "When the free space history shows the disk filling up within 2 weeks. The forecast appears after 2 days of measurements."
+          }
+        }
+      }
+    },
     "Godziny pracy" : {
       "localizations" : {
         "de" : {
@@ -2151,6 +2498,38 @@
         }
       }
     },
+    "Historia CPU" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CPU-Verlauf"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CPU history"
+          }
+        }
+      }
+    },
+    "Historia temperatury" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temperaturverlauf"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temperature history"
+          }
+        }
+      }
+    },
     "Historia wykresów" : {
       "localizations" : {
         "de" : {
@@ -2179,6 +2558,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Icons in the panels and Overview tiles. “Module colors” keeps each module’s own color."
+          }
+        }
+      }
+    },
+    "Importuj…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importieren …"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import…"
           }
         }
       }
@@ -2459,6 +2854,22 @@
         }
       }
     },
+    "Kliknij urządzenie, aby zobaczyć historię baterii." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klicke auf ein Gerät, um den Akkuverlauf zu sehen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Click a device to see its battery history."
+          }
+        }
+      }
+    },
     "Kliknij, aby skopiować" : {
       "localizations" : {
         "de" : {
@@ -2699,6 +3110,38 @@
         }
       }
     },
+    "Licz tylko hotspot i sieci komórkowe" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nur Hotspot und Mobilfunk zählen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Count only hotspot and cellular"
+          }
+        }
+      }
+    },
+    "Limit" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Limit"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Limit"
+          }
+        }
+      }
+    },
     "Limit %lld%% · wymaga pomocnika" : {
       "localizations" : {
         "de" : {
@@ -2727,6 +3170,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Limit %lld%% · charging paused"
+          }
+        }
+      }
+    },
+    "Limit (hotspot)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Limit (Hotspot)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Limit (hotspot)"
+          }
+        }
+      }
+    },
+    "Limit danych wykorzystany" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datenlimit erreicht"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Data limit reached"
+          }
+        }
+      }
+    },
+    "Limit i okres" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Limit und Zeitraum"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Limit and period"
           }
         }
       }
@@ -2857,6 +3348,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Macs on the network: %lld"
+          }
+        }
+      }
+    },
+    "Mapa pojawi się po 2 dniach zbierania danych. Pokaże, o których godzinach Mac zwykle pracuje najciężej." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Karte erscheint nach 2 Tagen. Sie zeigt, zu welchen Uhrzeiten dein Mac meist am stärksten arbeitet."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The map appears after 2 days of data. It shows at which hours your Mac usually works hardest."
           }
         }
       }
@@ -3146,6 +3653,22 @@
         }
       }
     },
+    "Najwyższa temperatura: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Höchste Temperatur: %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Highest temperature: %@"
+          }
+        }
+      }
+    },
     "Najwyższa wartość ze wszystkich" : {
       "localizations" : {
         "de" : {
@@ -3174,6 +3697,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Voltage"
+          }
+        }
+      }
+    },
+    "Nazwa procesu lub aplikacji" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name des Prozesses oder der App"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Process or app name"
           }
         }
       }
@@ -3302,6 +3841,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Could not run the command for “%@”."
+          }
+        }
+      }
+    },
+    "Nie udało się zmienić „%@”." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "„%@“ konnte nicht geändert werden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Could not change “%@”."
           }
         }
       }
@@ -3574,6 +4129,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "E.g. when a projector or TV is connected in mirroring mode (AirPlay)."
+          }
+        }
+      }
+    },
+    "Np. przy projektorze, telewizorze albo AirPlay w trybie dublowania." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Z. B. mit Beamer, Fernseher oder AirPlay im Synchronmodus."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E.g. with a projector, a TV or AirPlay in mirroring mode."
           }
         }
       }
@@ -3931,6 +4502,22 @@
         }
       }
     },
+    "Ostatnio uruchomiony: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zuletzt ausgeführt: %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last run: %@"
+          }
+        }
+      }
+    },
     "Ostrzeżenie SMART" : {
       "localizations" : {
         "de" : {
@@ -4011,6 +4598,22 @@
         }
       }
     },
+    "Otwórz Skróty" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kurzbefehle öffnen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Shortcuts"
+          }
+        }
+      }
+    },
     "Otwórz Ustawienia systemowe" : {
       "localizations" : {
         "de" : {
@@ -4023,6 +4626,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Open System Settings"
+          }
+        }
+      }
+    },
+    "Otwórz Ustawienia systemowe → Elementy logowania" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Systemeinstellungen → Anmeldeobjekte öffnen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open System Settings → Login Items"
           }
         }
       }
@@ -4188,6 +4807,22 @@
         }
       }
     },
+    "Pamięć powyżej" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speicher über"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memory above"
+          }
+        }
+      }
+    },
     "Pamięć użyta" : {
       "localizations" : {
         "de" : {
@@ -4312,6 +4947,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ring"
+          }
+        }
+      }
+    },
+    "Plik do przeniesienia ustawień na nowego Maca albo na kilka Maców naraz." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eine Datei, um die Einstellungen auf einen neuen Mac oder mehrere Macs zu übertragen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A file to move your settings to a new Mac or to several Macs at once."
           }
         }
       }
@@ -4444,6 +5095,22 @@
         }
       }
     },
+    "Pobrano" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empfangen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Downloaded"
+          }
+        }
+      }
+    },
     "Pobrano (sesja)" : {
       "localizations" : {
         "de" : {
@@ -4504,6 +5171,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "System power draw"
+          }
+        }
+      }
+    },
+    "Początek okresu" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeitraum beginnt am"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Period starts on day"
           }
         }
       }
@@ -4713,6 +5396,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Show name"
+          }
+        }
+      }
+    },
+    "Pokaż plik w Finderze" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datei im Finder zeigen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show file in Finder"
+          }
+        }
+      }
+    },
+    "Pokaż teraz" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jetzt zeigen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show now"
           }
         }
       }
@@ -4944,6 +5659,22 @@
         }
       }
     },
+    "Poprzedni okres" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorheriger Zeitraum"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Previous period"
+          }
+        }
+      }
+    },
     "Poważny" : {
       "localizations" : {
         "de" : {
@@ -4956,6 +5687,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Serious"
+          }
+        }
+      }
+    },
+    "Powiadom, gdy długo obciąża CPU" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Benachrichtigen bei langer CPU-Last"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notify when it loads the CPU for long"
           }
         }
       }
@@ -4992,6 +5739,22 @@
         }
       }
     },
+    "Powiadomienia o procesach" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prozess-Mitteilungen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Process notifications"
+          }
+        }
+      }
+    },
     "Powiadomienia wyłączone w systemie" : {
       "localizations" : {
         "de" : {
@@ -5020,6 +5783,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Notifications enabled"
+          }
+        }
+      }
+    },
+    "Powiadomienie, gdy wybrany proces długo obciąża procesor, z przyciskiem „Zakończ”. 100% to jeden pełny rdzeń. Nazwa aplikacji (np. Google Chrome) obejmuje też jej procesy pomocnicze. Proces dodasz też z panelu CPU: prawy klik na procesie." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eine Mitteilung mit „Beenden“-Taste, wenn der gewählte Prozess die CPU lange auslastet. 100 % ist ein voller Kern. Ein App-Name (z. B. Google Chrome) umfasst auch ihre Hilfsprozesse. Einen Prozess fügst du auch im CPU-Fenster hinzu: Rechtsklick darauf."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A notification with a “Quit” button when the chosen process keeps the CPU busy. 100% is one full core. An app name (e.g. Google Chrome) also covers its helper processes. You can also add a process from the CPU panel: right-click it."
+          }
+        }
+      }
+    },
+    "Powyżej %@ CPU" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Über %@ CPU"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Above %@ CPU"
           }
         }
       }
@@ -5255,6 +6050,44 @@
         }
       }
     },
+    "Procesor: średnio %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CPU: im Schnitt %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CPU: %@ on average"
+          }
+        }
+      }
+    },
+    "Procesor: średnio %@ (tydzień wcześniej %@)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CPU: im Schnitt %1$@ (Woche davor: %2$@)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CPU: %1$@ on average (week before: %2$@)"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Procesor: średnio %1$@ (tydzień wcześniej %2$@)"
+          }
+        }
+      }
+    },
     "Procesy · CPU" : {
       "localizations" : {
         "de" : {
@@ -5315,6 +6148,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Processes · memory"
+          }
+        }
+      }
+    },
+    "Programy innych aplikacji uruchamiane przy starcie (LaunchAgents i LaunchDaemons). Czas CPU liczy się od ich uruchomienia. Aplikacje otwierane przy logowaniu i zgody na działanie w tle zmienisz w Ustawieniach systemowych." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Programme anderer Apps, die beim Start laufen (LaunchAgents und LaunchDaemons). Die CPU-Zeit zählt ab ihrem Start. Beim Anmelden geöffnete Apps und Hintergrund-Erlaubnisse änderst du in den Systemeinstellungen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Programs of other apps started at login (LaunchAgents and LaunchDaemons). CPU time counts from their start. Apps opened at login and background permissions are changed in System Settings."
           }
         }
       }
@@ -5462,6 +6311,76 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Move up"
+          }
+        }
+      }
+    },
+    "Przez %lld min" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Für %lld Min."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "For %lld min"
+          }
+        }
+      }
+    },
+    "Przez hotspot" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Über Hotspot"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Via hotspot"
+          }
+        }
+      }
+    },
+    "Przez hotspot (teraz połączony)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Über Hotspot (jetzt verbunden)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Via hotspot (connected now)"
+          }
+        }
+      }
+    },
+    "Przy obecnym tempie na dysku %@ zabraknie miejsca za ok. %lld dni. Największe foldery pokaże panel Dysk → Co zajmuje miejsce." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beim aktuellen Tempo ist %1$@ in etwa %2$lld Tagen voll. Die größten Ordner zeigt das Fenster Volume → Was belegt Speicher."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "At the current rate %1$@ will run out of space in about %2$lld days. The Disk panel → What takes up space shows the biggest folders."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Przy obecnym tempie na dysku %1$@ zabraknie miejsca za ok. %2$lld dni. Największe foldery pokaże panel Dysk → Co zajmuje miejsce."
           }
         }
       }
@@ -5676,6 +6595,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pulse stopped responding earlier"
+          }
+        }
+      }
+    },
+    "Pulse uruchomi wybrany skrót, gdy wartość utrzyma się za progiem przez 30 sekund. Kolejny raz dopiero po powrocie do normy. Przykłady: włącz tryb niskiego zużycia energii przy słabej baterii, wyślij wiadomość przy przegrzaniu." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pulse führt den gewählten Kurzbefehl aus, wenn der Wert 30 Sekunden jenseits der Schwelle bleibt, erneut erst nach der Rückkehr zum Normalwert. Beispiele: Stromsparmodus bei schwachem Akku, Nachricht bei Überhitzung."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pulse runs the chosen shortcut when the value stays past the threshold for 30 seconds, and again only after it returns to normal. Examples: turn on Low Power Mode on a low battery, send a message when overheating."
           }
         }
       }
@@ -5936,6 +6871,22 @@
         }
       }
     },
+    "Rytm tygodnia" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wochenrhythmus"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weekly rhythm"
+          }
+        }
+      }
+    },
     "Różnica między sygnałem a szumem. Powyżej 25 dB połączenie jest stabilne, poniżej 15 dB mogą być przerwy i spowolnienia." : {
       "localizations" : {
         "de" : {
@@ -6144,6 +7095,22 @@
         }
       }
     },
+    "Skróty po przekroczeniu progu" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kurzbefehle bei Schwellen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shortcuts on thresholds"
+          }
+        }
+      }
+    },
     "SoC ma %@ (próg %@)." : {
       "localizations" : {
         "de" : {
@@ -6246,6 +7213,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Checking for updates…"
+          }
+        }
+      }
+    },
+    "Sprawdzam…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prüfe …"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Checking…"
           }
         }
       }
@@ -6603,6 +7586,22 @@
         }
       }
     },
+    "System (demon)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "System (Daemon)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "System (daemon)"
+          }
+        }
+      }
+    },
     "System i pozostałe" : {
       "localizations" : {
         "de" : {
@@ -6647,6 +7646,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The system rejected the change – charging works normally."
+          }
+        }
+      }
+    },
+    "Szacunek macOS dla każdej aplikacji razem z jej procesami pomocniczymi." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schätzung von macOS für jede App samt ihren Hilfsprozessen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS estimate for each app together with its helper processes."
           }
         }
       }
@@ -6908,6 +7923,22 @@
         }
       }
     },
+    "Temperatura powyżej" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temperatur über"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temperature above"
+          }
+        }
+      }
+    },
     "Temperatura w pasku menu nie zmienia koloru." : {
       "localizations" : {
         "de" : {
@@ -7133,6 +8164,22 @@
         }
       }
     },
+    "To nie jest plik ustawień Pulse" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das ist keine Pulse-Einstellungsdatei"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This is not a Pulse settings file"
+          }
+        }
+      }
+    },
     "To proces systemowy lub innego użytkownika. Użyj Monitora aktywności." : {
       "localizations" : {
         "de" : {
@@ -7183,22 +8230,6 @@
         }
       }
     },
-    "To samo powiadomienie nie pojawi się częściej niż co 30 minut ani ponownie, zanim wartość nie wróci do normy. Progi ustawisz na stronach modułów: CPU, Pamięć, Dysk, Czujniki i Bateria (także dla urządzeń Bluetooth). Na stronie Inne komputery włączysz powiadomienie, gdy komputer z sieci przestanie odpowiadać." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dieselbe Mitteilung erscheint höchstens alle 30 Minuten und erst wieder, wenn sich der Wert normalisiert hat. Schwellen legst du auf den Modulseiten fest: CPU, Speicher, Festplatte, Sensoren und Batterie (auch für Bluetooth-Geräte). Auf der Seite „Andere Computer“ aktivierst du eine Mitteilung, wenn ein Computer im Netzwerk nicht mehr antwortet."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The same notification appears at most every 30 minutes, and not again until the value returns to normal. Set thresholds on the module pages: CPU, Memory, Disk, Sensors and Battery (also for Bluetooth devices). On the Other Computers page you can turn on a notification when a computer on the network stops responding."
-          }
-        }
-      }
-    },
     "To samo powiadomienie nie pojawi się częściej niż co 30 minut ani ponownie, zanim wartość nie wróci do normy. Progi ustawisz na stronach modułów: CPU, Pamięć, Dysk, Czujniki i Bateria." : {
       "extractionState" : "stale",
       "localizations" : {
@@ -7232,6 +8263,118 @@
         }
       }
     },
+    "Tryb prezentacji" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Präsentationsmodus"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Presentation mode"
+          }
+        }
+      }
+    },
+    "Tryb prezentacji Pulse" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pulse-Präsentationsmodus"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pulse presentation mode"
+          }
+        }
+      }
+    },
+    "Tryb prezentacji włączony – kliknij, aby wyłączyć" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Präsentationsmodus an – zum Ausschalten klicken"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Presentation mode on – click to turn off"
+          }
+        }
+      }
+    },
+    "Tryb prezentacji: ukryj wartości i wycisz powiadomienia" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Präsentationsmodus: Werte ausblenden und Mitteilungen stummschalten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Presentation mode: hide values and mute notifications"
+          }
+        }
+      }
+    },
+    "Twoje konto" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dein Account"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your account"
+          }
+        }
+      }
+    },
+    "Twój Mac w ostatnim tygodniu" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dein Mac in der letzten Woche"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your Mac last week"
+          }
+        }
+      }
+    },
+    "Tygodniowe podsumowanie" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wochenübersicht"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weekly summary"
+          }
+        }
+      }
+    },
     "Tylko ikona Pulse" : {
       "localizations" : {
         "de" : {
@@ -7244,6 +8387,44 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pulse icon only"
+          }
+        }
+      }
+    },
+    "Ubywa ok. %@ dziennie" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Etwa %@ weniger pro Tag"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "About %@ less every day"
+          }
+        }
+      }
+    },
+    "Ubywa ok. %@ dziennie – dysk zapełni się za ok. %lld dni" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Etwa %1$@ weniger pro Tag – das Volume ist in etwa %2$lld Tagen voll"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "About %1$@ less every day – the disk will be full in about %2$lld days"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Ubywa ok. %1$@ dziennie – dysk zapełni się za ok. %2$lld dni"
           }
         }
       }
@@ -7308,6 +8489,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hidden"
+          }
+        }
+      }
+    },
+    "Ukrywa wartości w pasku menu i wycisza powiadomienia Pulse albo przywraca je z powrotem." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blendet die Werte in der Menüleiste aus und schaltet Pulse-Mitteilungen stumm oder stellt sie wieder her."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hides the values in the menu bar and mutes Pulse notifications, or brings them back."
           }
         }
       }
@@ -7424,6 +8621,22 @@
         }
       }
     },
+    "Uruchom skrót" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kurzbefehl ausführen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Run shortcut"
+          }
+        }
+      }
+    },
     "Uruchom, zatrzymaj lub uruchom ponownie kontener" : {
       "localizations" : {
         "de" : {
@@ -7472,6 +8685,22 @@
         }
       }
     },
+    "Ustawienia Pulse" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pulse-Einstellungen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pulse settings"
+          }
+        }
+      }
+    },
     "Ustawienia baterii" : {
       "localizations" : {
         "de" : {
@@ -7500,6 +8729,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Module settings"
+          }
+        }
+      }
+    },
+    "Usuń" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Löschen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
           }
         }
       }
@@ -7648,6 +8893,54 @@
         }
       }
     },
+    "W pasku menu zostaje tylko ikona Pulse, a powiadomienia Pulse milkną. Przełączysz go też przyciskiem z okiem w stopce okienka i w Skrótach." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In der Menüleiste bleibt nur das Pulse-Symbol, Pulse-Mitteilungen verstummen. Auch über die Augen-Taste unten im Fenster und in Kurzbefehle umschaltbar."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only the Pulse icon stays in the menu bar and Pulse notifications go quiet. Also toggled with the eye button at the bottom of the panel and in Shortcuts."
+          }
+        }
+      }
+    },
+    "W poniedziałek rano: średnie obciążenie CPU w porównaniu z poprzednim tygodniem, najwyższa temperatura, zapis na SSD i kondycja baterii." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Montagmorgens: durchschnittliche CPU-Last im Vergleich zur Vorwoche, höchste Temperatur, SSD-Schreibvorgänge und Akkuzustand."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On Monday morning: average CPU load compared with the week before, highest temperature, SSD writes and battery health."
+          }
+        }
+      }
+    },
+    "W trybie prezentacji Pulse nie wysyła powiadomień. To samo powiadomienie nie pojawi się częściej niż co 30 minut ani ponownie, zanim wartość nie wróci do normy. Progi ustawisz na stronach modułów: CPU, Pamięć, Dysk, Czujniki i Bateria (także dla urządzeń Bluetooth). Na stronie Inne komputery włączysz powiadomienie, gdy komputer z sieci przestanie odpowiadać." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Im Präsentationsmodus sendet Pulse keine Mitteilungen. Dieselbe Mitteilung erscheint höchstens alle 30 Minuten und erst wieder, wenn sich der Wert normalisiert hat. Schwellen legst du auf den Modulseiten fest: CPU, Speicher, Festplatte, Sensoren und Batterie (auch für Bluetooth-Geräte). Auf der Seite „Andere Computer“ aktivierst du eine Mitteilung, wenn ein Computer im Netzwerk nicht mehr antwortet."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pulse sends no notifications in presentation mode. The same notification appears at most every 30 minutes, and not again until the value returns to normal. Set thresholds on the module pages: CPU, Memory, Disk, Sensors and Battery (also for Bluetooth devices). On the Other Computers page you can turn on a notification when a computer on the network stops responding."
+          }
+        }
+      }
+    },
     "Wartości w pasku menu" : {
       "localizations" : {
         "de" : {
@@ -7740,6 +9033,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Value in the menu bar and on the tile"
+          }
+        }
+      }
+    },
+    "Wczytano ustawienia" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einstellungen importiert"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings imported"
           }
         }
       }
@@ -7942,6 +9251,38 @@
         }
       }
     },
+    "Wolne miejsce poniżej" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Freier Speicher unter"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Free space below"
+          }
+        }
+      }
+    },
+    "Wolne miejsce się nie kurczy" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der freie Speicher schrumpft nicht"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Free space is not shrinking"
+          }
+        }
+      }
+    },
     "Wolno" : {
       "localizations" : {
         "de" : {
@@ -7970,6 +9311,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pausing charging needs system privileges, so Pulse has to add a small helper (the same one used for the fan). You only do this once and can remove it later."
+          }
+        }
+      }
+    },
+    "Wszyscy użytkownicy" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Benutzer"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All users"
           }
         }
       }
@@ -8034,6 +9391,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Everything works well."
+          }
+        }
+      }
+    },
+    "Wybierz…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auswählen …"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose…"
           }
         }
       }
@@ -8134,6 +9507,22 @@
         }
       }
     },
+    "Wykorzystano 80% limitu danych" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "80 % des Datenlimits verbraucht"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "80% of the data limit used"
+          }
+        }
+      }
+    },
     "Wykres" : {
       "localizations" : {
         "de" : {
@@ -8162,6 +9551,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The 1 h, 24 h, 7 d and 30 d charts start over. The history file (%@) is deleted. This cannot be undone."
+          }
+        }
+      }
+    },
+    "Wymaga uprawnień administratora – wyłączysz go w Ustawieniach systemowych → Elementy logowania" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erfordert Administratorrechte – ausschalten in Systemeinstellungen → Anmeldeobjekte"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Needs administrator rights – turn it off in System Settings → Login Items"
           }
         }
       }
@@ -8348,6 +9753,22 @@
         }
       }
     },
+    "Wysłano" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gesendet"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uploaded"
+          }
+        }
+      }
+    },
     "Wysłano (sesja)" : {
       "localizations" : {
         "de" : {
@@ -8375,7 +9796,39 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Turn Off"
+            "value" : "Turn off"
+          }
+        }
+      }
+    },
+    "Wyłączyć „%@”?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "„%@“ ausschalten?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn off “%@”?"
+          }
+        }
+      }
+    },
+    "Wyłącz…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausschalten …"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn off…"
           }
         }
       }
@@ -8392,6 +9845,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Send test"
+          }
+        }
+      }
+    },
+    "Włącz" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einschalten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn on"
           }
         }
       }
@@ -8445,6 +9914,22 @@
         }
       }
     },
+    "Włączaj, gdy ekran jest dublowany" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einschalten, wenn der Bildschirm synchronisiert wird"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn on while the display is mirrored"
+          }
+        }
+      }
+    },
     "Włączenia" : {
       "localizations" : {
         "de" : {
@@ -8457,6 +9942,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Power cycles"
+          }
+        }
+      }
+    },
+    "Włączony" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ein"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On"
+          }
+        }
+      }
+    },
+    "Z listy" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aus Liste"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "From list"
+          }
+        }
+      }
+    },
+    "Za mało danych – podsumowanie potrzebuje co najmniej kilku godzin historii." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zu wenig Daten – die Übersicht braucht mindestens einige Stunden Verlauf."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not enough data – the summary needs at least a few hours of history."
           }
         }
       }
@@ -8611,6 +10144,22 @@
         }
       }
     },
+    "Zapis na SSD: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SSD-Schreibvorgänge: %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SSD writes: %@"
+          }
+        }
+      }
+    },
     "Zapisano" : {
       "localizations" : {
         "de" : {
@@ -8723,6 +10272,22 @@
         }
       }
     },
+    "Zbieram dane – ranking pojawi się po kilku minutach." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sammle Daten – die Rangliste erscheint in einigen Minuten."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Collecting data – the ranking appears in a few minutes."
+          }
+        }
+      }
+    },
     "Zbieranie danych…" : {
       "localizations" : {
         "de" : {
@@ -8820,6 +10385,22 @@
         }
       }
     },
+    "Zmienione ustawienia: %lld. Historia wykresów i dzienniki zostają bez zmian." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geänderte Einstellungen: %lld. Diagrammverlauf und Protokolle bleiben unverändert."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings changed: %lld. Chart history and logs stay as they are."
+          }
+        }
+      }
+    },
     "Zmień limit" : {
       "localizations" : {
         "de" : {
@@ -8848,6 +10429,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Shrink when space runs out"
+          }
+        }
+      }
+    },
+    "Zostanie zatrzymany i nie uruchomi się przy następnym logowaniu. Aplikacja, która go dodała, może przestać się sama aktualizować lub synchronizować. Włączysz go z powrotem w tym samym miejscu." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Er wird gestoppt und startet bei der nächsten Anmeldung nicht. Die App, die ihn hinzugefügt hat, aktualisiert oder synchronisiert sich dann eventuell nicht mehr selbst. Du kannst ihn hier wieder einschalten."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "It will be stopped and won’t start at the next login. The app that added it may stop updating or syncing on its own. You can turn it back on in the same place."
           }
         }
       }
@@ -9189,6 +10786,22 @@
         }
       }
     },
+    "od %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "seit %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "since %@"
+          }
+        }
+      }
+    },
     "ok. 5 s" : {
       "localizations" : {
         "de" : {
@@ -9201,6 +10814,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "about 5 s"
+          }
+        }
+      }
+    },
+    "ostatnie 24 h" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "letzte 24 Std."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "last 24 h"
           }
         }
       }
@@ -9370,6 +10999,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "all disks"
+          }
+        }
+      }
+    },
+    "wyłączony" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "aus"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "off"
           }
         }
       }
@@ -9633,6 +11278,22 @@
     },
     "—" : {
 
+    },
+    "„%@” obciąża procesor" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "„%@“ belastet die CPU"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“%@” is loading the CPU"
+          }
+        }
+      }
     },
     "↓%@ ↑%@" : {
       "localizations" : {
