@@ -26,7 +26,7 @@ enum Module: String, CaseIterable, Identifiable {
         case .disk: String(localized: "Dysk")
         case .network: String(localized: "Sieć")
         case .sensors: String(localized: "Czujniki")
-        case .battery: String(localized: "Bateria")
+        case .battery: PowerSource.hasBattery ? String(localized: "Bateria") : String(localized: "Energia")
         case .macs: String(localized: "Inne komputery")
         }
     }
@@ -40,7 +40,7 @@ enum Module: String, CaseIterable, Identifiable {
         case .disk: "SSD"
         case .network: "NET"
         case .sensors: "TEMP"
-        case .battery: "BAT"
+        case .battery: PowerSource.hasBattery ? "BAT" : "PWR"
         case .macs: "LAN"
         }
     }
@@ -54,7 +54,7 @@ enum Module: String, CaseIterable, Identifiable {
         case .disk: "internaldrive"
         case .network: "arrow.up.arrow.down"
         case .sensors: "thermometer.medium"
-        case .battery: "battery.75percent"
+        case .battery: PowerSource.hasBattery ? "battery.75percent" : "bolt"
         case .macs: "desktopcomputer.and.macbook"
         }
     }
@@ -126,6 +126,11 @@ extension Module {
 
 enum Fmt {
     static func pct(_ v: Double) -> String { "\(Int((v * 100).rounded()))%" }
+    /// Whole watts once the value is large enough that tenths only flicker (menu bar).
+    static func wattsShort(_ w: Double) -> String { w >= 10 ? "\(Int(w.rounded())) W" : String(format: "%.1f W", w) }
+    static func energy(_ wh: Double) -> String {
+        wh >= 1000 ? String(format: "%.2f kWh", wh / 1000) : (wh >= 10 ? "\(Int(wh.rounded())) Wh" : String(format: "%.1f Wh", wh))
+    }
 
     static func memory(_ bytes: UInt64) -> String {
         let f = ByteCountFormatter(); f.countStyle = .memory; f.allowsNonnumericFormatting = false
@@ -207,4 +212,15 @@ enum Heat {
         default: Color(red: 1.0, green: 0.35, blue: 0.3)
         }
     }
+}
+
+/// Whether this Mac has an internal battery. Without one (Mac mini, iMac, Mac Studio, Mac Pro)
+/// the Battery module becomes Energy: whole-system power instead of a charge level.
+enum PowerSource {
+    /// Snapshot testing of the battery-less layout on a laptop.
+    nonisolated static let forceNoBattery = CommandLine.arguments.contains("--no-battery")
+    nonisolated static let hasBattery: Bool = forceNoBattery ? false
+        : (CommandLine.arguments.contains("--demo") || BatterySampler.read().present)
+    /// Ring fill for a power reading: 60 W fills it (a Mac mini idles at a few watts).
+    nonisolated static func fraction(_ watts: Double) -> Double { min(max(watts / 60, 0), 1) }
 }

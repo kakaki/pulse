@@ -20,7 +20,14 @@ struct RemoteMacsDetail: View {
                             .font(.system(size: 11)).foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)
                             .fixedSize(horizontal: false, vertical: true)
-                        if let error = remote.browserError {
+                        if remote.localNetworkDenied {
+                            Text("macOS nie pozwala Pulse korzystać z sieci lokalnej. Włącz Pulse w Ustawieniach systemowych → Prywatność i ochrona → Sieć lokalna.")
+                                .font(.system(size: 11)).foregroundStyle(.orange)
+                                .multilineTextAlignment(.center)
+                                .fixedSize(horizontal: false, vertical: true)
+                            Button("Otwórz ustawienia sieci lokalnej") { RemoteMacs.openLocalNetworkSettings() }
+                                .controlSize(.small)
+                        } else if let error = remote.browserError {
                             Text(error).font(.system(size: 10.5)).foregroundStyle(.orange)
                         }
                     }

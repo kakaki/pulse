@@ -148,7 +148,7 @@ enum OverviewItem: String, CaseIterable, Identifiable {
     var title: String {
         switch self {
         case .cpu: "CPU"; case .gpu: "GPU"; case .mem: String(localized: "Pamięć"); case .disk: String(localized: "Dysk")
-        case .temp: String(localized: "Temperatura"); case .net: String(localized: "Sieć"); case .bat: String(localized: "Bateria")
+        case .temp: String(localized: "Temperatura"); case .net: String(localized: "Sieć"); case .bat: Module.battery.title
         case .macs: String(localized: "Inne komputery")
         }
     }
@@ -193,7 +193,7 @@ struct OverviewContent: View {
 
     /// Same order as the menu bar values (Settings → Przegląd); hidden tiles are skipped.
     private var tiles: [Module] {
-        OverviewItem.ordered.filter { $0.showsTile && ($0 != .bat || m.battery.present) }.map(\.module)
+        OverviewItem.ordered.filter { $0.showsTile && ($0 != .bat || m.battery.present || m.systemPower != nil) }.map(\.module)
     }
 
     var body: some View {
@@ -246,6 +246,8 @@ struct OverviewContent: View {
                      m.displayVolume.isSystem ? String(localized: "Dysk") : m.displayVolume.name)
         case .sensors: ((m.socMax ?? 0) / 105, Fmt.temp(m.socMax ?? m.socAvg), String(localized: "Temp."))
         case .network: (netLevel, Fmt.net(m.netIn, compact: true), String(localized: "Sieć"))
+        case .battery where !m.battery.present:
+            (m.systemPower.map(PowerSource.fraction) ?? 0, m.systemPower.map(Fmt.wattsShort) ?? "—", String(localized: "Energia"))
         case .battery: (m.battery.percent, Fmt.pct(m.battery.percent), String(localized: "Bateria"))
         case .macs:
             { let s = RemoteMacs.shared.summary; return (s.value, s.text, s.name ?? String(localized: "Inne komputery")) }()

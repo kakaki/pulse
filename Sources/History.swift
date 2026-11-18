@@ -2,7 +2,7 @@ import Foundation
 import SwiftUI
 
 enum HistoryMetric: String, CaseIterable, Codable {
-    case cpu, gpu, mem, temp, diskRead, diskWrite, netIn, netOut, battery, batteryPower
+    case cpu, gpu, mem, temp, diskRead, diskWrite, netIn, netOut, battery, batteryPower, power
 }
 
 enum HistoryRange: Int, CaseIterable, Identifiable {
@@ -55,7 +55,7 @@ extension HistoryMetric {
         case .temp: Fmt.temp(value)
         case .diskRead, .diskWrite: Fmt.rate(value)
         case .netIn, .netOut: Fmt.net(value)
-        case .batteryPower: String(format: "%.1f W", value)
+        case .batteryPower, .power: Fmt.watts(value)
         }
     }
 }
@@ -213,6 +213,28 @@ final class HistoryStore {
             sum += v; count += 1; top = max(top, v)
         }
         return count > 0 ? (sum / Double(count), top, count * 10) : nil
+    }
+
+    /// Energy in watt-hours between `from` and `to` minutes ago (from > to), integrating a power series in watts:
+    /// per-minute values for the last 24 h, 10-minute values before that. Nil without data.
+    func energyWh(key: String, fromMinutesAgo from: Int, toMinutesAgo to: Int) -> (wh: Double, minutes: Int)? {
+        let now = Self.minuteNow()
+        var wh = 0.0, minutes = 0
+        for b in buckets {
+            let age = now - b.minute
+            guard age <= from, age > to, let v = b.values[key], v.isFinite else { continue }
+            wh += v / 60; minutes += 1
+        }
+        if from > Self.minutes {
+            for b in coarse {
+                let age = now - b.minute
+                guard age <= from, age > max(to, Self.minutes), let v = b.values[key], v.isFinite else { continue }
+                wh += v / 6; minutes += 10
+            }
+        }
+        // The minute in progress, so today's total moves right after launch.
+        if to == 0, let s = sums[key], s.count > 0 { wh += s.sum / Double(s.count) / 60; minutes += 1 }
+        return minutes > 0 ? (wh, minutes) : nil
     }
 
     /// Average per weekday (Monday first) and hour from the kept 10-minute history; NaN where there is no data.

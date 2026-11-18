@@ -2066,6 +2066,22 @@
         }
       }
     },
+    "Dziś" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heute"
+          }
+        }
+      }
+    },
     "Długotrwałe obciążenie CPU" : {
       "localizations" : {
         "de" : {
@@ -4662,6 +4678,22 @@
         }
       }
     },
+    "Otwórz ustawienia sieci lokalnej" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einstellungen für lokales Netzwerk öffnen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Local Network settings"
+          }
+        }
+      }
+    },
     "Otwórz…" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -5155,6 +5187,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Power draw"
+          }
+        }
+      }
+    },
+    "Pobór mocy całego komputera" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Power draw of the whole computer"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leistungsaufnahme des ganzen Computers"
+          }
+        }
+      }
+    },
+    "Pobór mocy całego komputera, zużycie energii na dobę i energia aplikacji." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Power draw of the whole computer, energy used per day and app energy."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leistungsaufnahme des ganzen Computers, Energie pro Tag und Energie der Apps."
           }
         }
       }
@@ -9037,6 +9101,22 @@
         }
       }
     },
+    "Wczoraj" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yesterday"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gestern"
+          }
+        }
+      }
+    },
     "Wczytano ustawienia" : {
       "localizations" : {
         "de" : {
@@ -10690,6 +10770,22 @@
         }
       }
     },
+    "macOS nie pozwala Pulse korzystać z sieci lokalnej. Włącz Pulse w Ustawieniach systemowych → Prywatność i ochrona → Sieć lokalna." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS erlaubt Pulse keinen Zugriff auf das lokale Netzwerk. Aktiviere Pulse in Systemeinstellungen → Datenschutz & Sicherheit → Lokales Netzwerk."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS doesn't let Pulse use the local network. Turn Pulse on in System Settings → Privacy & Security → Local Network."
+          }
+        }
+      }
+    },
     "macOS nie pozwala odczytać tego folderu. Dostęp nadasz w Ustawieniach systemowych → Prywatność → Pełny dostęp do dysku." : {
       "localizations" : {
         "de" : {
@@ -11223,6 +11319,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Daily average (%lld days)"
+          }
+        }
+      }
+    },
+    "Średnio na dobę" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daily average"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ø pro Tag"
           }
         }
       }

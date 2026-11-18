@@ -603,13 +603,18 @@ struct BatteryDetail: View {
                 healthCard(b)
                 if ChargeLimit.shared.isSupported || ChargeLimit.shared.isSystemManaged { ChargeLimitShortcut(battery: b) }
                 BatteryLogCard()
+                if m.systemPower != nil { SystemPowerCard(compact: true) }
                 if Self.measuresEnergy { ProcessList(metric: .energy); AppEnergyCard() }
                 BluetoothBatteriesCard()
             } else {
-                Card {
-                    SectionTitle(text: "Bateria")
-                    Label("Ten Mac jest zasilany z sieci.", systemImage: "powerplug.fill")
-                        .font(.callout).foregroundStyle(.secondary)
+                if m.systemPower != nil {
+                    SystemPowerCard(compact: false)
+                } else {
+                    Card {
+                        SectionTitle(text: "Energia")
+                        Label("Ten Mac jest zasilany z sieci.", systemImage: "powerplug.fill")
+                            .font(.callout).foregroundStyle(.secondary)
+                    }
                 }
                 if Self.measuresEnergy { ProcessList(metric: .energy); AppEnergyCard() }
                 BluetoothBatteriesCard(showEmpty: true)
@@ -772,5 +777,62 @@ struct ProcessIcon: View {
                 .resizable().scaledToFit().padding(2)
                 .foregroundStyle(.secondary)
         }
+    }
+}
+
+/// Whole-system power from the SMC with its history and the energy used today, yesterday and per day.
+/// The main card on Macs without a battery; a smaller card under the battery on laptops.
+struct SystemPowerCard: View {
+    @Environment(SystemMonitor.self) private var m
+    var compact: Bool
+    private let tint = Color(red: 1.0, green: 0.78, blue: 0.25)
+
+    var body: some View {
+        Card {
+            if compact {
+                SectionTitle(text: "Pobór mocy systemu", trailing: m.systemPower.map(Fmt.watts))
+            } else {
+                SectionTitle(text: "Pobór mocy")
+                HStack(spacing: 16) {
+                    ZStack {
+                        RingGauge(value: m.systemPower.map(PowerSource.fraction) ?? 0, colors: [tint.opacity(0.7), .orange], lineWidth: 8)
+                        Image(systemName: "bolt.fill").font(.system(size: 16, weight: .semibold)).foregroundStyle(tint)
+                    }
+                    .frame(width: 64, height: 64)
+                    VStack(alignment: .leading, spacing: 2) {
+                        BigValue(value: m.systemPower.map(Fmt.watts) ?? "—")
+                        Text("Pobór mocy całego komputera").font(.system(size: 11.5)).foregroundStyle(.secondary)
+                    }
+                    Spacer()
+                }
+            }
+            HistoryChart(metric: .power, live: m.powerHistory, color: tint, height: 52, format: Fmt.watts)
+            let e = energy
+            HStack(spacing: 8) {
+                tile("Dziś", e.today)
+                tile("Wczoraj", e.yesterday)
+                tile("Średnio na dobę", e.perDay)
+            }
+        }
+    }
+
+    private var energy: (today: Double?, yesterday: Double?, perDay: Double?) {
+        if Snapshot.isRunning && CommandLine.arguments.contains("--demo") { return (86, 142, 131) }
+        let midnight = Int(Date().timeIntervalSince(Calendar.current.startOfDay(for: Date())) / 60)
+        let h = m.history
+        let today = h.energyWh(key: HistoryMetric.power.rawValue, fromMinutesAgo: midnight, toMinutesAgo: 0)?.wh
+        // Yesterday counts only once most of the day was recorded.
+        let y = h.energyWh(key: HistoryMetric.power.rawValue, fromMinutesAgo: midnight + 1440, toMinutesAgo: midnight)
+        let week = h.energyWh(key: HistoryMetric.power.rawValue, fromMinutesAgo: 7 * 1440, toMinutesAgo: 0)
+        return (today, y.flatMap { $0.minutes >= 1200 ? $0.wh : nil },
+                week.flatMap { $0.minutes >= 1440 ? $0.wh / Double($0.minutes) * 1440 : nil })
+    }
+
+    private func tile(_ title: LocalizedStringKey, _ wh: Double?) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(title).font(.system(size: 10.5)).foregroundStyle(.secondary)
+            Text(wh.map(Fmt.energy) ?? "—").font(.system(size: 13, weight: .semibold)).monospacedDigit()
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }

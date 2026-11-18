@@ -134,8 +134,11 @@ struct StatusSnapshot {
                     let sum = RemoteMacs.shared.summary
                     cell = .init(module: .macs, label: "LAN", text: sum.text, value: sum.value, history: sum.history, maxHistory: sum.maxHistory, level: sum.level)
                 case .bat:
-                    guard m.battery.present else { continue }
-                    cell = .init(module: .battery, label: "BAT", text: Fmt.pct(m.battery.percent), value: m.battery.percent, history: m.batteryHistory, maxHistory: 1, level: Severity.battery(m.battery))
+                    if m.battery.present {
+                        cell = .init(module: .battery, label: "BAT", text: Fmt.pct(m.battery.percent), value: m.battery.percent, history: m.batteryHistory, maxHistory: 1, level: Severity.battery(m.battery))
+                    } else if let w = m.systemPower {
+                        cell = .init(module: .battery, label: "PWR", text: Fmt.wattsShort(w), value: PowerSource.fraction(w), history: m.powerHistory, maxHistory: nil, level: nil)
+                    } else { continue }
                 }
                 cell.mode = item.style
                 cell.showLabel = item.showsLabel
@@ -164,9 +167,14 @@ struct StatusSnapshot {
             s.value = (t ?? 0) / 100
             s.history = m.tempHistory; s.maxHistory = 100
             s.level = Severity.temp(t)
+        case .battery where !m.battery.present:
+            // No battery: whole-system power instead of "AC".
+            s.text = m.systemPower.map(Fmt.wattsShort) ?? "AC"
+            s.value = m.systemPower.map(PowerSource.fraction) ?? 0
+            s.history = m.powerHistory; s.maxHistory = nil
         case .battery:
             s.value = m.battery.percent
-            s.text = m.battery.present ? Fmt.pct(m.battery.percent) : "AC"
+            s.text = Fmt.pct(m.battery.percent)
             s.symbol = m.battery.isCharging ? "bolt.fill" : (m.battery.onAC ? "powerplug.fill" : nil)
             s.level = Severity.battery(m.battery)
         case .macs:

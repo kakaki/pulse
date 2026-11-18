@@ -97,6 +97,8 @@ final class SystemMonitor {
     // MARK: Battery
     private(set) var battery = BatteryInfo()
     private(set) var batteryHistory: [Double] = []
+    /// Whole-system power in watts (SMC), for the Energy panel on Macs without a battery.
+    private(set) var powerHistory: [Double] = []
     /// Live series of single sensors and fans, by history key.
     private(set) var itemHistory: [String: [Double]] = [:]
 
@@ -214,6 +216,7 @@ final class SystemMonitor {
         hasFans = smcSampler.fanCount > 0
         if hasFans { fans = smcSampler.fans() }
         systemPower = smcSampler.systemPower()
+        if let w = systemPower { push(&powerHistory, w) }
         let thermal = ProcessInfo.processInfo.thermalState
         if thermal != thermalState { thermalState = thermal }
         uptime = ProcessInfo.processInfo.systemUptime
@@ -267,6 +270,7 @@ final class SystemMonitor {
             let rssi = iface.rssiValue()
             if rssi < 0 { recordItem(Self.wifiKey, Double(rssi + 100)) }
         }
+        history.add(.power, systemPower)
         if battery.present {
             history.add(.battery, battery.percent)
             history.add(.batteryPower, battery.watts)
@@ -560,6 +564,7 @@ extension SystemMonitor {
                         TempSensor(id: "bat", name: String(localized: "Bateria"), value: 31, kind: .battery)]
         if hasFans { fans = fans.map { FanInfo(id: $0.id, rpm: $0.min + 600, min: $0.min, max: $0.max) } }
         systemPower = 7.4
+        powerHistory = demoSeries(n, base: 7.4, amp: 2.5, seed: 10)
         thermalState = .nominal
         var b = BatteryInfo()
         b.present = true; b.percent = 0.82; b.onAC = false; b.isCharging = false
@@ -567,6 +572,7 @@ extension SystemMonitor {
         b.watts = -6.8; b.designCapacity = 5760; b.maxCapacity = 5645; b.currentCharge = 4629
         battery = b
         batteryHistory = demoSeries(n, base: 0.83, amp: 0.005, seed: 9)
+        if PowerSource.forceNoBattery { battery = BatteryInfo(); batteryHistory = [] }
         let mb: UInt64 = 1 << 20
         gpuProcesses = [.init(id: 99906, name: "WindowServer", share: 0.08), .init(id: demoPID("Safari", 99902), name: "Safari", share: 0.05),
                         .init(id: demoPID("Xcode", 99901), name: "Xcode", share: 0.02)]

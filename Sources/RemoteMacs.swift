@@ -1,3 +1,4 @@
+import AppKit
 import Foundation
 import IOKit
 import Network
@@ -106,6 +107,18 @@ final class RemoteMacs {
     private(set) var listenerError: String?
     /// Whether the browser has found the service at all (false until the first result or on failure).
     private(set) var browserError: String?
+    /// macOS blocks local network access for Pulse (Privacy & Security → Local Network).
+    private(set) var localNetworkDenied = false
+
+    /// NoAuth (-65555) and PolicyDenied (-65570) are what Bonjour reports when Local Network access is off.
+    nonisolated static func isLocalNetworkDenial(_ error: NWError) -> Bool {
+        if case .dns(let code) = error { return code == -65555 || code == -65570 }
+        return false
+    }
+
+    static func openLocalNetworkSettings() {
+        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_LocalNetwork")!)
+    }
 
     /// Open Other Macs panels: while > 0, peers are asked for their top processes and polled more often.
     /// Open Overview panels showing the Other Macs tile: peers are polled, without processes.
@@ -361,7 +374,9 @@ final class RemoteMacs {
                     DispatchQueue.main.async {
                         MainActor.assumeIsolated {
                             let remote = RemoteMacs.shared
-                            remote.listenerError = error.localizedDescription
+                            remote.listenerError = RemoteMacs.isLocalNetworkDenial(error)
+                                ? String(localized: "macOS nie pozwala Pulse korzystać z sieci lokalnej. Włącz Pulse w Ustawieniach systemowych → Prywatność i ochrona → Sieć lokalna.")
+                                : error.localizedDescription
                             remote.stopListener()   // the next tick starts it again
                         }
                     }
@@ -416,11 +431,19 @@ final class RemoteMacs {
             }
         }
         b.stateUpdateHandler = { state in
-            let message: String? = switch state {
-            case .failed(let error), .waiting(let error): error.localizedDescription
-            default: nil
+            let message: String?, denied: Bool
+            switch state {
+            case .failed(let error), .waiting(let error):
+                message = error.localizedDescription; denied = RemoteMacs.isLocalNetworkDenial(error)
+            default:
+                message = nil; denied = false
             }
-            DispatchQueue.main.async { MainActor.assumeIsolated { RemoteMacs.shared.browserError = message } }
+            DispatchQueue.main.async {
+                MainActor.assumeIsolated {
+                    RemoteMacs.shared.browserError = message
+                    RemoteMacs.shared.localNetworkDenied = denied
+                }
+            }
         }
         b.start(queue: queue)
         browser = b

@@ -173,7 +173,7 @@ struct ModuleSettings: View {
         case .disk: String(localized: "Wolne miejsce oraz prędkość odczytu i zapisu.")
         case .network: String(localized: "Prędkość pobierania i wysyłania, adres IP.")
         case .sensors: String(localized: "Temperatury SoC, SSD i baterii.")
-        case .battery: String(localized: "Poziom naładowania, kondycja, cykle i moc.")
+        case .battery: PowerSource.hasBattery ? String(localized: "Poziom naładowania, kondycja, cykle i moc.") : String(localized: "Pobór mocy całego komputera, zużycie energii na dobę i energia aplikacji.")
         case .macs: String(localized: "Obciążenie, temperatury i wentylatory pozostałych komputerów w sieci lokalnej.")
         }
     }
