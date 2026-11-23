@@ -14,26 +14,19 @@ enum ShareError: Error {
 
 /// Long-term identity (ECDH P-256) and the list of paired computers.
 enum ShareKeys {
-    private static let service = "local.pulse.share"
-    private static let account = "identity"
-
-    /// Created once and kept in the Keychain.
+    /// Created once and kept in Application Support with owner-only permissions, like PulseWin's per-user file.
+    /// Not in the Keychain: a login-keychain item is tied to the exact app binary, so every update would block
+    /// the app behind a password prompt.
     static let identity: P256.KeyAgreement.PrivateKey = {
-        let query: [String: Any] = [kSecClass as String: kSecClassGenericPassword, kSecAttrService as String: service,
-                                    kSecAttrAccount as String: account, kSecReturnData as String: true]
-        var item: CFTypeRef?
-        if SecItemCopyMatching(query as CFDictionary, &item) == errSecSuccess, let data = item as? Data,
-           let key = try? P256.KeyAgreement.PrivateKey(rawRepresentation: data) {
+        let dir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+            .appendingPathComponent("Pulse", isDirectory: true)
+        let url = dir.appendingPathComponent("share-key.bin")
+        if let data = try? Data(contentsOf: url), let key = try? P256.KeyAgreement.PrivateKey(rawRepresentation: data) {
             return key
         }
         let key = P256.KeyAgreement.PrivateKey()
-        let add: [String: Any] = [kSecClass as String: kSecClassGenericPassword, kSecAttrService as String: service,
-                                  kSecAttrAccount as String: account, kSecValueData as String: key.rawRepresentation,
-                                  kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly,
-                                  kSecAttrLabel as String: "Pulse – schowek i pliki"]
-        SecItemDelete([kSecClass as String: kSecClassGenericPassword, kSecAttrService as String: service,
-                       kSecAttrAccount as String: account] as CFDictionary)
-        SecItemAdd(add as CFDictionary, nil)
+        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        FileManager.default.createFile(atPath: url.path, contents: key.rawRepresentation, attributes: [.posixPermissions: 0o600])
         return key
     }()
 
