@@ -157,7 +157,7 @@ struct ModuleSettings: View {
             if module == .cpu || module == .memory { ProcessListSection() }
             if module == .cpu { ProcessAlertsSection() }
             if module == .battery { ChargeLimitSection(); EnergySavingSection() }
-            if module == .macs { RemoteSharingSection() }
+            if module == .macs { RemoteSharingSection(); ShareSettingsSection() }
             ForEach(Alerts.Kind.kinds(for: module)) { AlertRow(kind: $0) }
         }
         .formStyle(.grouped)

@@ -33,8 +33,9 @@
   - **Dysk:** miejsce zajęte lub wolne w procentach albo GB/TB, wiele dysków, odczyt i zapis, co zajmuje miejsce, prognoza zapełnienia dysku, żywotność SSD ze SMART (zużycie, zapisane dane, temperatura)
   - **Sieć:** wysyłanie i pobieranie w MB/s lub Mb/s, ruch per aplikacja, opóźnienie, test połączenia (router czy internet), adres lokalny i publiczny, szczegóły Wi‑Fi (sygnał/szum, standard, kanał, historia sygnału), dane w miesiącu z limitem (także osobno przez hotspot)
   - **Czujniki:** temperatury SoC, SSD i baterii, wentylatory, stan termiczny
-  - **Bateria:** wykres naładowania, kondycja, cykle, pobór mocy, moc zasilacza, zużycie energii przez aplikacje i ranking energii z 24 h (ile baterii zużyła każda aplikacja), energia ładowania w miesiącu, kondycja w czasie, baterie urządzeń Bluetooth (AirPods, klawiatura, mysz) z historią
+  - **Bateria:** wykres naładowania, kondycja, cykle, pobór mocy, moc zasilacza, zużycie energii przez aplikacje i ranking energii z 24 h (ile baterii zużyła każda aplikacja), energia ładowania w miesiącu, kondycja w czasie, baterie urządzeń Bluetooth (AirPods, klawiatura, mysz) z historią; na Macach bez baterii (np. Mac mini) moduł **Energia**: pobór mocy całego komputera z wykresem i zużyciem na dobę
   - **Inne komputery:** obciążenie, temperatury, wentylatory, procesy, kontenery Dockera i historia CPU i temperatury innych Maców z Pulse oraz komputerów z Windowsem i PulseWin w sieci lokalnej; zdalna aktualizacja Pulse na Makach (jeśli dany Mac na to pozwala)
+- **Schowek i pliki między komputerami** (opcja, domyślnie wyłączona): skopiowany tekst lub obraz zostaje na swoim komputerze, a drugi Mac z Pulse albo PC z PulseWin pobiera go tylko na żądanie skrótem ⌃⌥⌘V. Pliki i foldery wysyłasz, przeciągając je na kartę komputera albo na ikonę Pulse w pasku menu. Działa tylko między sparowanymi komputerami (kod potwierdzany na obu ekranach), połączenie jest szyfrowane.
 - **Limit ładowania** w MacBookach (50–95%), żeby bateria nie stała stale na 100%, z jednorazowym „naładuj do pełna” przed podróżą. Od macOS 27 Apple pozwala tylko na systemowy limit ładowania – Pulse prowadzi do jego ustawień.
 - **Historia z 2 min, 1 h, 24 h, 7 dni i 30 dni**, przechowywana 7, 14 lub 30 dni, z eksportem do CSV.
 - **Przydatne akcje:** zwalnianie pamięci (`purge`, pyta o hasło administratora), kończenie procesów prawym klikiem (procesy o tej samej nazwie można łączyć w jeden wiersz), kopiowanie adresu IP kliknięciem.
@@ -88,4 +89,4 @@ Tłumaczenia są w `Localization/Localizable.xcstrings`. Językiem źródłowym 
 
 ## Prywatność
 
-Pulse odczytuje wszystkie dane lokalnie z macOS (IOKit, `host_statistics`, `nettop`, SMC). Jedyne połączenia sieciowe to pomiar opóźnienia TCP do `1.1.1.1`, sprawdzenie publicznego IP (`api.ipify.org`) i sprawdzanie aktualizacji przez Sparkle.
+Pulse odczytuje wszystkie dane lokalnie z macOS (IOKit, `host_statistics`, `nettop`, SMC). Jedyne połączenia sieciowe to pomiar opóźnienia TCP do `1.1.1.1`, sprawdzenie publicznego IP (`api.ipify.org`) i sprawdzanie aktualizacji przez Sparkle. Odczyty innych komputerów, schowek i pliki idą wyłącznie w sieci lokalnej, bezpośrednio między komputerami; schowek i pliki tylko między sparowanymi komputerami i w postaci zaszyfrowanej.

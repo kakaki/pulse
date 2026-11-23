@@ -23,7 +23,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         statusBar = StatusBarController(monitor: SystemMonitor.shared)
         _ = Updater.shared  // starts Sparkle (background checks) when a feed is configured
-        if !CommandLine.arguments.contains("--snapshot") { Alerts.shared.requestAuthorization(); FanControl.shared.start(); HangWatchdog.shared.start(); HangWatchdog.announceNewReport() }
+        if !CommandLine.arguments.contains("--snapshot") { Alerts.shared.requestAuthorization(); ShareCenter.shared.apply(); FanControl.shared.start(); HangWatchdog.shared.start(); HangWatchdog.announceNewReport() }
         // Save history on SIGTERM too (pkill, logout), not only on a regular quit.
         signal(SIGTERM, SIG_IGN)
         let term = DispatchSource.makeSignalSource(signal: SIGTERM, queue: .main)
@@ -288,6 +288,7 @@ final class StatusBarController: NSObject, NSPopoverDelegate {
                 item.button?.action = #selector(togglePopover(_:))
                 item.button?.identifier = NSUserInterfaceItemIdentifier(module.rawValue)
                 item.button?.toolTip = module.title
+                if let button = item.button { ShareDropTarget.attach(to: button) }
                 items[module] = item
                 visibilityObservers[module] = item.observe(\.isVisible, options: [.new]) { _, change in
                     // User ⌘-dragged the item out of the menu bar.

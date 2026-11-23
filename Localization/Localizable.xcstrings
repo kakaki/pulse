@@ -39,6 +39,28 @@
     "%" : {
 
     },
+    "%@ (%@). Pliki trafią do folderu Pobrane." : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ (%2$@). Pliki trafią do folderu Pobrane."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ (%2$@). The files go to the Downloads folder."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ (%2$@). Die Dateien landen im Ordner „Downloads“."
+          }
+        }
+      }
+    },
     "%@ (niedostępny)" : {
       "localizations" : {
         "de" : {
@@ -93,6 +115,22 @@
         }
       }
     },
+    "%@ chce wysłać pliki" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ wants to send files"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ möchte Dateien senden"
+          }
+        }
+      }
+    },
     "%@ jest znowu dostępny w sieci." : {
       "localizations" : {
         "de" : {
@@ -109,6 +147,22 @@
         }
       }
     },
+    "%@ może teraz pobierać Twój schowek i wysyłać Ci pliki." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ can now take your clipboard and send you files."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ kann jetzt deine Zwischenablage abrufen und dir Dateien senden."
+          }
+        }
+      }
+    },
     "%@ nie odpowiada od 2 minut." : {
       "localizations" : {
         "de" : {
@@ -121,6 +175,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ has not responded for 2 minutes."
+          }
+        }
+      }
+    },
+    "%@ pobrał schowek z tego Maca." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ took the clipboard from this Mac."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ hat die Zwischenablage dieses Macs abgerufen."
           }
         }
       }
@@ -207,6 +277,16 @@
         }
       }
     },
+    "%@ → %@" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ → %2$@"
+          }
+        }
+      }
+    },
     "%@: %@ baterii." : {
       "localizations" : {
         "de" : {
@@ -225,6 +305,22 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "%1$@: %2$@ baterii."
+          }
+        }
+      }
+    },
+    "%lld min temu" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld min ago"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "vor %lld Min."
           }
         }
       }
@@ -1682,6 +1778,22 @@
         }
       }
     },
+    "Dane nie przeszły kontroli. Spróbuj ponownie." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The data failed the check. Try again."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Daten haben die Prüfung nicht bestanden. Versuch es erneut."
+          }
+        }
+      }
+    },
     "Dane w tym okresie" : {
       "localizations" : {
         "de" : {
@@ -2068,16 +2180,16 @@
     },
     "Dziś" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Today"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Heute"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
           }
         }
       }
@@ -3528,6 +3640,22 @@
         }
       }
     },
+    "Możesz pobierać schowek z %@ i wysyłać tam pliki." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can take the clipboard from %@ and send files there."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Du kannst die Zwischenablage von %@ abrufen und Dateien dorthin senden."
+          }
+        }
+      }
+    },
     "Muzyka" : {
       "localizations" : {
         "de" : {
@@ -3637,6 +3765,38 @@
         }
       }
     },
+    "Na tamtym komputerze brakuje miejsca." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The other computer is out of space."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auf dem anderen Computer fehlt Speicherplatz."
+          }
+        }
+      }
+    },
+    "Na tamtym komputerze opcja „Schowek i pliki” jest wyłączona." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“Clipboard and files” is turned off on the other computer."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "„Zwischenablage und Dateien“ ist auf dem anderen Computer ausgeschaltet."
+          }
+        }
+      }
+    },
     "Nagłe wyłączenia" : {
       "localizations" : {
         "de" : {
@@ -3665,6 +3825,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hottest"
+          }
+        }
+      }
+    },
+    "Najpierw sparuj inny komputer w Ustawieniach → Inne komputery." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pair another computer first in Settings → Other Computers."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kopple zuerst einen anderen Computer in Einstellungen → Andere Computer."
           }
         }
       }
@@ -4069,6 +4245,22 @@
         }
       }
     },
+    "Nikt nie odpowiedział na tamtym komputerze." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nobody answered on the other computer."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auf dem anderen Computer hat niemand geantwortet."
+          }
+        }
+      }
+    },
     "Niski poziom baterii" : {
       "localizations" : {
         "de" : {
@@ -4358,6 +4550,28 @@
         }
       }
     },
+    "Od %@: %@" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Od %1$@: %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "From %1$@: %2$@"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Von %1$@: %2$@"
+          }
+        }
+      }
+    },
     "Od macOS 27 limit ładowania ustawia sam system. Apple zablokował innym aplikacjom wstrzymywanie ładowania, więc Pulse nie może już tego robić." : {
       "localizations" : {
         "de" : {
@@ -4370,6 +4584,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Since macOS 27 the system sets the charge limit itself. Apple blocked other apps from pausing charging, so Pulse can no longer do it."
+          }
+        }
+      }
+    },
+    "Od razu wklejaj pobrany schowek" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paste the fetched clipboard right away"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abgerufene Zwischenablage sofort einsetzen"
           }
         }
       }
@@ -4418,6 +4648,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unpin"
+          }
+        }
+      }
+    },
+    "Odrzucono." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Declined."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abgelehnt."
+          }
+        }
+      }
+    },
+    "Odrzuć" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Decline"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ablehnen"
           }
         }
       }
@@ -4903,6 +5165,54 @@
         }
       }
     },
+    "Parowanie z %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pairing with %@"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kopplung mit %@"
+          }
+        }
+      }
+    },
+    "Parowanie: włącz opcję na obu komputerach, wybierz „Sparuj z komputerem…” i potwierdź ten sam kod na obu ekranach. Pliki przeciągnij na kartę komputera w panelu Inne komputery albo na ikonę Pulse w pasku menu; trafią do folderu Pobrane." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pairing: turn the option on on both computers, choose “Pair with a computer…” and confirm the same code on both screens. Drag files onto the computer’s card in the Other Computers panel or onto the Pulse icon in the menu bar; they go to the Downloads folder."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kopplung: Schalte die Option auf beiden Computern ein, wähle „Mit Computer koppeln …“ und bestätige auf beiden Bildschirmen denselben Code. Zieh Dateien auf die Karte des Computers im Bereich „Andere Computer“ oder auf das Pulse-Symbol in der Menüleiste; sie landen im Ordner „Downloads“."
+          }
+        }
+      }
+    },
+    "Paruj" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pair"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Koppeln"
+          }
+        }
+      }
+    },
     "Pasek menu" : {
       "localizations" : {
         "de" : {
@@ -5015,6 +5325,22 @@
         }
       }
     },
+    "Pliki: %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Files: %lld"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dateien: %lld"
+          }
+        }
+      }
+    },
     "Po dojściu do limitu Mac pracuje z zasilacza, a bateria się nie ładuje; ładowanie wraca %lld punktów niżej. Limit działa, gdy Pulse jest uruchomiony – po wyjściu z aplikacji Mac ładuje się normalnie. Na czas uśpienia ładowanie zostaje w ostatnim stanie. Przed podróżą wyłącz limit, aby naładować baterię do pełna." : {
       "localizations" : {
         "de" : {
@@ -5027,6 +5353,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "At the limit the Mac runs from the power adapter and the battery stops charging; charging resumes %lld points lower. The limit works while Pulse is running – after you quit it, the Mac charges normally. During sleep charging stays as it was. Before a trip, turn the limit off to charge the battery fully."
+          }
+        }
+      }
+    },
+    "Pobieraj na żądanie schowek z innego komputera z Pulse lub PulseWin i wysyłaj mu pliki. Działa tylko między sparowanymi komputerami, połączenie jest szyfrowane." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Take the clipboard from another computer with Pulse or PulseWin on request, and send it files. Works only between paired computers; the connection is encrypted."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rufe auf Wunsch die Zwischenablage eines anderen Computers mit Pulse oder PulseWin ab und sende ihm Dateien. Funktioniert nur zwischen gekoppelten Computern; die Verbindung ist verschlüsselt."
           }
         }
       }
@@ -5091,6 +5433,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Download / upload"
+          }
+        }
+      }
+    },
+    "Pobierz schowek" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Take clipboard"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zwischenablage abrufen"
+          }
+        }
+      }
+    },
+    "Pobierz schowek z" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Take clipboard from"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zwischenablage abrufen von"
           }
         }
       }
@@ -5193,32 +5567,32 @@
     },
     "Pobór mocy całego komputera" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Power draw of the whole computer"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Leistungsaufnahme des ganzen Computers"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Power draw of the whole computer"
           }
         }
       }
     },
     "Pobór mocy całego komputera, zużycie energii na dobę i energia aplikacji." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Power draw of the whole computer, energy used per day and app energy."
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Leistungsaufnahme des ganzen Computers, Energie pro Tag und Energie der Apps."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Power draw of the whole computer, energy used per day and app energy."
           }
         }
       }
@@ -5755,6 +6129,22 @@
         }
       }
     },
+    "Powiadamiaj, gdy ktoś pobierze mój schowek" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notify me when someone takes my clipboard"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mitteilung, wenn jemand meine Zwischenablage abruft"
+          }
+        }
+      }
+    },
     "Powiadom, gdy długo obciąża CPU" : {
       "localizations" : {
         "de" : {
@@ -5992,6 +6382,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Connection"
+          }
+        }
+      }
+    },
+    "Połączenie się nie udało." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The connection failed."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Verbindung ist fehlgeschlagen."
           }
         }
       }
@@ -6379,6 +6785,22 @@
         }
       }
     },
+    "Przesyłanie plików przerwane." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File transfer interrupted."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dateiübertragung abgebrochen."
+          }
+        }
+      }
+    },
     "Przez %lld min" : {
       "localizations" : {
         "de" : {
@@ -6427,6 +6849,22 @@
         }
       }
     },
+    "Przy jednym sparowanym komputerze w sieci pobiera od razu, przy kilku pokazuje listę." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "With one paired computer on the network it fetches at once; with several it shows a list."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mit einem gekoppelten Computer im Netzwerk wird sofort abgerufen, mit mehreren erscheint eine Liste."
+          }
+        }
+      }
+    },
     "Przy obecnym tempie na dysku %@ zabraknie miejsca za ok. %lld dni. Największe foldery pokaże panel Dysk → Co zajmuje miejsce." : {
       "localizations" : {
         "de" : {
@@ -6445,6 +6883,38 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Przy obecnym tempie na dysku %1$@ zabraknie miejsca za ok. %2$lld dni. Największe foldery pokaże panel Dysk → Co zajmuje miejsce."
+          }
+        }
+      }
+    },
+    "Przyjmij" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accept"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annehmen"
+          }
+        }
+      }
+    },
+    "Przyjmuj pliki" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accept files"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dateien annehmen"
           }
         }
       }
@@ -6999,6 +7469,70 @@
         }
       }
     },
+    "Schowek" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clipboard"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zwischenablage"
+          }
+        }
+      }
+    },
+    "Schowek i pliki" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clipboard and files"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zwischenablage und Dateien"
+          }
+        }
+      }
+    },
+    "Schowek na tym komputerze jest pusty albo zawiera coś, czego nie da się przesłać." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The clipboard on that computer is empty or holds something that can’t be sent."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Zwischenablage auf diesem Computer ist leer oder enthält etwas, das sich nicht senden lässt."
+          }
+        }
+      }
+    },
+    "Schowek z %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clipboard from %@"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zwischenablage von %@"
+          }
+        }
+      }
+    },
     "Separatory między wartościami" : {
       "localizations" : {
         "de" : {
@@ -7159,6 +7693,38 @@
         }
       }
     },
+    "Skopiowany tekst lub obraz zostaje na tym Macu. Sparowany komputer pobiera go tylko wtedy, gdy ktoś przy nim o to poprosi." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copied text or images stay on this Mac. A paired computer gets them only when someone there asks for them."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kopierter Text oder Bilder bleiben auf diesem Mac. Ein gekoppelter Computer erhält sie nur, wenn dort jemand danach fragt."
+          }
+        }
+      }
+    },
+    "Skrót ⌃⌥⌘V pobiera schowek" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shortcut ⌃⌥⌘V takes the clipboard"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kurzbefehl ⌃⌥⌘V ruft die Zwischenablage ab"
+          }
+        }
+      }
+    },
     "Skróty po przekroczeniu progu" : {
       "localizations" : {
         "de" : {
@@ -7216,6 +7782,54 @@
     },
     "Sparkle" : {
 
+    },
+    "Sparowano" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paired"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gekoppelt"
+          }
+        }
+      }
+    },
+    "Sparowano %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paired %@"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gekoppelt %@"
+          }
+        }
+      }
+    },
+    "Sparuj z komputerem…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pair with a computer…"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mit Computer koppeln …"
+          }
+        }
+      }
     },
     "Spokojnie" : {
       "localizations" : {
@@ -7373,6 +7987,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Check now"
+          }
+        }
+      }
+    },
+    "Sprawdź, czy na obu komputerach widać ten sam kod, i potwierdź na obu." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check that both computers show the same code, and confirm on both."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prüfe, ob beide Computer denselben Code zeigen, und bestätige auf beiden."
+          }
+        }
+      }
+    },
+    "Sprawdź, czy na obu komputerach widać ten sam kod. Po sparowaniu %@ może pobierać Twój schowek (jeśli na to pozwalasz) i wysyłać Ci pliki." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check that both computers show the same code. Once paired, %@ can take your clipboard (if you allow it) and send you files."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prüfe, ob beide Computer denselben Code zeigen. Nach dem Koppeln kann %@ deine Zwischenablage abrufen (wenn du es erlaubst) und dir Dateien senden."
           }
         }
       }
@@ -7907,6 +8553,38 @@
         }
       }
     },
+    "Tamten komputer jest zajęty. Spróbuj za chwilę." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The other computer is busy. Try again in a moment."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der andere Computer ist beschäftigt. Versuch es gleich noch einmal."
+          }
+        }
+      }
+    },
+    "Tamten komputer nie zna już tego Maca. Sparuj je ponownie." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The other computer no longer knows this Mac. Pair them again."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der andere Computer kennt diesen Mac nicht mehr. Kopple sie erneut."
+          }
+        }
+      }
+    },
     "Tekst" : {
       "localizations" : {
         "de" : {
@@ -8176,6 +8854,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "This Mac shares its readings too."
+          }
+        }
+      }
+    },
+    "Ten komputer nie jest teraz w sieci." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That computer is not on the network right now."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser Computer ist gerade nicht im Netzwerk."
+          }
+        }
+      }
+    },
+    "Ten komputer nie udostępnia swojego schowka." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That computer doesn’t share its clipboard."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser Computer gibt seine Zwischenablage nicht frei."
           }
         }
       }
@@ -8509,6 +9219,22 @@
         }
       }
     },
+    "Udostępniaj mój schowek na żądanie" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share my clipboard on request"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meine Zwischenablage auf Anfrage freigeben"
+          }
+        }
+      }
+    },
     "Udostępniaj odczyty tego Maca w sieci lokalnej" : {
       "localizations" : {
         "de" : {
@@ -8617,6 +9343,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hiding"
+          }
+        }
+      }
+    },
+    "Upuść, aby wysłać do %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drop to send to %@"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ablegen, um an %@ zu senden"
           }
         }
       }
@@ -8989,6 +9731,22 @@
         }
       }
     },
+    "W sieci nie widać komputerów z włączoną opcją „Schowek i pliki”." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No computers with “Clipboard and files” turned on are visible on the network."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Im Netzwerk ist kein Computer mit eingeschalteter Option „Zwischenablage und Dateien“ zu sehen."
+          }
+        }
+      }
+    },
     "W trybie prezentacji Pulse nie wysyła powiadomień. To samo powiadomienie nie pojawi się częściej niż co 30 minut ani ponownie, zanim wartość nie wróci do normy. Progi ustawisz na stronach modułów: CPU, Pamięć, Dysk, Czujniki i Bateria (także dla urządzeń Bluetooth). Na stronie Inne komputery włączysz powiadomienie, gdy komputer z sieci przestanie odpowiadać." : {
       "localizations" : {
         "de" : {
@@ -9103,16 +9861,16 @@
     },
     "Wczoraj" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Yesterday"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gestern"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yesterday"
           }
         }
       }
@@ -9635,6 +10393,22 @@
         }
       }
     },
+    "Wymaga dostępu w Ustawieniach systemowych → Prywatność i ochrona → Dostępność." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Needs access in System Settings → Privacy & Security → Accessibility."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Benötigt Zugriff in Systemeinstellungen → Datenschutz & Sicherheit → Bedienungshilfen."
+          }
+        }
+      }
+    },
     "Wymaga uprawnień administratora – wyłączysz go w Ustawieniach systemowych → Elementy logowania" : {
       "localizations" : {
         "de" : {
@@ -9913,6 +10687,38 @@
         }
       }
     },
+    "Wyślij do" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send to"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Senden an"
+          }
+        }
+      }
+    },
+    "Wyślij pliki…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send files…"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dateien senden …"
+          }
+        }
+      }
+    },
     "Wyślij test" : {
       "localizations" : {
         "de" : {
@@ -10054,6 +10860,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "From list"
+          }
+        }
+      }
+    },
+    "Za dużo danych." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Too much data."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zu viele Daten."
           }
         }
       }
@@ -10272,6 +11094,22 @@
         }
       }
     },
+    "Zapisano w Pobranych" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saved in Downloads"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In „Downloads“ gesichert"
+          }
+        }
+      }
+    },
     "Zapisz cały dziennik baterii jako CSV w folderze Pobrane" : {
       "localizations" : {
         "de" : {
@@ -10332,6 +11170,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Stop"
+          }
+        }
+      }
+    },
+    "Zawsze przyjmuj pliki" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Always accept files"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dateien immer annehmen"
           }
         }
       }
@@ -10882,6 +11736,60 @@
         }
       }
     },
+    "nie udostępnia" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "not shared"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "nicht freigegeben"
+          }
+        }
+      }
+    },
+    "obraz %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "image %@"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bild %@"
+          }
+        }
+      }
+    },
+    "obraz %lld×%lld" : {
+      "localizations" : {
+        "pl" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "obraz %1$lld×%2$lld"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "image %1$lld×%2$lld"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bild %1$lld×%2$lld"
+          }
+        }
+      }
+    },
     "od %@" : {
       "localizations" : {
         "de" : {
@@ -10994,6 +11902,38 @@
         }
       }
     },
+    "przed chwilą" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "just now"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "gerade eben"
+          }
+        }
+      }
+    },
+    "pusty" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "empty"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "leer"
+          }
+        }
+      }
+    },
     "s" : {
 
     },
@@ -11015,6 +11955,38 @@
     },
     "t" : {
 
+    },
+    "tekst %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "text %@"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Text %@"
+          }
+        }
+      }
+    },
+    "tekst, %lld zn." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "text, %lld chars"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Text, %lld Zeichen"
+          }
+        }
+      }
     },
     "utrata %@" : {
       "localizations" : {
@@ -11325,16 +12297,16 @@
     },
     "Średnio na dobę" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Daily average"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ø pro Tag"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daily average"
           }
         }
       }
@@ -11368,6 +12340,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "average"
+          }
+        }
+      }
+    },
+    "Żaden sparowany komputer nie jest teraz w sieci." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No paired computer is on the network right now."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein gekoppelter Computer ist gerade im Netzwerk."
           }
         }
       }

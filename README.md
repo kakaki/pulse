@@ -33,8 +33,9 @@
   - **Disk:** used or free space as percent or GB/TB, multiple drives, read/write speed, what takes up the space, a forecast of when the disk fills up, SSD life from SMART (wear, data written, temperature)
   - **Network:** upload/download in MB/s or Mb/s, traffic per app, latency, a connection test (router vs. internet), local and public IP, Wi‑Fi details (signal/noise, standard, channel, signal history), data used per month with a limit (also separately via hotspot)
   - **Sensors:** SoC, SSD and battery temperatures, fans, thermal state
-  - **Battery:** charge chart, health, cycle count, power draw, adapter wattage, energy use per app and a 24 h energy ranking (how much battery each app used), energy charged per month, health over time, Bluetooth device batteries (AirPods, keyboard, mouse) with history
+  - **Battery:** charge chart, health, cycle count, power draw, adapter wattage, energy use per app and a 24 h energy ranking (how much battery each app used), energy charged per month, health over time, Bluetooth device batteries (AirPods, keyboard, mouse) with history; on Macs without a battery (e.g. Mac mini) the **Energy** module: power draw of the whole computer with a chart and daily use
   - **Other Computers:** load, temperatures, fans, processes, Docker containers and CPU and temperature history of other Macs running Pulse and Windows PCs running PulseWin on the local network; update Pulse on those Macs remotely (if allowed on that Mac)
+- **Clipboard and files between computers** (optional, off by default): copied text or images stay on their computer, and another Mac with Pulse or PC with PulseWin fetches them only on request with ⌃⌥⌘V. Send files and folders by dragging them onto the computer's card or onto the Pulse icon in the menu bar. Works only between paired computers (a code confirmed on both screens); the connection is encrypted.
 - **Charge limit** on MacBooks (50–95%), so the battery doesn't sit at 100% all the time, with a one-time "charge to full" for trips. On macOS 27 and later Apple only allows the system's own charge limit; Pulse links to it.
 - **History of 2 min, 1 h, 24 h, 7 d and 30 d**, kept for 7, 14 or 30 days, with CSV export.
 - **Handy actions:** free up memory (`purge`, asks for your admin password), quit or force quit processes with a right-click (processes with the same name can be combined), click an IP address to copy it.
@@ -90,4 +91,4 @@ Translations live in `Localization/Localizable.xcstrings`. Polish is the source 
 
 ## Privacy
 
-Pulse reads all data locally from macOS (IOKit, `host_statistics`, `nettop`, SMC). The only network requests it makes are a TCP latency check to `1.1.1.1`, a public IP lookup (`api.ipify.org`) and the Sparkle update check.
+Pulse reads all data locally from macOS (IOKit, `host_statistics`, `nettop`, SMC). The only network requests it makes are a TCP latency check to `1.1.1.1`, a public IP lookup (`api.ipify.org`) and the Sparkle update check. Readings of other computers, the clipboard and files travel only on the local network, directly between computers; the clipboard and files only between paired computers and encrypted.

@@ -80,8 +80,10 @@ struct RemoteMacCard: View {
             }
             .buttonStyle(.plain)
             if showsUpdate { updateRow }
+            ShareCardRow(peerID: peer.id)
             if expanded { details }
         }
+        .modifier(ShareDropModifier(peerID: peer.id))
         .opacity(peer.isStale ? 0.55 : 1)
     }
 
