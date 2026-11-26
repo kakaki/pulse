@@ -1,4 +1,5 @@
 import CryptoKit
+@preconcurrency import Dispatch
 import Foundation
 import Network
 import Security
@@ -23,18 +24,35 @@ enum ShareKeys {
         let dir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
             .appendingPathComponent("Pulse", isDirectory: true)
         let url = dir.appendingPathComponent("share-key.bin")
-        if let data = try? Data(contentsOf: url), let key = try? P256.KeyAgreement.PrivateKey(rawRepresentation: data) {
-            return (key, true)
+        // Only a regular file of this user is trusted (no link); loose permissions are tightened.
+        func load() -> P256.KeyAgreement.PrivateKey?? {
+            var st = stat()
+            guard lstat(url.path, &st) == 0 else { return .some(nil) }   // no file yet
+            guard st.st_mode & S_IFMT == S_IFREG, st.st_uid == getuid() else { return nil }   // never use or replace
+            guard let data = try? Data(contentsOf: url), let key = try? P256.KeyAgreement.PrivateKey(rawRepresentation: data) else {
+                return .some(nil)   // damaged: replaced below
+            }
+            if st.st_mode & 0o077 != 0 { chmod(url.path, 0o600) }
+            return key
+        }
+        switch load() {
+        case .some(.some(let key)): return (key, true)
+        case .none: return (P256.KeyAgreement.PrivateKey(), false)
+        case .some(.none): break
         }
         let key = P256.KeyAgreement.PrivateKey()
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         let tmp = dir.appendingPathComponent("share-key.\(UUID().uuidString).tmp")
-        guard FileManager.default.createFile(atPath: tmp.path, contents: key.rawRepresentation, attributes: [.posixPermissions: 0o600]),
-              rename(tmp.path, url.path) == 0,
-              (try? Data(contentsOf: url)) == key.rawRepresentation else {
-            try? FileManager.default.removeItem(at: tmp)
+        defer { unlink(tmp.path) }
+        guard FileManager.default.createFile(atPath: tmp.path, contents: key.rawRepresentation, attributes: [.posixPermissions: 0o600]) else {
             return (key, false)
         }
+        // A damaged file is replaced; otherwise link() never overwrites, so of two instances starting
+        // together the first one wins and the other uses its key.
+        var existing = stat()
+        if lstat(url.path, &existing) == 0 { unlink(url.path) }
+        if link(tmp.path, url.path) != 0, case .some(.some(let winner)) = load() { return (winner, true) }
+        guard (try? Data(contentsOf: url)) == key.rawRepresentation else { return (key, false) }
         return (key, true)
     }()
 
@@ -71,10 +89,10 @@ enum ShareKeys {
         return "\(s.prefix(3)) \(s.suffix(3))"
     }
 
+    /// SystemRandomNumberGenerator is the system CSPRNG on Apple platforms and cannot fail.
     static func random(_ n: Int) -> Data {
-        var d = Data(count: n)
-        _ = d.withUnsafeMutableBytes { SecRandomCopyBytes(kSecRandomDefault, n, $0.baseAddress!) }
-        return d
+        var g = SystemRandomNumberGenerator()
+        return Data((0..<n).map { _ in UInt8.random(in: .min ... .max, using: &g) })
     }
 }
 
@@ -118,6 +136,13 @@ final class ShareConnection: @unchecked Sendable {
     private var sendCounter: UInt64 = 0
     private var receiveCounter: UInt64 = 0
 
+    // Watching for the other side closing while this side waits for its user (see `watchForClose`).
+    private let lock = NSLock()
+    private var buffered = Data()
+    private var peerClosed = false
+    private var peeking = false
+    private var peekWaiters: [() -> Void] = []
+
     init(_ connection: NWConnection) { self.connection = connection }
 
     convenience init(endpoint: NWEndpoint) {
@@ -139,9 +164,52 @@ final class ShareConnection: @unchecked Sendable {
                 }
             }
             connection.start(queue: queue)
-            queue.asyncAfter(deadline: .now() + timeout) { [connection] in
+            schedule(timeout) { [connection] in
                 if once.take() { connection.cancel(); cont.resume(throwing: ShareError.timeout) }
             }
+        }
+    }
+
+    /// A timeout that is cancelled as soon as the operation ends, so finished reads leave nothing queued.
+    @discardableResult
+    private func schedule(_ seconds: TimeInterval, _ fire: @escaping () -> Void) -> DispatchWorkItem {
+        let item = DispatchWorkItem(block: fire)
+        queue.asyncAfter(deadline: .now() + seconds, execute: item)
+        return item
+    }
+
+    /// While this side waits for its user and the other side has nothing to send, notices the other side
+    /// going away (or this connection being closed) and calls `onClose`. Bytes that arrive meanwhile are
+    /// kept and read first, in order.
+    func watchForClose(_ onClose: @escaping @Sendable () -> Void) {
+        lock.lock()
+        guard !peeking, !peerClosed else { lock.unlock(); return }
+        peeking = true
+        lock.unlock()
+        connection.receive(minimumIncompleteLength: 1, maximumLength: 65_536) { [self] data, _, isComplete, error in
+            lock.lock()
+            if let data { buffered.append(data) }
+            if isComplete || error != nil { peerClosed = true }
+            peeking = false
+            let waiters = peekWaiters
+            peekWaiters = []
+            lock.unlock()
+            waiters.forEach { $0() }
+            if (data?.isEmpty ?? true) && (isComplete || error != nil) { onClose() }
+        }
+    }
+
+    /// Waits for a pending `watchForClose` read, so the next read cannot overtake its bytes.
+    private func settlePeek(timeout: TimeInterval) async throws {
+        try await withCheckedThrowingContinuation { (cont: CheckedContinuation<Void, Error>) in
+            let once = Once()
+            lock.lock()
+            guard peeking else { lock.unlock(); cont.resume(); return }
+            let timer = schedule(timeout) { [connection] in
+                if once.take() { connection.cancel(); cont.resume(throwing: ShareError.timeout) }
+            }
+            peekWaiters.append { timer.cancel(); if once.take() { cont.resume() } }
+            lock.unlock()
         }
     }
 
@@ -154,16 +222,31 @@ final class ShareConnection: @unchecked Sendable {
     // MARK: Raw frames
 
     private func receive(exactly n: Int, timeout: TimeInterval) async throws -> Data {
+        let deadline = Date().addingTimeInterval(timeout)
+        try await settlePeek(timeout: timeout)
+        let (head, closed) = lock.withLock { () -> (Data, Bool) in
+            let head = Data(buffered.prefix(n))
+            buffered = Data(buffered.dropFirst(head.count))
+            return (head, peerClosed)
+        }
+        if head.count == n { return head }
+        if closed { throw ShareError.closed }
+        let rest = try await receiveRaw(n - head.count, timeout: max(deadline.timeIntervalSinceNow, 0.5))
+        return head + rest
+    }
+
+    private func receiveRaw(_ n: Int, timeout: TimeInterval) async throws -> Data {
         try await withCheckedThrowingContinuation { (cont: CheckedContinuation<Data, Error>) in
             let once = Once()
+            let timer = schedule(timeout) { [connection] in
+                if once.take() { connection.cancel(); cont.resume(throwing: ShareError.timeout) }
+            }
             connection.receive(minimumIncompleteLength: n, maximumLength: n) { data, _, isComplete, error in
+                timer.cancel()
                 guard once.take() else { return }
                 if let error { cont.resume(throwing: error); return }
                 guard let data, data.count == n else { cont.resume(throwing: isComplete ? ShareError.closed : ShareError.badFrame); return }
                 cont.resume(returning: data)
-            }
-            queue.asyncAfter(deadline: .now() + timeout) { [connection] in
-                if once.take() { connection.cancel(); cont.resume(throwing: ShareError.timeout) }
             }
         }
     }
@@ -184,13 +267,14 @@ final class ShareConnection: @unchecked Sendable {
         let frame = Data(bytes: &length, count: 4) + body
         try await withCheckedThrowingContinuation { (cont: CheckedContinuation<Void, Error>) in
             let once = Once()
+            let timer = schedule(timeout) { [connection] in
+                if once.take() { connection.cancel(); cont.resume(throwing: ShareError.timeout) }
+            }
             connection.send(content: frame, completion: .contentProcessed { error in
+                timer.cancel()
                 guard once.take() else { return }
                 if let error { cont.resume(throwing: error) } else { cont.resume() }
             })
-            queue.asyncAfter(deadline: .now() + timeout) { [connection] in
-                if once.take() { connection.cancel(); cont.resume(throwing: ShareError.timeout) }
-            }
         }
     }
 
@@ -340,7 +424,8 @@ enum SharePaths {
     static func components(_ path: String) -> [String]? {
         if path.hasPrefix("/") || path.contains("\\") || path.contains("\0") { return nil }
         let parts = path.split(separator: "/", omittingEmptySubsequences: false).map(String.init)
-        guard !parts.isEmpty, parts.count <= 64 else { return nil }
+        // SHARE.md: at most 4096 characters and 256 parts.
+        guard !parts.isEmpty, parts.count <= 256, path.count <= 4096 else { return nil }
         var result: [String] = []
         for raw in parts {
             guard !raw.isEmpty, raw != ".", raw != ".." else { return nil }
@@ -349,24 +434,14 @@ enum SharePaths {
             guard !part.isEmpty else { return nil }
             let stem = part.split(separator: ".", maxSplits: 1).first.map(String.init)?.uppercased() ?? ""
             if reserved.contains(stem) { part = "_" + part }
-            // Room for the temp suffix (".1a2b3c4d.pulse-part") within the 255-byte name limit.
+            // Room for the temp suffix (".1a2b3c4d.pulse-part") within the 255-byte name limit;
+            // trimming must not leave a trailing dot or space behind.
             while part.utf8.count > 200 { part.removeLast() }
+            while let last = part.last, last == "." || last == " " { part.removeLast() }
+            guard !part.isEmpty else { return nil }
             result.append(part)
         }
         return result
-    }
-
-    /// `name`, `name (2).ext`, `name (3).ext`… — the first one free in `folder`.
-    static func free(_ name: String, in folder: URL) -> String {
-        let fm = FileManager.default
-        if !fm.fileExists(atPath: folder.appendingPathComponent(name).path) { return name }
-        let ext = (name as NSString).pathExtension
-        let base = ext.isEmpty ? name : (name as NSString).deletingPathExtension
-        for i in 2...9999 {
-            let candidate = ext.isEmpty ? "\(base) (\(i))" : "\(base) (\(i)).\(ext)"
-            if !fm.fileExists(atPath: folder.appendingPathComponent(candidate).path) { return candidate }
-        }
-        return UUID().uuidString + (ext.isEmpty ? "" : ".\(ext)")
     }
 }
 
@@ -374,7 +449,10 @@ enum SharePaths {
 /// and a cap on incoming connections that have not authenticated yet.
 final class ShareRegistry: @unchecked Sendable {
     static let shared = ShareRegistry()
-    static let maxIncoming = 16
+    /// Incoming connections that have not authenticated yet, and all incoming ones: unpaired
+    /// connections alone cannot use up the room a paired computer needs.
+    static let maxUnauthenticated = 16
+    static let maxIncoming = 48
 
     private let lock = NSLock()
     private var open: [ObjectIdentifier: (conn: ShareConnection, peer: String?, incoming: Bool)] = [:]
@@ -382,7 +460,10 @@ final class ShareRegistry: @unchecked Sendable {
     /// False when too many incoming connections are already open.
     func admit(_ conn: ShareConnection, incoming: Bool) -> Bool {
         lock.lock(); defer { lock.unlock() }
-        if incoming, open.values.filter(\.incoming).count >= Self.maxIncoming { return false }
+        if incoming {
+            let all = open.values.filter(\.incoming)
+            if all.count >= Self.maxIncoming || all.filter({ $0.peer == nil }).count >= Self.maxUnauthenticated { return false }
+        }
         open[ObjectIdentifier(conn)] = (conn, nil, incoming)
         return true
     }
@@ -404,4 +485,75 @@ final class ShareRegistry: @unchecked Sendable {
         lock.unlock()
         victims.forEach { $0.close() }
     }
+}
+
+/// Strict reading of JSON values: NSNumber bridging would otherwise turn true into 1, 1 into true, 1.9 into 1.
+enum ShareJSON {
+    static func int(_ value: Any?) -> Int64? {
+        guard let n = value as? NSNumber, CFGetTypeID(n) != CFBooleanGetTypeID(), !CFNumberIsFloatType(n) else { return nil }
+        return n.int64Value
+    }
+
+    static func bool(_ value: Any?) -> Bool? {
+        guard let n = value as? NSNumber, CFGetTypeID(n) == CFBooleanGetTypeID() else { return nil }
+        return n.boolValue
+    }
+}
+
+/// A folder opened without following links. Files are created, published and removed relative to it,
+/// so renaming a folder or putting a link in its place cannot redirect a write elsewhere.
+final class ShareDir: @unchecked Sendable {
+    let fd: Int32
+    private init(fd: Int32) { self.fd = fd }
+    deinit { Darwin.close(fd) }
+
+    /// Downloads itself may be a link the user made; everything below it is opened without following links.
+    static func open(_ url: URL) -> ShareDir? {
+        let fd = Darwin.open(url.path, O_RDONLY | O_DIRECTORY | O_CLOEXEC)
+        return fd >= 0 ? ShareDir(fd: fd) : nil
+    }
+
+    /// A subfolder, created when missing; a link or a file in its place is refused.
+    func folder(_ name: String) throws -> ShareDir {
+        if mkdirat(fd, name, 0o755) != 0, errno != EEXIST { throw ShareError.unexpected("mkdir") }
+        let child = openat(fd, name, O_RDONLY | O_DIRECTORY | O_NOFOLLOW | O_CLOEXEC)
+        guard child >= 0 else { throw ShareError.badFrame }
+        return ShareDir(fd: child)
+    }
+
+    func exists(_ name: String) -> Bool {
+        var st = stat()
+        return fstatat(fd, name, &st, AT_SYMLINK_NOFOLLOW) == 0
+    }
+
+    /// `name`, `name (2).ext`, `name (3).ext`… — the first one free here.
+    func free(_ name: String) -> String {
+        if !exists(name) { return name }
+        let ext = (name as NSString).pathExtension
+        let base = ext.isEmpty ? name : (name as NSString).deletingPathExtension
+        for i in 2...9999 {
+            let candidate = ext.isEmpty ? "\(base) (\(i))" : "\(base) (\(i)).\(ext)"
+            if !exists(candidate) { return candidate }
+        }
+        return UUID().uuidString + (ext.isEmpty ? "" : ".\(ext)")
+    }
+
+    /// A new file that did not exist before (never an existing file or a link).
+    func createExclusive(_ name: String) throws -> FileHandle {
+        let file = openat(fd, name, O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW | O_CLOEXEC, 0o644)
+        guard file >= 0 else { throw ShareError.unexpected("create") }
+        return FileHandle(fileDescriptor: file, closeOnDealloc: true)
+    }
+
+    /// Renames the finished temp file to a free name; never replaces anything. Returns the name used.
+    func publish(_ tmp: String, as name: String) throws -> String {
+        for _ in 0..<20 {
+            let target = free(name)
+            if renameatx_np(fd, tmp, fd, target, UInt32(RENAME_EXCL)) == 0 { return target }
+            guard errno == EEXIST else { break }
+        }
+        throw ShareError.unexpected("rename")
+    }
+
+    func remove(_ name: String) { unlinkat(fd, name, 0) }
 }

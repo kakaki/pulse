@@ -152,6 +152,12 @@ final class Alerts: NSObject, UNUserNotificationCenterDelegate {
         UNUserNotificationCenter.current().add(request)
     }
 
+    /// Takes back a notification, shown or pending.
+    func withdraw(_ id: String) {
+        UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: ["pulse.\(id)"])
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["pulse.\(id)"])
+    }
+
     nonisolated func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification,
                                             withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         completionHandler([.banner, .sound])

@@ -355,23 +355,27 @@ struct ShareCardRow: View {
     private let share = ShareCenter.shared
 
     var body: some View {
-        if let peer = share.peer(peerID), share.isOnline(peerID) {
+        let transfers = share.transfers.filter { $0.peerID == peerID }
+        if let peer = share.peer(peerID), share.isOnline(peerID) || !transfers.isEmpty {
             VStack(spacing: 6) {
-                HStack(spacing: 8) {
-                    Button {
-                        share.fetchClipboard(from: peer)
-                    } label: { Label("Pobierz schowek", systemImage: "doc.on.clipboard") }
-                    Button {
-                        let panel = NSOpenPanel()
-                        panel.allowsMultipleSelection = true
-                        panel.canChooseDirectories = true
-                        NSApp.activate(ignoringOtherApps: true)
-                        if panel.runModal() == .OK { share.send(panel.urls, to: peer) }
-                    } label: { Label("Wyślij pliki…", systemImage: "paperplane") }
-                    Spacer()
+                if share.isOnline(peerID) {
+                    HStack(spacing: 8) {
+                        Button {
+                            share.fetchClipboard(from: peer)
+                        } label: { Label("Pobierz schowek", systemImage: "doc.on.clipboard") }
+                        Button {
+                            let panel = NSOpenPanel()
+                            panel.allowsMultipleSelection = true
+                            panel.canChooseDirectories = true
+                            NSApp.activate(ignoringOtherApps: true)
+                            if panel.runModal() == .OK { share.send(panel.urls, to: peer) }
+                        } label: { Label("Wyślij pliki…", systemImage: "paperplane") }
+                        Spacer()
+                    }
+                    .controlSize(.small)
                 }
-                .controlSize(.small)
-                ForEach(share.transfers.filter { $0.peerID == peerID }) { t in
+                // Progress and Cancel stay while the transfer lasts, even if the computer drops out of Bonjour.
+                ForEach(transfers) { t in
                     HStack(spacing: 8) {
                         Image(systemName: t.incoming ? "arrow.down.circle" : "arrow.up.circle").foregroundStyle(.secondary)
                         LinearMeter(value: t.fraction, colors: [.blue.opacity(0.7), .blue], height: 5)

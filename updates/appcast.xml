@@ -3,6 +3,14 @@
     <channel>
         <title>Pulse</title>
         <item>
+            <title>1.17.3</title>
+            <pubDate>Thu, 26 Nov 2026 23:27:54 +0100</pubDate>
+            <sparkle:version>37</sparkle:version>
+            <sparkle:shortVersionString>1.17.3</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://raw.githubusercontent.com/kakaki/pulse/main/updates/Pulse-1.17.3.dmg" length="8041128" type="application/octet-stream" sparkle:edSignature="Q10kvbw9Qifsmji0su/1I0lT8W2EjUz3Jr5iT6J5rKJcZi6u5bdLILeJ3iHJ3nOVSioMxaV6/bZddWuxkYX5Bw=="/>
+        </item>
+        <item>
             <title>1.17.2</title>
             <pubDate>Thu, 26 Nov 2026 20:38:40 +0100</pubDate>
             <sparkle:version>36</sparkle:version>
@@ -17,14 +25,6 @@
             <sparkle:shortVersionString>1.17.1</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
             <enclosure url="https://raw.githubusercontent.com/kakaki/pulse/main/updates/Pulse-1.17.1.dmg" length="7877769" type="application/octet-stream" sparkle:edSignature="0UZnk6NmCQX1Pi+I0i16gqxe+gPslXf/Y0fygsBb/THjb16h/VbByjh1uxLmAQFT412WuQ1TnnCRYdB+k+ftCQ=="/>
-        </item>
-        <item>
-            <title>1.17</title>
-            <pubDate>Mon, 23 Nov 2026 18:46:08 +0100</pubDate>
-            <sparkle:version>34</sparkle:version>
-            <sparkle:shortVersionString>1.17</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
-            <enclosure url="https://raw.githubusercontent.com/kakaki/pulse/main/updates/Pulse-1.17.dmg" length="7878895" type="application/octet-stream" sparkle:edSignature="lHf0OPRbhXqifKZmQEd3IMlmzhaV36WRE33vFycMWVkeTjpmGOioAq/8fxHpkxATx/hgDJY6JzWRANikuAA9Bw=="/>
         </item>
         <item>
             <title>1.6.1</title>
