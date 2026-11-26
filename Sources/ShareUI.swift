@@ -11,11 +11,25 @@ final class SharePrompt {
     private var panel: NSPanel?
     private var answer: Bool?
     private var waiters: [CheckedContinuation<Bool, Never>] = []
+    private var closeObserver: NSObjectProtocol?
     private(set) var timedOut = false
+    /// The optional checkbox ("Zawsze pozwalaj…"), read after the answer.
+    fileprivate(set) var checked = false
 
-    static func show(title: String, message: String, code: String?, ok: String, cancel: String, timeout: TimeInterval) -> SharePrompt {
+    /// Open questions, closed all at once when the option is turned off.
+    private static var open: [ObjectIdentifier: SharePrompt] = [:]
+
+    static func dismissAll() { open.values.forEach { $0.finish(false) } }
+
+    static func show(title: String, message: String, code: String?, symbol: String? = nil, ok: String, cancel: String,
+                     checkbox: String? = nil, timeout: TimeInterval) -> SharePrompt {
         let prompt = SharePrompt()
-        let view = SharePromptView(title: title, message: message, code: code, ok: ok, cancel: cancel) { [weak prompt] in prompt?.finish($0) }
+        let view = SharePromptView(title: title, message: message, code: code,
+                                   symbol: symbol ?? (code == nil ? "arrow.down.doc" : "lock.shield"),
+                                   ok: ok, cancel: cancel, checkbox: checkbox) { [weak prompt] value, checked in
+            prompt?.checked = checked
+            prompt?.finish(value)
+        }
         let panel = NSPanel(contentRect: NSRect(x: 0, y: 0, width: 380, height: 200),
                             styleMask: [.titled, .closable, .nonactivatingPanel, .fullSizeContentView], backing: .buffered, defer: false)
         panel.titlebarAppearsTransparent = true
@@ -33,7 +47,8 @@ final class SharePrompt {
         panel.orderFrontRegardless()
         panel.makeKey()
         prompt.panel = panel
-        NotificationCenter.default.addObserver(forName: NSWindow.willCloseNotification, object: panel, queue: .main) { [weak prompt] _ in
+        open[ObjectIdentifier(prompt)] = prompt
+        prompt.closeObserver = NotificationCenter.default.addObserver(forName: NSWindow.willCloseNotification, object: panel, queue: .main) { [weak prompt] _ in
             MainActor.assumeIsolated { prompt?.finish(false) }
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + timeout) { [weak prompt] in
@@ -56,8 +71,12 @@ final class SharePrompt {
     private func finish(_ value: Bool) {
         guard answer == nil else { return }
         answer = value
+        if !value { checked = false }
+        if let closeObserver { NotificationCenter.default.removeObserver(closeObserver) }
+        closeObserver = nil
         panel?.orderOut(nil)
         panel = nil
+        Self.open[ObjectIdentifier(self)] = nil
         for w in waiters { w.resume(returning: value) }
         waiters = []
     }
@@ -67,13 +86,16 @@ private struct SharePromptView: View {
     let title: String
     let message: String
     let code: String?
+    let symbol: String
     let ok: String
     let cancel: String
-    let answer: (Bool) -> Void
+    let checkbox: String?
+    let answer: (Bool, Bool) -> Void
+    @State private var checked = false
 
     var body: some View {
         VStack(spacing: 14) {
-            Image(systemName: code == nil ? "arrow.down.doc" : "lock.shield")
+            Image(systemName: symbol)
                 .font(.system(size: 30)).foregroundStyle(.tint)
             Text(verbatim: title).font(.headline).multilineTextAlignment(.center)
             if let code {
@@ -81,9 +103,12 @@ private struct SharePromptView: View {
             }
             Text(verbatim: message).font(.callout).foregroundStyle(.secondary)
                 .multilineTextAlignment(.center).fixedSize(horizontal: false, vertical: true)
+            if let checkbox {
+                Toggle(isOn: $checked) { Text(verbatim: checkbox) }.toggleStyle(.checkbox).font(.callout)
+            }
             HStack {
-                Button(cancel) { answer(false) }.keyboardShortcut(.cancelAction)
-                Button(ok) { answer(true) }.keyboardShortcut(.defaultAction)
+                Button(cancel) { answer(false, false) }.keyboardShortcut(.cancelAction)
+                Button(ok) { answer(true, checked) }.keyboardShortcut(.defaultAction)
             }
         }
         .padding(24)
@@ -133,6 +158,7 @@ enum ShareMenus {
         if let age = info["age"] as? Int {
             text += ", " + (age < 60 ? String(localized: "przed chwilą") : String(localized: "\(age / 60) min temu"))
         }
+        if info["ask"] as? Bool == true { text += ", " + String(localized: "zapyta o zgodę") }
         return text
     }
 
@@ -242,6 +268,7 @@ struct ShareSettingsSection: View {
     @AppStorage(ShareCenter.notifyKey) private var notify = true
     @AppStorage(ShareCenter.pasteKey) private var paste = false
     @AppStorage(ShareCenter.hotkeyKey) private var hotkey = true
+    @AppStorage(ShareCenter.askClipKey) private var askClip = true
     private let share = ShareCenter.shared
 
     var body: some View {
@@ -256,6 +283,11 @@ struct ShareSettingsSection: View {
                     Text("Udostępniaj mój schowek na żądanie")
                     Text("Skopiowany tekst lub obraz zostaje na tym Macu. Sparowany komputer pobiera go tylko wtedy, gdy ktoś przy nim o to poprosi.")
                 }
+                Toggle(isOn: $askClip) {
+                    Text("Pytaj o zgodę, zanim inny komputer pobierze mój schowek")
+                    Text("Przy każdym pobraniu na tym Macu pojawi się pytanie Pozwól / Odmów. Komputerom zaznaczonym niżej jako „Schowek bez pytania” pozwalasz zawsze.")
+                }
+                .disabled(!clip)
                 Toggle("Powiadamiaj, gdy ktoś pobierze mój schowek", isOn: $notify).disabled(!clip)
                 Toggle("Przyjmuj pliki", isOn: $files)
                 Toggle(isOn: $hotkey) {
@@ -280,8 +312,16 @@ struct ShareSettingsSection: View {
                             Text(verbatim: peer.name)
                             Text("Sparowano \(peer.pairedAt.formatted(date: .abbreviated, time: .omitted))")
                                 .font(.caption).foregroundStyle(.secondary)
+                            if share.nearby[peer.id]?.keyChanged == true {
+                                Text("Ten komputer ma teraz inny klucz. Jeśli to ten sam komputer (np. po ponownej instalacji), sparuj go jeszcze raz.")
+                                    .font(.caption).foregroundStyle(.orange)
+                            }
                         }
                         Spacer()
+                        if askClip && clip {
+                            Toggle("Schowek bez pytania", isOn: Binding(get: { peer.allowClip }, set: { share.setAllowClip(peer.id, $0) }))
+                                .toggleStyle(.checkbox).font(.caption)
+                        }
                         Toggle("Zawsze przyjmuj pliki", isOn: Binding(get: { peer.autoAccept }, set: { share.setAutoAccept(peer.id, $0) }))
                             .toggleStyle(.checkbox).font(.caption)
                         Button("Usuń") { share.remove(peer.id) }
@@ -337,10 +377,8 @@ struct ShareCardRow: View {
                         LinearMeter(value: t.fraction, colors: [.blue.opacity(0.7), .blue], height: 5)
                         Text(verbatim: ByteCountFormatter.string(fromByteCount: t.total, countStyle: .file))
                             .font(.system(size: 10.5)).foregroundStyle(.secondary).monospacedDigit()
-                        if !t.incoming {
-                            Button { share.cancelTransfer(t.id) } label: { Image(systemName: "xmark.circle.fill") }
-                                .buttonStyle(.plain).foregroundStyle(.secondary)
-                        }
+                        Button { share.cancelTransfer(t.id) } label: { Image(systemName: "xmark.circle.fill") }
+                            .buttonStyle(.plain).foregroundStyle(.secondary)
                     }
                 }
             }

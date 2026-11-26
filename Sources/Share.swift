@@ -1,6 +1,7 @@
 import AppKit
 import CryptoKit
 import Foundation
+import ImageIO
 import Network
 
 /// Clipboard pull and file transfer between paired computers (Pulse and PulseWin). Off until turned on in Settings.
@@ -17,6 +18,7 @@ final class ShareCenter {
     nonisolated static let notifyKey = "share.notifyTaken"
     nonisolated static let pasteKey = "share.paste"
     nonisolated static let hotkeyKey = "share.hotkey"
+    nonisolated static let askClipKey = "share.askClip"
     private static let peersKey = "share.peers"
     private static let lastPeerKey = "share.lastPeer"
 
@@ -26,12 +28,21 @@ final class ShareCenter {
     nonisolated static var notifiesTaken: Bool { UserDefaults.standard.object(forKey: notifyKey) as? Bool ?? true }
     nonisolated static var pastesAtOnce: Bool { UserDefaults.standard.bool(forKey: pasteKey) }
     nonisolated static var hotkeyOn: Bool { UserDefaults.standard.object(forKey: hotkeyKey) as? Bool ?? true }
+    /// Ask on this Mac before another computer takes its clipboard (on unless turned off).
+    nonisolated static var asksClip: Bool { UserDefaults.standard.object(forKey: askClipKey) as? Bool ?? true }
+
+    /// Install ids are UUIDs; anything else is refused before it can reach a prompt or a table.
+    nonisolated static func validID(_ s: String) -> Bool {
+        (1...64).contains(s.utf8.count) && s.utf8.allSatisfy { $0 == 0x2D || (0x30...0x39).contains($0) || (0x41...0x5A).contains($0) || (0x61...0x7A).contains($0) }
+    }
 
     struct Nearby: Identifiable {
         let id: String
         var name: String
         var endpoint: NWEndpoint
         var fingerprint: String?
+        /// A paired id advertising a different key: reinstalled, or someone else using that id.
+        var keyChanged = false
     }
 
     /// A transfer in progress, shown on the computer's card.
@@ -42,6 +53,8 @@ final class ShareCenter {
         var done: Int64 = 0
         var total: Int64
         var cancelled = false
+        /// Closed by Cancel, so a stalled read or write ends at once.
+        var conn: ShareConnection?
         var fraction: Double { total > 0 ? min(Double(done) / Double(total), 1) : 0 }
     }
 
@@ -51,8 +64,12 @@ final class ShareCenter {
     private(set) var listenerError: String?
     /// Computer ids whose pairing was cancelled recently (30 s of `busy`).
     @ObservationIgnored private var cancelledPairings: [String: Date] = [:]
+    @ObservationIgnored private var lastCancelledPairing: Date?
     @ObservationIgnored private var pairingBusy = false
     @ObservationIgnored private var receiving = false
+    @ObservationIgnored private var clipPromptOpen = false
+    /// Every advertisement per id, before choosing the one whose key matches.
+    @ObservationIgnored private var advertised: [String: [Nearby]] = [:]
 
     @ObservationIgnored private var listener: NWListener?
     @ObservationIgnored private var browser: NWBrowser?
@@ -82,7 +99,10 @@ final class ShareCenter {
             listener?.cancel(); listener = nil
             browser?.cancel(); browser = nil
             clipTimer?.invalidate(); clipTimer = nil
-            nearby = [:]
+            nearby = [:]; advertised = [:]
+            // Nothing keeps going once the option is off: open sessions and open questions end here.
+            ShareRegistry.shared.close()
+            SharePrompt.dismissAll()
         }
         ShareHotkey.shared.update(Self.isOn && Self.hotkeyOn)
     }
@@ -104,6 +124,7 @@ final class ShareCenter {
             l.service = NWListener.Service(name: RemoteMacs.sharedName, type: Self.serviceType, domain: nil, txtRecord: txt)
             l.newConnectionHandler = { connection in
                 let conn = ShareConnection(connection)
+                guard ShareRegistry.shared.admit(conn, incoming: true) else { connection.cancel(); return }
                 Task.detached { await ShareServer.handle(conn) }
             }
             l.stateUpdateHandler = { state in
@@ -131,13 +152,14 @@ final class ShareCenter {
         let b = NWBrowser(for: .bonjourWithTXTRecord(type: Self.serviceType, domain: nil), using: .tcp)
         let ownID = RemoteMacs.installID
         b.browseResultsChangedHandler = { results, _ in
-            var found: [String: Nearby] = [:]
+            var found: [String: [Nearby]] = [:]
             for result in results {
                 guard case .service(let name, _, _, _) = result.endpoint,
-                      case .bonjour(let txt) = result.metadata, let id = txt["id"], id != ownID else { continue }
-                found[id] = Nearby(id: id, name: name, endpoint: result.endpoint, fingerprint: txt["pk"])
+                      case .bonjour(let txt) = result.metadata, let id = txt["id"], id != ownID, ShareCenter.validID(id),
+                      txt["v"] == nil || txt["v"] == "1" else { continue }
+                found[id, default: []].append(Nearby(id: id, name: name, endpoint: result.endpoint, fingerprint: txt["pk"]?.lowercased()))
             }
-            DispatchQueue.main.async { MainActor.assumeIsolated { ShareCenter.shared.nearby = found } }
+            DispatchQueue.main.async { MainActor.assumeIsolated { ShareCenter.shared.advertised = found; ShareCenter.shared.refreshNearby() } }
         }
         b.start(queue: queue)
         browser = b
@@ -146,7 +168,26 @@ final class ShareCenter {
     // MARK: - Paired computers
 
     func peer(_ id: String) -> SharePeer? { paired.first { $0.id == id } }
-    func isOnline(_ id: String) -> Bool { nearby[id] != nil }
+    /// Online means advertising the key this Mac paired with; a different key is never used.
+    func isOnline(_ id: String) -> Bool { nearby[id].map { !$0.keyChanged } ?? false }
+
+    /// For a paired id prefers the advertisement whose `pk` matches the stored key.
+    private func refreshNearby() {
+        var result: [String: Nearby] = [:]
+        for (id, list) in advertised {
+            guard var pick = list.first else { continue }
+            if let peer = peer(id) {
+                let fp = ShareKeys.fingerprint(peer.key)
+                if let match = list.first(where: { $0.fingerprint == fp }) ?? list.first(where: { $0.fingerprint == nil }) {
+                    pick = match
+                } else {
+                    pick.keyChanged = true
+                }
+            }
+            result[id] = pick
+        }
+        nearby = result
+    }
     var onlinePeers: [SharePeer] {
         let last = UserDefaults.standard.string(forKey: Self.lastPeerKey)
         return paired.filter { isOnline($0.id) }.sorted { a, b in
@@ -160,11 +201,26 @@ final class ShareCenter {
         paired.removeAll { $0.id == peer.id }
         paired.append(peer)
         save()
+        refreshNearby()
     }
 
     func remove(_ id: String) {
         paired.removeAll { $0.id == id }
         save()
+        refreshNearby()
+        // A session opened before the removal must not finish after it.
+        ShareRegistry.shared.close(peer: id)
+    }
+
+    func setAllowClip(_ id: String, _ on: Bool) {
+        guard let i = paired.firstIndex(where: { $0.id == id }) else { return }
+        paired[i].allowClip = on
+        save()
+    }
+
+    /// Whether a session with this key may still act: option on and the computer still paired with that key.
+    fileprivate func stillTrusted(_ id: String, key: Data) -> Bool {
+        Self.isOn && peer(id)?.key == key
     }
 
     func setAutoAccept(_ id: String, _ on: Bool) {
@@ -177,17 +233,32 @@ final class ShareCenter {
         if let data = try? JSONEncoder().encode(paired) { UserDefaults.standard.set(data, forKey: Self.peersKey) }
     }
 
+    /// One pairing at a time, 30 s per id after a cancel, and 10 s for anyone after any cancel,
+    /// so changing the id does not reopen the question again and again.
     fileprivate func pairingAllowed(_ id: String) -> Bool {
+        let now = Date()
+        cancelledPairings = cancelledPairings.filter { now.timeIntervalSince($0.value) < 30 }
         if pairingBusy { return false }
-        if let t = cancelledPairings[id], Date().timeIntervalSince(t) < 30 { return false }
+        if cancelledPairings[id] != nil { return false }
+        if let t = lastCancelledPairing, now.timeIntervalSince(t) < 10 { return false }
         pairingBusy = true
         return true
     }
 
     fileprivate func pairingEnded(_ id: String, cancelled: Bool) {
         pairingBusy = false
-        if cancelled { cancelledPairings[id] = Date() }
+        if cancelled {
+            cancelledPairings[id] = Date()
+            lastCancelledPairing = Date()
+        }
     }
+
+    fileprivate func beginClipPrompt() -> Bool {
+        if clipPromptOpen { return false }
+        clipPromptOpen = true
+        return true
+    }
+    fileprivate func endClipPrompt() { clipPromptOpen = false }
 
     fileprivate func beginReceiving() -> Bool {
         if receiving { return false }
@@ -204,7 +275,10 @@ final class ShareCenter {
     }
     fileprivate func finishTransfer(_ id: UUID) { transfers.removeAll { $0.id == id } }
     func cancelTransfer(_ id: UUID) {
-        if let i = transfers.firstIndex(where: { $0.id == id }) { transfers[i].cancelled = true }
+        if let i = transfers.firstIndex(where: { $0.id == id }) {
+            transfers[i].cancelled = true
+            transfers[i].conn?.close()
+        }
     }
     fileprivate func isCancelled(_ id: UUID) -> Bool { transfers.first { $0.id == id }?.cancelled ?? true }
 
@@ -218,14 +292,20 @@ final class ShareCenter {
     }
 
     /// What `clip-info` reports: no conversion, sizes are approximate for images.
-    fileprivate func clipInfo() -> [String: Any] {
-        guard Self.sharesClipboard else { return ["kind": "off", "size": 0, "age": NSNull()] }
+    fileprivate func clipInfo(for peer: SharePeer) -> [String: Any] {
+        guard Self.sharesClipboard else { return ["kind": "off", "size": 0, "age": NSNull(), "ask": false] }
         let pb = NSPasteboard.general
         let age: Any = lastChange.map { Int(Date().timeIntervalSince($0)) } ?? NSNull()
-        if pb.types?.contains(.fileURL) == true { return ["kind": "empty", "size": 0, "age": age] }
-        if let text = pb.string(forType: .string) { return ["kind": "text", "size": Self.lf(text).utf8.count, "age": age] }
-        if let data = pb.data(forType: .png) ?? pb.data(forType: .tiff) { return ["kind": "image", "size": data.count, "age": age] }
-        return ["kind": "empty", "size": 0, "age": age]
+        let ask = asks(peer)
+        if pb.types?.contains(.fileURL) == true { return ["kind": "empty", "size": 0, "age": age, "ask": ask] }
+        if let text = pb.string(forType: .string) { return ["kind": "text", "size": Self.lf(text).utf8.count, "age": age, "ask": ask] }
+        if let data = pb.data(forType: .png) ?? pb.data(forType: .tiff) { return ["kind": "image", "size": data.count, "age": age, "ask": ask] }
+        return ["kind": "empty", "size": 0, "age": age, "ask": ask]
+    }
+
+    /// Whether this computer has to ask before taking the clipboard.
+    fileprivate func asks(_ peer: SharePeer) -> Bool {
+        Self.asksClip && !(self.peer(peer.id)?.allowClip ?? false)
     }
 
     fileprivate func clipContent() -> ClipContent {
@@ -275,20 +355,34 @@ final class ShareCenter {
     func fetchClipboard(from peer: SharePeer) {
         UserDefaults.standard.set(peer.id, forKey: Self.lastPeerKey)
         Task {
+            // When the other side asks its user first, say so instead of looking frozen.
+            let waiting = Task {
+                try await Task.sleep(for: .seconds(1.5))
+                Alerts.shared.send(title: peer.name, body: String(localized: "Czekam na zgodę na \(peer.name)…"), id: "share.clip")
+            }
+            defer { waiting.cancel() }
             do {
                 let clip = try await ShareClient.clipGet(peer)
-                let pb = NSPasteboard.general
+                waiting.cancel()
                 let body: String
                 switch clip.kind {
                 case "text":
-                    let text = String(decoding: clip.data, as: UTF8.self)
+                    // Checked before the clipboard is touched, so a bad answer leaves it as it was.
+                    guard let text = String(data: clip.data, encoding: .utf8) else { throw ShareError.badFrame }
+                    let pb = NSPasteboard.general
                     pb.clearContents(); pb.setString(text, forType: .string)
                     body = String(localized: "tekst, \(text.count) zn.")
                 case "image":
+                    guard let size = ShareClient.pngSize(clip.data) else { throw ShareError.badFrame }
+                    let png = clip.data
+                    // TIFF for apps that do not read PNG, made off the main actor and only for sane sizes.
+                    let tiff: Data? = size.width * size.height <= 40_000_000
+                        ? await Task.detached { NSBitmapImageRep(data: png)?.tiffRepresentation }.value : nil
+                    let pb = NSPasteboard.general
                     pb.clearContents()
-                    pb.setData(clip.data, forType: .png)
-                    if let tiff = NSImage(data: clip.data)?.tiffRepresentation { pb.setData(tiff, forType: .tiff) }
-                    body = String(localized: "obraz \(clip.width)×\(clip.height)")
+                    pb.setData(png, forType: .png)
+                    if let tiff { pb.setData(tiff, forType: .tiff) }
+                    body = String(localized: "obraz \(size.width)×\(size.height)")
                 case "off":
                     Alerts.shared.send(title: peer.name, body: String(localized: "Ten komputer nie udostępnia swojego schowka."), id: "share.clip")
                     return
@@ -296,11 +390,12 @@ final class ShareCenter {
                     Alerts.shared.send(title: peer.name, body: String(localized: "Schowek na tym komputerze jest pusty albo zawiera coś, czego nie da się przesłać."), id: "share.clip")
                     return
                 }
-                lastChangeCount = pb.changeCount
+                lastChangeCount = NSPasteboard.general.changeCount
                 Alerts.shared.send(title: String(localized: "Schowek z \(peer.name)"), body: body, id: "share.clip")
                 if Self.pastesAtOnce { ShareMenus.pasteNow() }
             } catch {
-                Alerts.shared.send(title: peer.name, body: ShareClient.describe(error), id: "share.clip")
+                waiting.cancel()
+                Alerts.shared.send(title: peer.name, body: ShareClient.describe(error, clipboard: true), id: "share.clip")
             }
         }
     }
@@ -346,11 +441,14 @@ final class ShareCenter {
 
 enum ShareServer {
     static func handle(_ conn: ShareConnection) async {
-        defer { conn.close() }
+        defer { conn.close(); ShareRegistry.shared.remove(conn) }
         do {
             try await conn.start()
             let hello = try await conn.readPlain()
-            guard hello["hello"] as? String == "pulse-share", let id = hello["id"] as? String else { return }
+            guard hello["hello"] as? String == "pulse-share", let id = hello["id"] as? String, ShareCenter.validID(id) else {
+                try await conn.sendPlain(["error": "bad-request"]); return
+            }
+            guard hello["v"] as? Int == 1 else { try await conn.sendPlain(["error": "unsupported"]); return }
             guard await MainActor.run(body: { ShareCenter.isOn }) else { try await conn.sendPlain(["error": "off"]); return }
             switch hello["mode"] as? String {
             case "pair": try await pair(conn, hello: hello, id: id)
@@ -367,6 +465,8 @@ enum ShareServer {
               (try? P256.KeyAgreement.PublicKey(x963Representation: pkC)) != nil else {
             try await conn.sendPlain(["error": "bad-request"]); return
         }
+        // A key that is not saved would be gone after a restart, and the pairing with it.
+        guard ShareKeys.isPersistent else { try await conn.sendPlain(["error": "busy"]); return }
         let name = String((hello["name"] as? String ?? "?").prefix(63))
         guard await MainActor.run(body: { ShareCenter.shared.pairingAllowed(id) }) else {
             try await conn.sendPlain(["error": "busy"]); return
@@ -393,11 +493,14 @@ enum ShareServer {
         let theirs = try await conn.readPlain(timeout: 130)
         guard theirs["confirmed"] as? Bool == true else { return }
         let peer = SharePeer(id: id, name: name, key: pkC, platform: hello["platform"] as? String)
-        await MainActor.run {
+        // The option may have been turned off while the question was open.
+        let stored = await MainActor.run { () -> Bool in
+            guard ShareCenter.isOn else { return false }
             ShareCenter.shared.store(peer)
             Alerts.shared.send(title: String(localized: "Sparowano"), body: String(localized: "\(name) może teraz pobierać Twój schowek i wysyłać Ci pliki."), id: "share.pair")
+            return true
         }
-        confirmed = true
+        confirmed = stored
     }
 
     private static func session(_ conn: ShareConnection, hello: [String: Any], id: String) async throws {
@@ -407,21 +510,28 @@ enum ShareServer {
         guard let nC = (hello["nonce"] as? String).flatMap({ Data(base64Encoded: $0) }), nC.count == 32 else {
             try await conn.sendPlain(["error": "bad-request"]); return
         }
+        ShareRegistry.shared.bind(conn, to: id)
         let nS = ShareKeys.random(32)
         try await conn.sendPlain(["nonce": nS.base64EncodedString()])
         let keys = try ShareKeys.sessionKeys(peerKey: peer.key, nC: nC, nS: nS)
         conn.setKeys(send: keys.s2c, receive: keys.c2s)
         let request = try await conn.readJSON()
+        // Removed or turned off while this connection waited for its request.
+        guard await MainActor.run(body: { ShareCenter.shared.stillTrusted(id, key: peer.key) }) else {
+            try await conn.sendJSON(["error": "not-paired"]); return
+        }
         switch request["op"] as? String {
         case "hello":
             let name = await MainActor.run { RemoteMacs.sharedName }
+            let ask = await MainActor.run { ShareCenter.shared.asks(peer) }
             try await conn.sendJSON(["name": name, "version": Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "",
-                                     "platform": "macos", "clip": ShareCenter.sharesClipboard, "files": ShareCenter.acceptsFiles])
+                                     "platform": "macos", "clip": ShareCenter.sharesClipboard, "files": ShareCenter.acceptsFiles,
+                                     "ask": ask])
         case "clip-info":
-            let info = await MainActor.run { ShareCenter.shared.clipInfo() }
+            let info = await MainActor.run { ShareCenter.shared.clipInfo(for: peer) }
             try await conn.sendJSON(info)
         case "clip-get":
-            try await clipGet(conn, peer: peer)
+            try await clipGet(conn, peer: peer, waits: request["wait"] as? Bool == true)
         case "files-offer":
             try await ShareReceiver.receive(conn, offer: request, from: peer)
         default:
@@ -429,7 +539,32 @@ enum ShareServer {
         }
     }
 
-    private static func clipGet(_ conn: ShareConnection, peer: SharePeer) async throws {
+    /// `waits`: the client sent `"wait": true` and gives the user here up to 130 s. An older client would
+    /// time out after 10 s, so it gets a plain "off" (reason "ask") and no question pops up.
+    private static func clipGet(_ conn: ShareConnection, peer: SharePeer, waits: Bool) async throws {
+        guard ShareCenter.sharesClipboard else { try await conn.sendJSON(["kind": "off", "size": 0]); return }
+        if await MainActor.run(body: { ShareCenter.shared.asks(peer) }) {
+            guard waits else { try await conn.sendJSON(["kind": "off", "size": 0, "reason": "ask"]); return }
+            guard await MainActor.run(body: { ShareCenter.shared.beginClipPrompt() }) else {
+                try await conn.sendJSON(["error": "busy"]); return
+            }
+            defer { Task { @MainActor in ShareCenter.shared.endClipPrompt() } }
+            let prompt = await SharePrompt.show(
+                title: String(localized: "\(peer.name) chce pobrać Twój schowek"),
+                message: String(localized: "To, co teraz jest w schowku tego Maca, trafi na \(peer.name). Bez Twojej zgody nic nie zostanie wysłane."),
+                code: nil, symbol: "doc.on.clipboard", ok: String(localized: "Pozwól"), cancel: String(localized: "Odmów"),
+                checkbox: String(localized: "Zawsze pozwalaj temu komputerowi"), timeout: 120)
+            guard await prompt.result() else {
+                let timedOut = await prompt.timedOut
+                try await conn.sendJSON(["error": timedOut ? "timeout" : "declined"]); return
+            }
+            // Consent is for this one request; the state may have changed while the question was open.
+            guard await MainActor.run(body: { ShareCenter.shared.stillTrusted(peer.id, key: peer.key) }), ShareCenter.sharesClipboard else {
+                try await conn.sendJSON(["error": "declined"]); return
+            }
+            if await prompt.checked { await MainActor.run { ShareCenter.shared.setAllowClip(peer.id, true) } }
+        }
+        // Read only now, after consent.
         let clip = await MainActor.run { ShareCenter.shared.clipContent() }
         guard clip.kind == "text" || clip.kind == "image" else {
             try await conn.sendJSON(["kind": clip.kind, "size": 0]); return
@@ -454,23 +589,37 @@ enum ShareServer {
 enum ShareReceiver {
     struct Item { let parts: [String]; let size: Int64 }
 
+    static let maxFileSize: Int64 = 1 << 50
+
     static func receive(_ conn: ShareConnection, offer: [String: Any], from peer: SharePeer) async throws {
         guard ShareCenter.acceptsFiles else { try await conn.sendJSON(["accept": false, "reason": "off"]); return }
         guard let list = offer["files"] as? [[String: Any]], !list.isEmpty, list.count <= 10_000 else {
             try await conn.sendJSON(["error": "bad-request"]); return
         }
+        // Everything is checked before the question: whole non-negative sizes, a sum that fits and matches
+        // `total`, no path twice (case-insensitively, like the disk).
         var items: [Item] = []
+        var seen = Set<String>()
+        var total: Int64 = 0
         for entry in list {
             guard let path = entry["path"] as? String, let parts = SharePaths.components(path),
-                  let size = (entry["size"] as? NSNumber)?.int64Value, size >= 0 else {
+                  let number = entry["size"] as? NSNumber, CFNumberIsFloatType(number) == false,
+                  CFGetTypeID(number) != CFBooleanGetTypeID(),
+                  case let size = number.int64Value, size >= 0, size <= maxFileSize,
+                  seen.insert(parts.joined(separator: "/").lowercased()).inserted else {
                 try await conn.sendJSON(["error": "bad-request"]); return
             }
+            let (sum, overflow) = total.addingReportingOverflow(size)
+            guard !overflow else { try await conn.sendJSON(["error": "bad-request"]); return }
+            total = sum
             items.append(Item(parts: parts, size: size))
         }
-        let total = items.reduce(0) { $0 + $1.size }
+        if let declared = offer["total"] {
+            guard (declared as? NSNumber)?.int64Value == total else { try await conn.sendJSON(["error": "bad-request"]); return }
+        }
         let downloads = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask)[0]
         let free = (try? downloads.resourceValues(forKeys: [.volumeAvailableCapacityForImportantUsageKey]))?.volumeAvailableCapacityForImportantUsage
-        if let free, free < total + 100_000_000 { try await conn.sendJSON(["accept": false, "reason": "space"]); return }
+        if let free, free - 100_000_000 < total { try await conn.sendJSON(["accept": false, "reason": "space"]); return }
         guard await MainActor.run(body: { ShareCenter.shared.beginReceiving() }) else {
             try await conn.sendJSON(["accept": false, "reason": "busy"]); return
         }
@@ -488,14 +637,19 @@ enum ShareReceiver {
                 let timedOut = await prompt.timedOut
                 try await conn.sendJSON(["accept": false, "reason": timedOut ? "timeout" : "declined"]); return
             }
+            guard await MainActor.run(body: { ShareCenter.shared.stillTrusted(peer.id, key: peer.key) }), ShareCenter.acceptsFiles else {
+                try await conn.sendJSON(["accept": false, "reason": "off"]); return
+            }
         }
         try await conn.sendJSON(["accept": true])
 
-        let transfer = ShareCenter.Transfer(peerID: peer.id, incoming: true, total: total)
-        await MainActor.run { ShareCenter.shared.addTransfer(transfer) }
-        defer { Task { @MainActor in ShareCenter.shared.finishTransfer(transfer.id) } }
+        var transfer = ShareCenter.Transfer(peerID: peer.id, incoming: true, total: total)
+        transfer.conn = conn
+        await MainActor.run { [transfer] in ShareCenter.shared.addTransfer(transfer) }
+        defer { Task { @MainActor [transfer] in ShareCenter.shared.finishTransfer(transfer.id) } }
 
         // Every top-level item goes straight into Downloads; a taken name gets " (2)".
+        let home = downloads.resolvingSymlinksInPath().path
         var tops: [String: String] = [:]
         var created: [URL] = []
         var partials: [URL] = []
@@ -508,17 +662,21 @@ enum ShareReceiver {
                 if let t = tops[top] { topName = t } else {
                     topName = SharePaths.free(top, in: downloads)
                     tops[top] = topName
-                    created.append(downloads.appendingPathComponent(topName))
+                    if item.parts.count > 1 { created.append(downloads.appendingPathComponent(topName)) }
                 }
                 var target = downloads.appendingPathComponent(topName)
                 for p in item.parts.dropFirst() { target.appendPathComponent(p) }
-                // Never outside Downloads, whatever the names resolve to.
-                guard target.standardizedFileURL.path.hasPrefix(downloads.standardizedFileURL.path + "/") else { throw ShareError.badFrame }
-                try FileManager.default.createDirectory(at: target.deletingLastPathComponent(), withIntermediateDirectories: true)
-                let part = target.appendingPathExtension("pulse-part")
-                FileManager.default.createFile(atPath: part.path, contents: nil)
+                let dir = target.deletingLastPathComponent()
+                try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+                // Never outside Downloads, whatever the names or links on disk resolve to.
+                let real = dir.resolvingSymlinksInPath().path
+                guard real == home || real.hasPrefix(home + "/") else { throw ShareError.badFrame }
+                // A temp name of our own, created exclusively: an existing file is never reused or deleted.
+                let part = dir.appendingPathComponent("\(target.lastPathComponent).\(ShareKeys.hex(ShareKeys.random(4))).pulse-part")
+                let fd = open(part.path, O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW, 0o644)
+                guard fd >= 0 else { throw ShareError.unexpected("create") }
                 partials.append(part)
-                let handle = try FileHandle(forWritingTo: part)
+                let handle = FileHandle(fileDescriptor: fd, closeOnDealloc: true)
                 let written: Int
                 do {
                     written = try await conn.receiveStream(limit: Int(item.size)) { chunk in
@@ -528,10 +686,11 @@ enum ShareReceiver {
                     try handle.close()
                 } catch { try? handle.close(); throw error }
                 guard written == Int(item.size) else { throw ShareError.badFrame }
-                let final = item.parts.count == 1 ? target
-                    : target.deletingLastPathComponent().appendingPathComponent(SharePaths.free(target.lastPathComponent, in: target.deletingLastPathComponent()))
+                // moveItem never replaces an existing file.
+                let final = dir.appendingPathComponent(SharePaths.free(target.lastPathComponent, in: dir))
                 try FileManager.default.moveItem(at: part, to: final)
                 partials.removeLast()
+                if item.parts.count == 1 { created.append(final) }
             }
             try await conn.sendJSON(["ok": true])
         } catch {
@@ -557,8 +716,12 @@ enum ShareReceiver {
 enum ShareClient {
     struct Clip { var kind: String; var data = Data(); var width = 0; var height = 0 }
 
-    static func describe(_ error: Error) -> String {
+    static func describe(_ error: Error, clipboard: Bool = false) -> String {
         switch error {
+        case ShareError.remote("declined") where clipboard: String(localized: "Na tamtym komputerze odmówiono pobrania schowka.")
+        case ShareError.remote("timeout") where clipboard: String(localized: "Na tamtym komputerze nikt nie odpowiedział na prośbę o schowek.")
+        case ShareError.tooMany: String(localized: "Najwyżej 10 000 plików naraz.")
+        case ShareError.unexpected("key"): String(localized: "Nie udało się zapisać klucza tego Maca w folderze Application Support, więc parowanie nie jest możliwe.")
         case ShareError.remote("off"): String(localized: "Na tamtym komputerze opcja „Schowek i pliki” jest wyłączona.")
         case ShareError.remote("not-paired"): String(localized: "Tamten komputer nie zna już tego Maca. Sparuj je ponownie.")
         case ShareError.remote("busy"): String(localized: "Tamten komputer jest zajęty. Spróbuj za chwilę.")
@@ -576,6 +739,8 @@ enum ShareClient {
     static func session(_ peer: SharePeer) async throws -> ShareConnection {
         guard let endpoint = await MainActor.run(body: { ShareCenter.shared.nearby[peer.id]?.endpoint }) else { throw ShareError.offline }
         let conn = ShareConnection(endpoint: endpoint)
+        _ = ShareRegistry.shared.admit(conn, incoming: false)
+        ShareRegistry.shared.bind(conn, to: peer.id)
         do {
             try await conn.start()
             let nC = ShareKeys.random(32)
@@ -586,30 +751,46 @@ enum ShareClient {
             let keys = try ShareKeys.sessionKeys(peerKey: peer.key, nC: nC, nS: nS)
             conn.setKeys(send: keys.c2s, receive: keys.s2c)
             return conn
-        } catch { conn.close(); throw error }
+        } catch { conn.close(); ShareRegistry.shared.remove(conn); throw error }
+    }
+
+    /// Closes the session and forgets it.
+    static func done(_ conn: ShareConnection) { conn.close(); ShareRegistry.shared.remove(conn) }
+
+    /// Width and height of a PNG, read from its header without decoding it; nil for anything else
+    /// or for images too large to put on the clipboard safely.
+    static func pngSize(_ data: Data) -> (width: Int, height: Int)? {
+        guard data.starts(with: [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]),
+              let source = CGImageSourceCreateWithData(data as CFData, nil),
+              let props = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? [CFString: Any],
+              let w = props[kCGImagePropertyPixelWidth] as? Int, let h = props[kCGImagePropertyPixelHeight] as? Int,
+              w > 0, h > 0, w.multipliedReportingOverflow(by: h).partialValue <= 150_000_000, w <= 65_535, h <= 65_535 else { return nil }
+        return (w, h)
     }
 
     static func clipInfo(_ peer: SharePeer) async throws -> [String: Any] {
         let conn = try await session(peer)
-        defer { conn.close() }
+        defer { done(conn) }
         try await conn.sendJSON(["op": "clip-info"])
         return try await conn.readJSON(timeout: 3)
     }
 
     static func clipGet(_ peer: SharePeer) async throws -> Clip {
         let conn = try await session(peer)
-        defer { conn.close() }
-        try await conn.sendJSON(["op": "clip-get"])
-        let header = try await conn.readJSON()
+        defer { done(conn) }
+        try await conn.sendJSON(["op": "clip-get", "wait": true])
+        // The other side may ask its user first (up to 120 s).
+        let header = try await conn.readJSON(timeout: 130)
         let kind = header["kind"] as? String ?? "empty"
         guard kind == "text" || kind == "image" else { return Clip(kind: kind) }
+        if let size = header["size"] as? Int, size > ShareCenter.clipLimit { throw ShareError.tooLarge }
         var data = Data()
         _ = try await conn.receiveStream(limit: ShareCenter.clipLimit) { data.append($0) }
         return Clip(kind: kind, data: data, width: header["width"] as? Int ?? 0, height: header["height"] as? Int ?? 0)
     }
 
     /// Files and folders → relative paths ("/" separators); folders keep their tree, links are skipped.
-    static func collect(_ urls: [URL]) -> [(url: URL, path: String, size: Int64)] {
+    static func collect(_ urls: [URL]) throws -> [(url: URL, path: String, size: Int64)] {
         var result: [(URL, String, Int64)] = []
         let keys: [URLResourceKey] = [.isRegularFileKey, .isDirectoryKey, .isSymbolicLinkKey, .fileSizeKey]
         for url in urls {
@@ -623,27 +804,30 @@ enum ShareClient {
                     guard v?.isRegularFile == true, v?.isSymbolicLink != true else { continue }
                     let rel = String(item.path.dropFirst(base.count + 1))
                     result.append((item, rel, Int64(v?.fileSize ?? 0)))
+                    if result.count > 10_000 { throw ShareError.tooMany }
                 }
             } else if values?.isRegularFile == true {
                 result.append((url, url.lastPathComponent, Int64(values?.fileSize ?? 0)))
             }
         }
-        return Array(result.prefix(10_000))
+        guard result.count <= 10_000 else { throw ShareError.tooMany }
+        return result
     }
 
     static func sendFiles(_ urls: [URL], to peer: SharePeer) async throws {
-        let files = collect(urls)
+        let files = try collect(urls)
         guard !files.isEmpty else { return }
         let total = files.reduce(0) { $0 + $1.size }
         let conn = try await session(peer)
-        defer { conn.close() }
+        defer { done(conn) }
         try await conn.sendJSON(["op": "files-offer", "total": total,
                                  "files": files.map { ["path": $0.path, "size": $0.size] }])
         let answer = try await conn.readJSON(timeout: 130)
         guard answer["accept"] as? Bool == true else { throw ShareError.remote(answer["reason"] as? String ?? "declined") }
-        let transfer = ShareCenter.Transfer(peerID: peer.id, incoming: false, total: total)
-        await MainActor.run { ShareCenter.shared.addTransfer(transfer) }
-        defer { Task { @MainActor in ShareCenter.shared.finishTransfer(transfer.id) } }
+        var transfer = ShareCenter.Transfer(peerID: peer.id, incoming: false, total: total)
+        transfer.conn = conn
+        await MainActor.run { [transfer] in ShareCenter.shared.addTransfer(transfer) }
+        defer { Task { @MainActor [transfer] in ShareCenter.shared.finishTransfer(transfer.id) } }
         for (index, file) in files.enumerated() {
             try await conn.sendJSON(["file": index])
             // The size announced in the offer is what the receiver checks.
@@ -662,8 +846,10 @@ enum ShareClient {
 
     /// Pairing as the client. Returns the other computer's name.
     static func pair(_ nearby: ShareCenter.Nearby) async throws -> String {
+        guard ShareKeys.isPersistent else { throw ShareError.unexpected("key") }
         let conn = ShareConnection(endpoint: nearby.endpoint)
-        defer { conn.close() }
+        _ = ShareRegistry.shared.admit(conn, incoming: false)
+        defer { done(conn) }
         try await conn.start()
         let pkC = ShareKeys.publicKey
         let myName = await MainActor.run { RemoteMacs.sharedName }
@@ -685,10 +871,11 @@ enum ShareClient {
             title: String(localized: "Parowanie z \(name)"),
             message: String(localized: "Sprawdź, czy na obu komputerach widać ten sam kod, i potwierdź na obu."),
             code: code, ok: String(localized: "Paruj"), cancel: String(localized: "Anuluj"), timeout: 120)
-        // The server answers first; a "no" there closes this prompt too.
+        // The server answers first; a "no" there, or the connection dropping, closes this prompt too.
         let theirsTask = Task { try await conn.readPlain(timeout: 130) }
         let watcher = Task {
-            if let theirs = try? await theirsTask.value, theirs["confirmed"] as? Bool != true { await prompt.dismiss() }
+            let theirs = try? await theirsTask.value
+            if theirs?["confirmed"] as? Bool != true { await prompt.dismiss() }
         }
         let mine = await prompt.result()
         let theirs = try await theirsTask.value
@@ -697,8 +884,14 @@ enum ShareClient {
         try await conn.sendPlain(["confirmed": mine && serverOK])
         guard serverOK else { throw ShareError.remote("declined") }
         guard mine else { throw ShareError.remote("declined") }
+        guard ShareCenter.validID(id) else { throw ShareError.badFrame }
         let peer = SharePeer(id: id, name: name, key: pkS, platform: server["platform"] as? String)
-        await MainActor.run { ShareCenter.shared.store(peer) }
+        let stored = await MainActor.run { () -> Bool in
+            guard ShareCenter.isOn else { return false }
+            ShareCenter.shared.store(peer)
+            return true
+        }
+        guard stored else { throw ShareError.closed }
         return name
     }
 }

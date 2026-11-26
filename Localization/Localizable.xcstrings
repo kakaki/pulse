@@ -41,10 +41,10 @@
     },
     "%@ (%@). Pliki trafią do folderu Pobrane." : {
       "localizations" : {
-        "pl" : {
+        "de" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ (%2$@). Pliki trafią do folderu Pobrane."
+            "state" : "translated",
+            "value" : "%1$@ (%2$@). Die Dateien landen im Ordner „Downloads“."
           }
         },
         "en" : {
@@ -53,10 +53,10 @@
             "value" : "%1$@ (%2$@). The files go to the Downloads folder."
           }
         },
-        "de" : {
+        "pl" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@ (%2$@). Die Dateien landen im Ordner „Downloads“."
+            "state" : "new",
+            "value" : "%1$@ (%2$@). Pliki trafią do folderu Pobrane."
           }
         }
       }
@@ -115,18 +115,34 @@
         }
       }
     },
-    "%@ chce wysłać pliki" : {
+    "%@ chce pobrać Twój schowek" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ wants to send files"
+            "value" : "%@ wants to take your clipboard"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "%@ möchte deine Zwischenablage abrufen"
+          }
+        }
+      }
+    },
+    "%@ chce wysłać pliki" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "%@ möchte Dateien senden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ wants to send files"
           }
         }
       }
@@ -149,16 +165,16 @@
     },
     "%@ może teraz pobierać Twój schowek i wysyłać Ci pliki." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ can now take your clipboard and send you files."
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ kann jetzt deine Zwischenablage abrufen und dir Dateien senden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ can now take your clipboard and send you files."
           }
         }
       }
@@ -181,16 +197,16 @@
     },
     "%@ pobrał schowek z tego Maca." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ took the clipboard from this Mac."
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ hat die Zwischenablage dieses Macs abgerufen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ took the clipboard from this Mac."
           }
         }
       }
@@ -311,16 +327,16 @@
     },
     "%lld min temu" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld min ago"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "vor %lld Min."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld min ago"
           }
         }
       }
@@ -1698,6 +1714,22 @@
         }
       }
     },
+    "Czekam na zgodę na %@…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waiting for permission on %@…"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Warte auf Zustimmung auf %@ …"
+          }
+        }
+      }
+    },
     "Czujniki" : {
       "localizations" : {
         "de" : {
@@ -1780,16 +1812,16 @@
     },
     "Dane nie przeszły kontroli. Spróbuj ponownie." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The data failed the check. Try again."
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Die Daten haben die Prüfung nicht bestanden. Versuch es erneut."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The data failed the check. Try again."
           }
         }
       }
@@ -3642,16 +3674,16 @@
     },
     "Możesz pobierać schowek z %@ i wysyłać tam pliki." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You can take the clipboard from %@ and send files there."
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Du kannst die Zwischenablage von %@ abrufen und Dateien dorthin senden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can take the clipboard from %@ and send files there."
           }
         }
       }
@@ -3767,32 +3799,64 @@
     },
     "Na tamtym komputerze brakuje miejsca." : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auf dem anderen Computer fehlt Speicherplatz."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "The other computer is out of space."
           }
+        }
+      }
+    },
+    "Na tamtym komputerze nikt nie odpowiedział na prośbę o schowek." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nobody answered the clipboard request on the other computer."
+          }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Auf dem anderen Computer fehlt Speicherplatz."
+            "value" : "Auf dem anderen Computer hat niemand auf die Anfrage nach der Zwischenablage geantwortet."
+          }
+        }
+      }
+    },
+    "Na tamtym komputerze odmówiono pobrania schowka." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taking the clipboard was refused on the other computer."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auf dem anderen Computer wurde das Abrufen der Zwischenablage abgelehnt."
           }
         }
       }
     },
     "Na tamtym komputerze opcja „Schowek i pliki” jest wyłączona." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "“Clipboard and files” is turned off on the other computer."
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "„Zwischenablage und Dateien“ ist auf dem anderen Computer ausgeschaltet."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“Clipboard and files” is turned off on the other computer."
           }
         }
       }
@@ -3831,16 +3895,32 @@
     },
     "Najpierw sparuj inny komputer w Ustawieniach → Inne komputery." : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kopple zuerst einen anderen Computer in Einstellungen → Andere Computer."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pair another computer first in Settings → Other Computers."
           }
+        }
+      }
+    },
+    "Najwyżej 10 000 plików naraz." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "At most 10,000 files at a time."
+          }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kopple zuerst einen anderen Computer in Einstellungen → Andere Computer."
+            "value" : "Höchstens 10.000 Dateien auf einmal."
           }
         }
       }
@@ -4033,6 +4113,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Could not run the command for “%@”."
+          }
+        }
+      }
+    },
+    "Nie udało się zapisać klucza tego Maca w folderze Application Support, więc parowanie nie jest możliwe." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This Mac’s key could not be saved in the Application Support folder, so pairing isn’t possible."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Schlüssel dieses Macs konnte nicht im Ordner „Application Support“ gespeichert werden, daher ist keine Kopplung möglich."
           }
         }
       }
@@ -4247,16 +4343,16 @@
     },
     "Nikt nie odpowiedział na tamtym komputerze." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nobody answered on the other computer."
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Auf dem anderen Computer hat niemand geantwortet."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nobody answered on the other computer."
           }
         }
       }
@@ -4552,10 +4648,10 @@
     },
     "Od %@: %@" : {
       "localizations" : {
-        "pl" : {
+        "de" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "Od %1$@: %2$@"
+            "state" : "translated",
+            "value" : "Von %1$@: %2$@"
           }
         },
         "en" : {
@@ -4564,10 +4660,10 @@
             "value" : "From %1$@: %2$@"
           }
         },
-        "de" : {
+        "pl" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Von %1$@: %2$@"
+            "state" : "new",
+            "value" : "Od %1$@: %2$@"
           }
         }
       }
@@ -4590,16 +4686,16 @@
     },
     "Od razu wklejaj pobrany schowek" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Paste the fetched clipboard right away"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Abgerufene Zwischenablage sofort einsetzen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paste the fetched clipboard right away"
           }
         }
       }
@@ -4652,34 +4748,50 @@
         }
       }
     },
-    "Odrzucono." : {
+    "Odmów" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Declined."
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Abgelehnt."
-          }
-        }
-      }
-    },
-    "Odrzuć" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Decline"
+            "value" : "Deny"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ablehnen"
+          }
+        }
+      }
+    },
+    "Odrzucono." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abgelehnt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Declined."
+          }
+        }
+      }
+    },
+    "Odrzuć" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ablehnen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Decline"
           }
         }
       }
@@ -5167,48 +5279,48 @@
     },
     "Parowanie z %@" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pairing with %@"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kopplung mit %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pairing with %@"
           }
         }
       }
     },
     "Parowanie: włącz opcję na obu komputerach, wybierz „Sparuj z komputerem…” i potwierdź ten sam kod na obu ekranach. Pliki przeciągnij na kartę komputera w panelu Inne komputery albo na ikonę Pulse w pasku menu; trafią do folderu Pobrane." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pairing: turn the option on on both computers, choose “Pair with a computer…” and confirm the same code on both screens. Drag files onto the computer’s card in the Other Computers panel or onto the Pulse icon in the menu bar; they go to the Downloads folder."
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kopplung: Schalte die Option auf beiden Computern ein, wähle „Mit Computer koppeln …“ und bestätige auf beiden Bildschirmen denselben Code. Zieh Dateien auf die Karte des Computers im Bereich „Andere Computer“ oder auf das Pulse-Symbol in der Menüleiste; sie landen im Ordner „Downloads“."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pairing: turn the option on on both computers, choose “Pair with a computer…” and confirm the same code on both screens. Drag files onto the computer’s card in the Other Computers panel or onto the Pulse icon in the menu bar; they go to the Downloads folder."
           }
         }
       }
     },
     "Paruj" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pair"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Koppeln"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pair"
           }
         }
       }
@@ -5327,16 +5439,16 @@
     },
     "Pliki: %lld" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Files: %lld"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dateien: %lld"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Files: %lld"
           }
         }
       }
@@ -5359,16 +5471,16 @@
     },
     "Pobieraj na żądanie schowek z innego komputera z Pulse lub PulseWin i wysyłaj mu pliki. Działa tylko między sparowanymi komputerami, połączenie jest szyfrowane." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Take the clipboard from another computer with Pulse or PulseWin on request, and send it files. Works only between paired computers; the connection is encrypted."
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Rufe auf Wunsch die Zwischenablage eines anderen Computers mit Pulse oder PulseWin ab und sende ihm Dateien. Funktioniert nur zwischen gekoppelten Computern; die Verbindung ist verschlüsselt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Take the clipboard from another computer with Pulse or PulseWin on request, and send it files. Works only between paired computers; the connection is encrypted."
           }
         }
       }
@@ -5439,32 +5551,32 @@
     },
     "Pobierz schowek" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Take clipboard"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zwischenablage abrufen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Take clipboard"
           }
         }
       }
     },
     "Pobierz schowek z" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Take clipboard from"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zwischenablage abrufen von"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Take clipboard from"
           }
         }
       }
@@ -6131,16 +6243,16 @@
     },
     "Powiadamiaj, gdy ktoś pobierze mój schowek" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Notify me when someone takes my clipboard"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mitteilung, wenn jemand meine Zwischenablage abruft"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notify me when someone takes my clipboard"
           }
         }
       }
@@ -6337,6 +6449,22 @@
         }
       }
     },
+    "Pozwól" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erlauben"
+          }
+        }
+      }
+    },
     "Pozwól innym Macom zaktualizować Pulse" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -6388,16 +6516,16 @@
     },
     "Połączenie się nie udało." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The connection failed."
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Die Verbindung ist fehlgeschlagen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The connection failed."
           }
         }
       }
@@ -6787,16 +6915,16 @@
     },
     "Przesyłanie plików przerwane." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "File transfer interrupted."
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dateiübertragung abgebrochen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File transfer interrupted."
           }
         }
       }
@@ -6851,16 +6979,32 @@
     },
     "Przy jednym sparowanym komputerze w sieci pobiera od razu, przy kilku pokazuje listę." : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mit einem gekoppelten Computer im Netzwerk wird sofort abgerufen, mit mehreren erscheint eine Liste."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "With one paired computer on the network it fetches at once; with several it shows a list."
           }
+        }
+      }
+    },
+    "Przy każdym pobraniu na tym Macu pojawi się pytanie Pozwól / Odmów. Komputerom zaznaczonym niżej jako „Schowek bez pytania” pozwalasz zawsze." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every request shows Allow / Deny on this Mac. Computers marked “Clipboard without asking” below are always allowed."
+          }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mit einem gekoppelten Computer im Netzwerk wird sofort abgerufen, mit mehreren erscheint eine Liste."
+            "value" : "Bei jeder Anfrage erscheint auf diesem Mac Erlauben / Ablehnen. Unten als „Zwischenablage ohne Nachfrage“ markierte Computer sind immer erlaubt."
           }
         }
       }
@@ -6889,32 +7033,32 @@
     },
     "Przyjmij" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Accept"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Annehmen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accept"
           }
         }
       }
     },
     "Przyjmuj pliki" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Accept files"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dateien annehmen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accept files"
           }
         }
       }
@@ -7213,6 +7357,22 @@
         }
       }
     },
+    "Pytaj o zgodę, zanim inny komputer pobierze mój schowek" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ask before another computer takes my clipboard"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fragen, bevor ein anderer Computer meine Zwischenablage abruft"
+          }
+        }
+      }
+    },
     "Płyta" : {
       "localizations" : {
         "de" : {
@@ -7471,64 +7631,80 @@
     },
     "Schowek" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zwischenablage"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Clipboard"
           }
+        }
+      }
+    },
+    "Schowek bez pytania" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clipboard without asking"
+          }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zwischenablage"
+            "value" : "Zwischenablage ohne Nachfrage"
           }
         }
       }
     },
     "Schowek i pliki" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Clipboard and files"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zwischenablage und Dateien"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clipboard and files"
           }
         }
       }
     },
     "Schowek na tym komputerze jest pusty albo zawiera coś, czego nie da się przesłać." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The clipboard on that computer is empty or holds something that can’t be sent."
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Die Zwischenablage auf diesem Computer ist leer oder enthält etwas, das sich nicht senden lässt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The clipboard on that computer is empty or holds something that can’t be sent."
           }
         }
       }
     },
     "Schowek z %@" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Clipboard from %@"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zwischenablage von %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clipboard from %@"
           }
         }
       }
@@ -7695,32 +7871,32 @@
     },
     "Skopiowany tekst lub obraz zostaje na tym Macu. Sparowany komputer pobiera go tylko wtedy, gdy ktoś przy nim o to poprosi." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Copied text or images stay on this Mac. A paired computer gets them only when someone there asks for them."
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kopierter Text oder Bilder bleiben auf diesem Mac. Ein gekoppelter Computer erhält sie nur, wenn dort jemand danach fragt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copied text or images stay on this Mac. A paired computer gets them only when someone there asks for them."
           }
         }
       }
     },
     "Skrót ⌃⌥⌘V pobiera schowek" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Shortcut ⌃⌥⌘V takes the clipboard"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kurzbefehl ⌃⌥⌘V ruft die Zwischenablage ab"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shortcut ⌃⌥⌘V takes the clipboard"
           }
         }
       }
@@ -7785,48 +7961,48 @@
     },
     "Sparowano" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Paired"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gekoppelt"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paired"
           }
         }
       }
     },
     "Sparowano %@" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Paired %@"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gekoppelt %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paired %@"
           }
         }
       }
     },
     "Sparuj z komputerem…" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pair with a computer…"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mit Computer koppeln …"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pair with a computer…"
           }
         }
       }
@@ -7993,32 +8169,32 @@
     },
     "Sprawdź, czy na obu komputerach widać ten sam kod, i potwierdź na obu." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Check that both computers show the same code, and confirm on both."
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Prüfe, ob beide Computer denselben Code zeigen, und bestätige auf beiden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check that both computers show the same code, and confirm on both."
           }
         }
       }
     },
     "Sprawdź, czy na obu komputerach widać ten sam kod. Po sparowaniu %@ może pobierać Twój schowek (jeśli na to pozwalasz) i wysyłać Ci pliki." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Check that both computers show the same code. Once paired, %@ can take your clipboard (if you allow it) and send you files."
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Prüfe, ob beide Computer denselben Code zeigen. Nach dem Koppeln kann %@ deine Zwischenablage abrufen (wenn du es erlaubst) und dir Dateien senden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check that both computers show the same code. Once paired, %@ can take your clipboard (if you allow it) and send you files."
           }
         }
       }
@@ -8555,32 +8731,32 @@
     },
     "Tamten komputer jest zajęty. Spróbuj za chwilę." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The other computer is busy. Try again in a moment."
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Der andere Computer ist beschäftigt. Versuch es gleich noch einmal."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The other computer is busy. Try again in a moment."
           }
         }
       }
     },
     "Tamten komputer nie zna już tego Maca. Sparuj je ponownie." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The other computer no longer knows this Mac. Pair them again."
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Der andere Computer kennt diesen Mac nicht mehr. Kopple sie erneut."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The other computer no longer knows this Mac. Pair them again."
           }
         }
       }
@@ -8858,34 +9034,50 @@
         }
       }
     },
-    "Ten komputer nie jest teraz w sieci." : {
+    "Ten komputer ma teraz inny klucz. Jeśli to ten sam komputer (np. po ponownej instalacji), sparuj go jeszcze raz." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "That computer is not on the network right now."
+            "value" : "This computer now has a different key. If it’s the same computer (for example after reinstalling), pair it again."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Dieser Computer hat jetzt einen anderen Schlüssel. Wenn es derselbe Computer ist (z. B. nach einer Neuinstallation), kopple ihn erneut."
+          }
+        }
+      }
+    },
+    "Ten komputer nie jest teraz w sieci." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "Dieser Computer ist gerade nicht im Netzwerk."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That computer is not on the network right now."
           }
         }
       }
     },
     "Ten komputer nie udostępnia swojego schowka." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "That computer doesn’t share its clipboard."
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dieser Computer gibt seine Zwischenablage nicht frei."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That computer doesn’t share its clipboard."
           }
         }
       }
@@ -9033,6 +9225,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "This needs the Pulse helper"
+          }
+        }
+      }
+    },
+    "To, co teraz jest w schowku tego Maca, trafi na %@. Bez Twojej zgody nic nie zostanie wysłane." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What is on this Mac’s clipboard right now will go to %@. Nothing is sent without your permission."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der aktuelle Inhalt der Zwischenablage dieses Macs geht an %@. Ohne deine Zustimmung wird nichts gesendet."
           }
         }
       }
@@ -9221,16 +9429,16 @@
     },
     "Udostępniaj mój schowek na żądanie" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Share my clipboard on request"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Meine Zwischenablage auf Anfrage freigeben"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share my clipboard on request"
           }
         }
       }
@@ -9349,16 +9557,16 @@
     },
     "Upuść, aby wysłać do %@" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Drop to send to %@"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ablegen, um an %@ zu senden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drop to send to %@"
           }
         }
       }
@@ -9733,16 +9941,16 @@
     },
     "W sieci nie widać komputerów z włączoną opcją „Schowek i pliki”." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No computers with “Clipboard and files” turned on are visible on the network."
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Im Netzwerk ist kein Computer mit eingeschalteter Option „Zwischenablage und Dateien“ zu sehen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No computers with “Clipboard and files” turned on are visible on the network."
           }
         }
       }
@@ -10395,16 +10603,16 @@
     },
     "Wymaga dostępu w Ustawieniach systemowych → Prywatność i ochrona → Dostępność." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Needs access in System Settings → Privacy & Security → Accessibility."
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Benötigt Zugriff in Systemeinstellungen → Datenschutz & Sicherheit → Bedienungshilfen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Needs access in System Settings → Privacy & Security → Accessibility."
           }
         }
       }
@@ -10689,32 +10897,32 @@
     },
     "Wyślij do" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Send to"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Senden an"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send to"
           }
         }
       }
     },
     "Wyślij pliki…" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Send files…"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dateien senden …"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send files…"
           }
         }
       }
@@ -10866,16 +11074,16 @@
     },
     "Za dużo danych." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Too much data."
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zu viele Daten."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Too much data."
           }
         }
       }
@@ -11096,16 +11304,16 @@
     },
     "Zapisano w Pobranych" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Saved in Downloads"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "In „Downloads“ gesichert"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saved in Downloads"
           }
         }
       }
@@ -11174,18 +11382,34 @@
         }
       }
     },
-    "Zawsze przyjmuj pliki" : {
+    "Zawsze pozwalaj temu komputerowi" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Always accept files"
+            "value" : "Always allow this computer"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Diesem Computer immer erlauben"
+          }
+        }
+      }
+    },
+    "Zawsze przyjmuj pliki" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "Dateien immer annehmen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Always accept files"
           }
         }
       }
@@ -11738,42 +11962,42 @@
     },
     "nie udostępnia" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "not shared"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "nicht freigegeben"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "not shared"
           }
         }
       }
     },
     "obraz %@" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "image %@"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bild %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "image %@"
           }
         }
       }
     },
     "obraz %lld×%lld" : {
       "localizations" : {
-        "pl" : {
+        "de" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "obraz %1$lld×%2$lld"
+            "state" : "translated",
+            "value" : "Bild %1$lld×%2$lld"
           }
         },
         "en" : {
@@ -11782,10 +12006,10 @@
             "value" : "image %1$lld×%2$lld"
           }
         },
-        "de" : {
+        "pl" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bild %1$lld×%2$lld"
+            "state" : "new",
+            "value" : "obraz %1$lld×%2$lld"
           }
         }
       }
@@ -11904,32 +12128,32 @@
     },
     "przed chwilą" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "just now"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "gerade eben"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "just now"
           }
         }
       }
     },
     "pusty" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "empty"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "leer"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "empty"
           }
         }
       }
@@ -11958,32 +12182,32 @@
     },
     "tekst %@" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "text %@"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Text %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "text %@"
           }
         }
       }
     },
     "tekst, %lld zn." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "text, %lld chars"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Text, %lld Zeichen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "text, %lld chars"
           }
         }
       }
@@ -12099,6 +12323,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "of %@"
+          }
+        }
+      }
+    },
+    "zapyta o zgodę" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "will ask for permission"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "fragt um Zustimmung"
           }
         }
       }
@@ -12346,16 +12586,16 @@
     },
     "Żaden sparowany komputer nie jest teraz w sieci." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No paired computer is on the network right now."
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kein gekoppelter Computer ist gerade im Netzwerk."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No paired computer is on the network right now."
           }
         }
       }
