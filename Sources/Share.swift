@@ -421,6 +421,7 @@ final class ShareCenter {
                 if Self.pastesAtOnce { ShareMenus.pasteNow() }
             } catch {
                 waiting.cancel()
+                shareLog.info("clip-get from \(peer.name, privacy: .public) failed: \(String(describing: error), privacy: .public)")
                 notify(peer.name, ShareClient.describe(error, clipboard: true))
             }
         }
@@ -432,6 +433,8 @@ final class ShareCenter {
         Task.detached {
             do {
                 try await ShareClient.sendFiles(urls, to: peer)
+            } catch ShareError.cancelled {
+                // Cancelled here with ✕: nothing to say.
             } catch {
                 await MainActor.run { Alerts.shared.send(title: peer.name, body: ShareClient.describe(error), id: "share.files") }
             }
@@ -802,6 +805,9 @@ enum ShareClient {
         case ShareError.tooLarge: String(localized: "Za dużo danych.")
         case ShareError.hash, ShareError.decrypt: String(localized: "Dane nie przeszły kontroli. Spróbuj ponownie.")
         case ShareError.offline: String(localized: "Ten komputer nie jest teraz w sieci.")
+        case ShareError.timeout: String(localized: "Tamten komputer nie odpowiada.")
+        case ShareError.remote("bad-request"), ShareError.remote("unsupported"), ShareError.remote("mismatch"):
+            String(localized: "Tamten komputer nie przyjął żądania. Zaktualizuj Pulse lub PulseWin na obu komputerach.")
         default: String(localized: "Połączenie się nie udało.")
         }
     }
@@ -899,19 +905,26 @@ enum ShareClient {
         transfer.conn = conn
         await MainActor.run { [transfer] in ShareCenter.shared.addTransfer(transfer) }
         defer { Task { @MainActor [transfer] in ShareCenter.shared.finishTransfer(transfer.id) } }
-        try await conn.sendJSON(["op": "files-offer", "total": total,
-                                 "files": files.map { ["path": $0.path, "size": $0.size] }])
-        let answer = try await conn.readJSON(timeout: 130)
-        guard ShareJSON.bool(answer["accept"]) == true else { throw ShareError.remote(answer["reason"] as? String ?? "declined") }
-        for (index, file) in files.enumerated() {
-            try await conn.sendJSON(["file": index])
-            // The size announced in the offer is what the receiver checks.
-            try await conn.sendFile(file.url, progress: { n in
-                Task { @MainActor in ShareCenter.shared.progress(transfer.id, n) }
-            }, cancelled: { DispatchQueue.main.sync { MainActor.assumeIsolated { ShareCenter.shared.isCancelled(transfer.id) } } })
+        do {
+            try await conn.sendJSON(["op": "files-offer", "total": total,
+                                     "files": files.map { ["path": $0.path, "size": $0.size] }])
+            let answer = try await conn.readJSON(timeout: 130)
+            guard ShareJSON.bool(answer["accept"]) == true else { throw ShareError.remote(answer["reason"] as? String ?? "declined") }
+            for (index, file) in files.enumerated() {
+                try await conn.sendJSON(["file": index])
+                // The size announced in the offer is what the receiver checks.
+                try await conn.sendFile(file.url, progress: { n in
+                    Task { @MainActor in ShareCenter.shared.progress(transfer.id, n) }
+                }, cancelled: { DispatchQueue.main.sync { MainActor.assumeIsolated { ShareCenter.shared.isCancelled(transfer.id) } } })
+            }
+            let result = try await conn.readJSON(timeout: 30)
+            guard ShareJSON.bool(result["ok"]) == true else { throw ShareError.remote(result["reason"] as? String ?? "error") }
+        } catch {
+            // ✕ closes the connection on purpose: that is not a failure to report.
+            if await MainActor.run(body: { [id = transfer.id] in ShareCenter.shared.isCancelled(id) }) { throw ShareError.cancelled }
+            shareLog.info("send to \(peer.name, privacy: .public) failed: \(String(describing: error), privacy: .public)")
+            throw error
         }
-        let result = try await conn.readJSON(timeout: 30)
-        guard ShareJSON.bool(result["ok"]) == true else { throw ShareError.remote(result["reason"] as? String ?? "error") }
         await MainActor.run {
             Alerts.shared.send(title: String(localized: "Wysłano"),
                                body: String(localized: "\(files.count == 1 ? files[0].path : String(localized: "Pliki: \(files.count)")) → \(peer.name)"),

@@ -8,7 +8,7 @@ import Security
 // Wire format: PulseWin repo, docs/SHARE.md — both apps implement exactly that document.
 
 enum ShareError: Error {
-    case closed, timeout, badFrame, decrypt, hash, tooLarge, tooMany, offline
+    case closed, timeout, badFrame, decrypt, hash, tooLarge, tooMany, offline, cancelled
     case remote(String)
     case unexpected(String)
 }

@@ -117,16 +117,16 @@
     },
     "%@ chce pobrać Twój schowek" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ wants to take your clipboard"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ möchte deine Zwischenablage abrufen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ wants to take your clipboard"
           }
         }
       }
@@ -1716,16 +1716,16 @@
     },
     "Czekam na zgodę na %@…" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Waiting for permission on %@…"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Warte auf Zustimmung auf %@ …"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waiting for permission on %@…"
           }
         }
       }
@@ -3815,32 +3815,32 @@
     },
     "Na tamtym komputerze nikt nie odpowiedział na prośbę o schowek." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nobody answered the clipboard request on the other computer."
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Auf dem anderen Computer hat niemand auf die Anfrage nach der Zwischenablage geantwortet."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nobody answered the clipboard request on the other computer."
           }
         }
       }
     },
     "Na tamtym komputerze odmówiono pobrania schowka." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Taking the clipboard was refused on the other computer."
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Auf dem anderen Computer wurde das Abrufen der Zwischenablage abgelehnt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taking the clipboard was refused on the other computer."
           }
         }
       }
@@ -3911,16 +3911,16 @@
     },
     "Najwyżej 10 000 plików naraz." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "At most 10,000 files at a time."
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Höchstens 10.000 Dateien auf einmal."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "At most 10,000 files at a time."
           }
         }
       }
@@ -4119,16 +4119,16 @@
     },
     "Nie udało się zapisać klucza tego Maca w folderze Application Support, więc parowanie nie jest możliwe." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This Mac’s key could not be saved in the Application Support folder, so pairing isn’t possible."
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Der Schlüssel dieses Macs konnte nicht im Ordner „Application Support“ gespeichert werden, daher ist keine Kopplung möglich."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This Mac’s key could not be saved in the Application Support folder, so pairing isn’t possible."
           }
         }
       }
@@ -4750,16 +4750,16 @@
     },
     "Odmów" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deny"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ablehnen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deny"
           }
         }
       }
@@ -6451,16 +6451,16 @@
     },
     "Pozwól" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Allow"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Erlauben"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow"
           }
         }
       }
@@ -6995,16 +6995,16 @@
     },
     "Przy każdym pobraniu na tym Macu pojawi się pytanie Pozwól / Odmów. Komputerom zaznaczonym niżej jako „Schowek bez pytania” pozwalasz zawsze." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Every request shows Allow / Deny on this Mac. Computers marked “Clipboard without asking” below are always allowed."
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bei jeder Anfrage erscheint auf diesem Mac Erlauben / Ablehnen. Unten als „Zwischenablage ohne Nachfrage“ markierte Computer sind immer erlaubt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every request shows Allow / Deny on this Mac. Computers marked “Clipboard without asking” below are always allowed."
           }
         }
       }
@@ -7359,16 +7359,16 @@
     },
     "Pytaj o zgodę, zanim inny komputer pobierze mój schowek" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ask before another computer takes my clipboard"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fragen, bevor ein anderer Computer meine Zwischenablage abruft"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ask before another computer takes my clipboard"
           }
         }
       }
@@ -7647,16 +7647,16 @@
     },
     "Schowek bez pytania" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Clipboard without asking"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zwischenablage ohne Nachfrage"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clipboard without asking"
           }
         }
       }
@@ -8745,6 +8745,38 @@
         }
       }
     },
+    "Tamten komputer nie odpowiada." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The other computer isn’t responding."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der andere Computer antwortet nicht."
+          }
+        }
+      }
+    },
+    "Tamten komputer nie przyjął żądania. Zaktualizuj Pulse lub PulseWin na obu komputerach." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The other computer didn’t accept the request. Update Pulse or PulseWin on both computers."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der andere Computer hat die Anfrage nicht angenommen. Aktualisiere Pulse oder PulseWin auf beiden Computern."
+          }
+        }
+      }
+    },
     "Tamten komputer nie zna już tego Maca. Sparuj je ponownie." : {
       "localizations" : {
         "de" : {
@@ -9036,16 +9068,16 @@
     },
     "Ten komputer ma teraz inny klucz. Jeśli to ten sam komputer (np. po ponownej instalacji), sparuj go jeszcze raz." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This computer now has a different key. If it’s the same computer (for example after reinstalling), pair it again."
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dieser Computer hat jetzt einen anderen Schlüssel. Wenn es derselbe Computer ist (z. B. nach einer Neuinstallation), kopple ihn erneut."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This computer now has a different key. If it’s the same computer (for example after reinstalling), pair it again."
           }
         }
       }
@@ -9231,16 +9263,16 @@
     },
     "To, co teraz jest w schowku tego Maca, trafi na %@. Bez Twojej zgody nic nie zostanie wysłane." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "What is on this Mac’s clipboard right now will go to %@. Nothing is sent without your permission."
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Der aktuelle Inhalt der Zwischenablage dieses Macs geht an %@. Ohne deine Zustimmung wird nichts gesendet."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What is on this Mac’s clipboard right now will go to %@. Nothing is sent without your permission."
           }
         }
       }
@@ -11384,16 +11416,16 @@
     },
     "Zawsze pozwalaj temu komputerowi" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Always allow this computer"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Diesem Computer immer erlauben"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Always allow this computer"
           }
         }
       }
@@ -12329,16 +12361,16 @@
     },
     "zapyta o zgodę" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "will ask for permission"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "fragt um Zustimmung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "will ask for permission"
           }
         }
       }
